@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://20qmnpkknyat"]
+
+[ext_resource type="Script" uid="uid://bwdthdufgde5k" path="res://tela_inicial.gd" id="1_qtomq"]
+
+[node name="TelaInicial" type="Control" unique_id=1884107508]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qtomq")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1930490237]
+layout_mode = 0
+offset_right = 478.0
+offset_bottom = 800.0
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=345960387]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=336306919]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=367547604]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=1299755605]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1557133030]
+layout_mode = 2
+text = "Letra a Letra"
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1772012908]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1980914892]
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1045529245]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=2109721861]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=864042497]
+layout_mode = 2
+
+[node name="create-room" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1515490697]
+layout_mode = 2
+text = "Jogar"
+
+[node name="join-room" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=233635876]
+layout_mode = 2
+
+[connection signal="pressed" from="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2/create-room" to="." method="_on_button_pressed"]
