@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://20qmnpkknyat"]
+
+[ext_resource type="Script" uid="uid://bwdthdufgde5k" path="res://scenes/auth/login_screen.gd" id="1_nkr1e"]
+
+[node name="LoginScreen" type="Control" unique_id=1884107508]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_nkr1e")
+
+[node name="AuthRequest" type="HTTPRequest" parent="." unique_id=2035983858]
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1160960620]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=127049610]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1945757522]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/VBoxContainer" unique_id=1756525645]
+layout_mode = 2
+
+[node name="EmailInput" type="LineEdit" parent="CenterContainer/VBoxContainer" unique_id=476403429]
+layout_mode = 2
+
+[node name="PasswordInput" type="LineEdit" parent="CenterContainer/VBoxContainer" unique_id=1994816605]
+layout_mode = 2
+secret = true
+
+[node name="LoginBtn" type="Button" parent="CenterContainer/VBoxContainer" unique_id=750805592]
+layout_mode = 2
+text = "Entrar"
+
+[node name="LinkButton" type="LinkButton" parent="CenterContainer/VBoxContainer" unique_id=1903284642]
+layout_mode = 2
+text = " Não tem conta? Cadastre-se"
+
+[connection signal="request_completed" from="AuthRequest" to="." method="_on_auth_request_request_completed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/LoginBtn" to="." method="_on_login_btn_pressed"]
