@@ -15,6 +15,10 @@ run/main_scene="res://scenes/auth/login_screen.tscn"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="uid://d21ogefatq3eu"
 
+[autoload]
+
+AuthManager="*uid://dpfh4jommrggr"
+
 [display]
 
 window/size/viewport_width=480
