@@ -5,10 +5,12 @@ signal login_failed(reason)
 
 var http_request: HTTPRequest
 
-func ready():
+var user_tokken: String = ""
+var user_id: String = ""
+
+func _ready():
 	http_request = HTTPRequest.new()
 	add_child(http_request)
-	
 	http_request.request_completed.connect(_on_request_completed)
 	
 func login(email, password):
@@ -22,9 +24,9 @@ func login(email, password):
 	
 	http_request.request(url, headers, HTTPClient.METHOD_POST, json)
 	
-func _on_request_completed(result, response_code, body, headers):
+func _on_request_completed(result, response_code, headers, body):
 	if response_code == 200:
 		login_success.emit()
 	else:
-		login_failed.emit()
+		login_failed.emit("Erro ao logar")
 	
