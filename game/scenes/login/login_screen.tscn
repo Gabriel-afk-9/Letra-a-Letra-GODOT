@@ -1,0 +1,205 @@
+[gd_scene format=3 uid="uid://20qmnpkknyat"]
+
+[ext_resource type="Script" uid="uid://bwdthdufgde5k" path="res://scenes/login/login_screen.gd" id="1_nkr1e"]
+[ext_resource type="Texture2D" uid="uid://dqs86ekigl3gn" path="res://assets/images/email.svg" id="2_cv2ei"]
+[ext_resource type="Texture2D" uid="uid://d3vjpdb2ej7rl" path="res://assets/images/password.svg" id="3_e3gle"]
+[ext_resource type="Texture2D" uid="uid://tnkct7fjvybr" path="res://assets/images/lal.png" id="4_rt4ph"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ygu2p"]
+content_margin_left = 10.0
+content_margin_top = 15.0
+content_margin_right = 20.0
+content_margin_bottom = 15.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.65834, 0.65834, 0.6583396, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+expand_margin_left = 40.0
+expand_margin_right = 40.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e3gle"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rt4ph"]
+
+[sub_resource type="FontVariation" id="FontVariation_e3gle"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e3gle"]
+content_margin_left = 35.0
+content_margin_top = 15.0
+content_margin_right = 35.0
+content_margin_bottom = 15.0
+bg_color = Color(0.899679, 0.4970603, 0.12679172, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.99999994, 0.56200707, 0.22477919, 1)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+shadow_color = Color(0.30283663, 0.13133419, 0.015524826, 0.4)
+shadow_size = 1
+shadow_offset = Vector2(0, 5)
+anti_aliasing_size = 0.01
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rt4ph"]
+content_margin_left = 35.0
+content_margin_top = 15.0
+content_margin_right = 35.0
+content_margin_bottom = 15.0
+bg_color = Color(0.899679, 0.4970603, 0.12679172, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.99999994, 0.56200707, 0.22477919, 1)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+shadow_color = Color(0.30283663, 0.13133419, 0.015524826, 0.4)
+shadow_size = 1
+anti_aliasing_size = 0.01
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6o4ev"]
+content_margin_left = 35.0
+content_margin_top = 15.0
+content_margin_right = 35.0
+content_margin_bottom = 15.0
+bg_color = Color(0.899679, 0.4970603, 0.12679172, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.99999994, 0.56200707, 0.22477919, 1)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+shadow_color = Color(0.30283663, 0.13133419, 0.015524826, 0.4)
+shadow_size = 1
+shadow_offset = Vector2(0, 5)
+anti_aliasing_size = 0.01
+
+[node name="LoginScreen" type="Control" unique_id=1884107508]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_nkr1e")
+
+[node name="Background" type="ColorRect" parent="." unique_id=347695202]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -6.0
+offset_top = 10.0
+offset_right = -6.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5227242, 0.5227242, 0.52272433, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=127049610]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -440.0
+offset_top = 29.0
+offset_right = 567.0
+offset_bottom = -42.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1945757522]
+layout_mode = 2
+theme_override_constants/separation = 46
+alignment = 1
+
+[node name="EmailInput" type="LineEdit" parent="CenterContainer/VBoxContainer" unique_id=476403429]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_ygu2p")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_e3gle")
+placeholder_text = "Email"
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/VBoxContainer/EmailInput" unique_id=1863087017]
+texture_filter = 2
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.115384616
+anchor_top = 0.4528302
+anchor_right = -0.03846154
+anchor_bottom = 0.6792453
+offset_top = -6.0
+offset_right = 34.0
+offset_bottom = 18.000002
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_cv2ei")
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="PasswordInput" type="LineEdit" parent="CenterContainer/VBoxContainer" unique_id=1994816605]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_ygu2p")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_rt4ph")
+placeholder_text = "Senha"
+secret = true
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/VBoxContainer/PasswordInput" unique_id=872668136]
+layout_mode = 0
+offset_left = -25.5
+offset_top = 12.0
+offset_right = 16.5
+offset_bottom = 66.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_e3gle")
+
+[node name="LoginBtn" type="Button" parent="CenterContainer/VBoxContainer" unique_id=750805592]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
+theme_override_fonts/font = SubResource("FontVariation_e3gle")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_e3gle")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_rt4ph")
+theme_override_styles/hover = SubResource("StyleBoxFlat_6o4ev")
+text = "Entrar"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=658482929]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/HBoxContainer" unique_id=1222019905]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Não tem conta? "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SignUpButton" type="LinkButton" parent="CenterContainer/VBoxContainer/HBoxContainer" unique_id=1903284642]
+layout_mode = 2
+text = "Cadastre-se"
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer" unique_id=1756525645]
+layout_mode = 2
+size_flags_stretch_ratio = 1.3
+texture = ExtResource("4_rt4ph")
+stretch_mode = 4
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/LoginBtn" to="." method="_on_login_btn_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer/SignUpButton" to="." method="_on_sign_up_button_pressed"]

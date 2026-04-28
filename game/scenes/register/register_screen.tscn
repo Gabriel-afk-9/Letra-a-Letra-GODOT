@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c50cbbtkr55tk"]
 
-[ext_resource type="Script" uid="uid://bwdthdufgde5k" path="res://scenes/auth/login_screen.gd" id="1_yj3ua"]
+[ext_resource type="Script" uid="uid://jmcihk8p8lu" path="res://scenes/register/register_screen.gd" id="1_ui3s0"]
 
 [node name="RegisterScreen" type="Control" unique_id=1884107508]
 layout_mode = 3
@@ -10,9 +10,7 @@ anchor_bottom = 1.0
 offset_right = -2.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_yj3ua")
-
-[node name="RegisterRequest" type="HTTPRequest" parent="." unique_id=2035983858]
+script = ExtResource("1_ui3s0")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1160960620]
 layout_mode = 0
@@ -42,11 +40,11 @@ secret = true
 
 [node name="RegisterBtn" type="Button" parent="CenterContainer/VBoxContainer" unique_id=750805592]
 layout_mode = 2
-text = "Entrar"
+text = "Cadastrar"
 
-[node name="LinkButton" type="LinkButton" parent="CenterContainer/VBoxContainer" unique_id=1903284642]
+[node name="SignInButton" type="LinkButton" parent="CenterContainer/VBoxContainer" unique_id=1903284642]
 layout_mode = 2
-text = " Não tem conta? Cadastre-se"
+text = "Já tem conta? Entrar"
 
-[connection signal="request_completed" from="RegisterRequest" to="." method="_on_auth_request_request_completed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/RegisterBtn" to="." method="_on_register_btn_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/SignInButton" to="." method="_on_sign_in_button_pressed"]

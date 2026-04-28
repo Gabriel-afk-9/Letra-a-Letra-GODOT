@@ -11,13 +11,15 @@ config_version=5
 [application]
 
 config/name="Letra a Letra"
-run/main_scene="res://scenes/auth/login_screen.tscn"
+run/main_scene="res://scenes/login/login_screen.tscn"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="uid://d21ogefatq3eu"
 
 [autoload]
 
 AuthManager="*uid://dpfh4jommrggr"
+ApiManager="*uid://dr3otudrva1w7"
+AuthService="*uid://m0w2wpf86fi6"
 
 [display]
 
