@@ -1,8 +1,9 @@
 extends Control
 
-@onready var nickname_input = $CenterContainer/VBoxContainer/NicknameInput
-@onready var email_input = $CenterContainer/VBoxContainer/EmailInput
-@onready var password_input = $CenterContainer/VBoxContainer/PasswordInput
+@onready var nickname_input: LineEdit = $CenterContainer/VBoxContainer/NicknameInput
+@onready var email_input: LineEdit = $CenterContainer/VBoxContainer/EmailInput
+@onready var password_input: LineEdit = $CenterContainer/VBoxContainer/PasswordInput
+@onready var login_btn = $CenterContainer/VBoxContainer/RegisterBtn
 
 @onready var auth_service = get_node("/root/AuthService")
 
@@ -15,10 +16,19 @@ func _on_register_btn_pressed() -> void:
 	var email = email_input.text.strip_edges()
 	var password = password_input.text.strip_edges()
 	
-	if nickname.is_empty() or email.is_empty() or password.is_empty():
-		print("Preencha todos os campos!")
+	if nickname.is_empty():
+		nickname_input.shake()
 		return
 		
+	if email.is_empty():
+		email_input.shake()
+		return
+		
+	if password.is_empty():
+		password_input.shake()
+		return
+	
+	login_btn.disabled = true
 	auth_service.register(nickname, email, password)
 	
 func _on_register_success() -> void:
