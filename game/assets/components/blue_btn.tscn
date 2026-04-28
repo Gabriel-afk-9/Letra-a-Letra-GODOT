@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dl64eom2m0cg8"]
+
+[ext_resource type="StyleBox" uid="uid://b13v067ao1u61" path="res://assets/styles/blue_button_default.tres" id="1_rugwq"]
+[ext_resource type="StyleBox" uid="uid://d0pic7fl8tl7d" path="res://assets/styles/blue_button_hover.tres" id="3_2p3mw"]
+
+[sub_resource type="FontVariation" id="FontVariation_e3gle"]
+
+[node name="LoginBtn" type="Button" unique_id=1224227437]
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = SubResource("FontVariation_e3gle")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("1_rugwq")
+theme_override_styles/hover = ExtResource("3_2p3mw")
+text = "Entrar"

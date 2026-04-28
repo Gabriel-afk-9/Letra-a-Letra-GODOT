@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://c6cjcpgmkn7yb"]
+
+[ext_resource type="StyleBox" uid="uid://dl6uwr3dmjcd3" path="res://assets/styles/input_default.tres" id="1_1hhny"]
+[ext_resource type="Texture2D" uid="uid://dqs86ekigl3gn" path="res://assets/images/icons/email.svg" id="2_cdn0j"]
+[ext_resource type="Script" uid="uid://bg7inir6k7k6m" path="res://assets/animation/animated_input.gd" id="2_gwde0"]
+
+[node name="EmailInput" type="LineEdit" unique_id=145490928]
+custom_minimum_size = Vector2(300, 60)
+offset_left = 61.0
+offset_top = 19.0
+offset_right = 361.0
+offset_bottom = 79.0
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = ExtResource("1_1hhny")
+theme_override_styles/focus = ExtResource("1_1hhny")
+placeholder_text = "Email"
+script = ExtResource("2_gwde0")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1971652273]
+texture_filter = 2
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.103571266
+anchor_top = 0.45283
+anchor_right = 0.07824692
+anchor_bottom = 0.6792451
+offset_top = -6.0
+offset_right = 34.0
+offset_bottom = 18.000002
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_cdn0j")
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
