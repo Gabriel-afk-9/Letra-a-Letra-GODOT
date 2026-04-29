@@ -1,5 +1,8 @@
 extends LineEdit
 
+func _ready() -> void:
+	self.text_changed.connect(func(new_text): self.modulate = Color.WHITE)
+	
 func shake() -> void:
 	var tween: Tween = create_tween()
 	var original_x: float = position.x
@@ -10,5 +13,4 @@ func shake() -> void:
 	tween.tween_property(self, "position:x", original_x - 5, 0.05)
 	tween.tween_property(self, "position:x", original_x, 0.05)
 	
-	self.modulate = Color.RED
-	tween.tween_property(self, "modulate", Color.WHITE, 0.3)
+	self.modulate = Color("#ff6b6b")

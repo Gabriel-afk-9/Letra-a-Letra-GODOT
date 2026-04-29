@@ -1,9 +1,10 @@
 extends Control
 
-@onready var nickname_input: LineEdit = $CenterContainer/VBoxContainer/NicknameInput
-@onready var email_input: LineEdit = $CenterContainer/VBoxContainer/EmailInput
-@onready var password_input: LineEdit = $CenterContainer/VBoxContainer/PasswordInput
-@onready var login_btn = $CenterContainer/VBoxContainer/RegisterBtn
+@onready var nickname_input: LineEdit = $ScrollContainer/CenterContainer/VBoxContainer/NicknameInput
+@onready var email_input: LineEdit = $ScrollContainer/CenterContainer/VBoxContainer/EmailInput
+@onready var password_input: LineEdit = $ScrollContainer/CenterContainer/VBoxContainer/PasswordInput
+@onready var register_btn = $ScrollContainer/CenterContainer/VBoxContainer/RegisterBtn
+@onready var error_label = $ScrollContainer/CenterContainer/VBoxContainer/ErrorLabel
 
 @onready var auth_service = get_node("/root/AuthService")
 
@@ -16,19 +17,34 @@ func _on_register_btn_pressed() -> void:
 	var email = email_input.text.strip_edges()
 	var password = password_input.text.strip_edges()
 	
+	var has_error = false
+	var first_error_input = null
+
 	if nickname.is_empty():
 		nickname_input.shake()
-		return
+		has_error = true
+		first_error_input = nickname_input
 		
 	if email.is_empty():
 		email_input.shake()
-		return
+		has_error = true
+		
+		if first_error_input == null:
+			first_error_input = email_input
 		
 	if password.is_empty():
 		password_input.shake()
-		return
+		has_error = true
+		
+		if first_error_input == null: 
+			first_error_input = password_input
 	
-	login_btn.disabled = true
+	if has_error:
+		error_label.show_error("Por favor, preencha todos os campos em vermelho.")
+		first_error_input.grab_focus() 
+		return
+		
+	register_btn.disabled = true
 	auth_service.register(nickname, email, password)
 	
 func _on_register_success() -> void:
@@ -37,6 +53,10 @@ func _on_register_success() -> void:
 		
 func _on_register_failed(reason: String) -> void:
 	print("Erro ao cadastrar: ", reason)
+	register_btn.disabled = false
+	
+	error_label.show_error(reason)
+	password_input.shake()
 	
 func _on_sign_in_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/login/login_screen.tscn")

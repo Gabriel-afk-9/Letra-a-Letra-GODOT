@@ -12,10 +12,12 @@ offset_right = 361.0
 offset_bottom = 79.0
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = ExtResource("1_lupaj")
 theme_override_styles/focus = ExtResource("1_lupaj")
 placeholder_text = "Nickname"
+caret_blink = true
 script = ExtResource("2_ar2ui")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1971652273]
