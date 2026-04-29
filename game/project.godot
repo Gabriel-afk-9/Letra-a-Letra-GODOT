@@ -17,9 +17,9 @@ config/icon="uid://d21ogefatq3eu"
 
 [autoload]
 
-AuthManager="*uid://dpfh4jommrggr"
-ApiManager="*uid://dr3otudrva1w7"
-AuthService="*uid://m0w2wpf86fi6"
+AuthService="*uid://dqw3qjg1qtvap"
+AuthManager="*uid://cmfm5w4xywucc"
+ApiManager="*uid://6letqv2xt2me"
 
 [display]
 

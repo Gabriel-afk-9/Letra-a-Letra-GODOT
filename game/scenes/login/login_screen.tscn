@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bhq774fbmvd8f" path="res://assets/components/password_input.tscn" id="4_dmiep"]
 [ext_resource type="Texture2D" uid="uid://tnkct7fjvybr" path="res://assets/images/logo/lal.png" id="4_rt4ph"]
 [ext_resource type="PackedScene" uid="uid://c1mkvlunchsxe" path="res://assets/components/orange_btn.tscn" id="5_ga6py"]
+[ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://assets/animation/animated_error_label.gd" id="5_so766"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://assets/animation/animated_btn.gd" id="6_dmiep"]
 [ext_resource type="PackedScene" uid="uid://cksusds5ucrfa" path="res://assets/components/link_btn_orange.tscn" id="6_so766"]
 
@@ -28,7 +29,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.8983909, 0.898391, 0.8983909, 1)
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=1756525645]
+[node name="Logo" type="TextureRect" parent="." unique_id=1756525645]
 custom_minimum_size = Vector2(400, 390)
 layout_mode = 1
 anchors_preset = 5
@@ -43,44 +44,52 @@ texture = ExtResource("4_rt4ph")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CenterContainer" type="CenterContainer" parent="." unique_id=127049610]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=926601718]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -2.0
-offset_bottom = 138.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1945757522]
+[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer" unique_id=127049610]
+custom_minimum_size = Vector2(0, 333)
 layout_mode = 2
-theme_override_constants/separation = 46
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.06
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/CenterContainer" unique_id=1945757522]
+layout_mode = 2
+theme_override_constants/separation = 40
 alignment = 1
 
-[node name="EmailInput" parent="CenterContainer/VBoxContainer" unique_id=145490928 instance=ExtResource("3_0gs85")]
-layout_mode = 2
-
-[node name="PasswordInput" parent="CenterContainer/VBoxContainer" unique_id=933791737 instance=ExtResource("4_dmiep")]
-layout_mode = 2
-
-[node name="ErrorLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=247027246]
+[node name="ErrorLabel" type="Label" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=247027246]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.3019608, 0.3019608, 1)
 text = " "
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
+script = ExtResource("5_so766")
 
-[node name="LoginBtn" parent="CenterContainer/VBoxContainer" unique_id=1224227437 instance=ExtResource("5_ga6py")]
+[node name="EmailInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=145490928 instance=ExtResource("3_0gs85")]
+layout_mode = 2
+
+[node name="PasswordInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=933791737 instance=ExtResource("4_dmiep")]
+layout_mode = 2
+
+[node name="LoginBtn" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1224227437 instance=ExtResource("5_ga6py")]
 layout_mode = 2
 script = ExtResource("6_dmiep")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=658482929]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=658482929]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_stretch_ratio = 1.06
 
-[node name="NoAccount" type="Label" parent="CenterContainer/VBoxContainer/HBoxContainer" unique_id=1222019905]
+[node name="NoAccount" type="Label" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1222019905]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_colors/font_color = Color(0, 0, 0, 0.43529412)
@@ -91,8 +100,8 @@ text = "Não tem conta? "
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SignUpButton" parent="CenterContainer/VBoxContainer/HBoxContainer" unique_id=1593634469 instance=ExtResource("6_so766")]
+[node name="SignUpButton" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1593634469 instance=ExtResource("6_so766")]
 layout_mode = 2
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/LoginBtn" to="." method="_on_login_btn_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/HBoxContainer/SignUpButton" to="." method="_on_sign_up_button_pressed"]
+[connection signal="pressed" from="ScrollContainer/CenterContainer/VBoxContainer/LoginBtn" to="." method="_on_login_btn_pressed"]
+[connection signal="pressed" from="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer/SignUpButton" to="." method="_on_sign_up_button_pressed"]
