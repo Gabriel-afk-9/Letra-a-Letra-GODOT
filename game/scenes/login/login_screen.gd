@@ -5,11 +5,10 @@ extends Control
 @onready var login_btn = $ScrollContainer/CenterContainer/VBoxContainer/LoginBtn
 @onready var error_label = $ScrollContainer/CenterContainer/VBoxContainer/ErrorLabel
 
-@onready var auth_service = get_node("/root/AuthService")
+var login_usecase: LoginUseCase
 
 func _ready() -> void:
-	auth_service.login_success.connect(_on_login_success)
-	auth_service.login_failed.connect(_on_login_failed)
+	login_usecase = LoginUseCase.new()
 
 func _on_login_btn_pressed() -> void:
 	var email = email_input.text.strip_edges()
@@ -36,7 +35,13 @@ func _on_login_btn_pressed() -> void:
 		return
 		
 	login_btn.disabled = true
-	auth_service.login(email, password)
+	
+	var result = await login_usecase.execute(email, password)
+	
+	if result["success"]:
+		_on_login_success(result.get("data", {}))
+	else:
+		_on_login_failed(result.get("message", "Erro desconhecido ao logar"))
 
 func _on_login_success(data) -> void:
 	print("Login deu certo!")

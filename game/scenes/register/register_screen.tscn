@@ -8,9 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://bhq774fbmvd8f" path="res://assets/components/password_input.tscn" id="5_5v8rl"]
 [ext_resource type="PackedScene" uid="uid://dl64eom2m0cg8" path="res://assets/components/blue_btn.tscn" id="6_f7u8l"]
 [ext_resource type="StyleBox" uid="uid://cxd05n5v24ui3" path="res://assets/styles/blue_button_pressed.tres" id="7_5v8rl"]
-[ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://assets/animation/animated_error_label.gd" id="7_ig2pb"]
+[ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://scripts/animation/animated_error_label.gd" id="7_ig2pb"]
 [ext_resource type="PackedScene" uid="uid://drih5in0kah48" path="res://assets/components/link_btn_blue.tscn" id="7_v2kv0"]
-[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://assets/animation/animated_btn.gd" id="8_5v8rl"]
+[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://scripts/animation/animated_btn.gd" id="8_5v8rl"]
 
 [node name="RegisterScreen" type="Control" unique_id=1884107508]
 layout_mode = 3
@@ -64,10 +64,11 @@ theme_override_constants/separation = 44
 alignment = 1
 
 [node name="Separation" type="Control" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=613671958]
+custom_minimum_size = Vector2(0, 90)
 layout_mode = 2
 
 [node name="ErrorLabel" type="Label" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=549722903]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(1, 0.3019608, 0.3019608, 1)
@@ -80,12 +81,16 @@ script = ExtResource("7_ig2pb")
 [node name="NicknameInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=145490928 instance=ExtResource("3_pk2yw")]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_f7u8l")
+theme_override_font_sizes/font_size = 25
 
 [node name="EmailInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1664070884 instance=ExtResource("4_jtm01")]
 layout_mode = 2
+theme_override_font_sizes/font_size = 25
 
 [node name="PasswordInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=933791737 instance=ExtResource("5_5v8rl")]
 layout_mode = 2
+theme_override_font_sizes/font_size = 25
+placeholder_text = "Senha (mínimo 8)"
 
 [node name="RegisterBtn" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1224227437 instance=ExtResource("6_f7u8l")]
 layout_mode = 2
@@ -103,13 +108,14 @@ layout_mode = 2
 size_flags_horizontal = 6
 theme_override_colors/font_color = Color(0, 0, 0, 0.43529412)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.43529412)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 25
 text = "Já tem uma conta? "
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SignInButton" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1593634469 instance=ExtResource("7_v2kv0")]
 layout_mode = 2
+theme_override_font_sizes/font_size = 25
 
 [connection signal="pressed" from="ScrollContainer/CenterContainer/VBoxContainer/RegisterBtn" to="." method="_on_register_btn_pressed"]
 [connection signal="pressed" from="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer/SignInButton" to="." method="_on_sign_in_button_pressed"]

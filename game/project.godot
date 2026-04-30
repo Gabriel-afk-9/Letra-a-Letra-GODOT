@@ -17,8 +17,7 @@ config/icon="uid://d21ogefatq3eu"
 
 [autoload]
 
-AuthService="*uid://dqw3qjg1qtvap"
-AuthManager="*uid://cmfm5w4xywucc"
+GlobalEnvironment="*uid://d13gwhhypaefa"
 ApiManager="*uid://6letqv2xt2me"
 
 [display]
