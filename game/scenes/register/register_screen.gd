@@ -6,11 +6,10 @@ extends Control
 @onready var register_btn = $ScrollContainer/CenterContainer/VBoxContainer/RegisterBtn
 @onready var error_label = $ScrollContainer/CenterContainer/VBoxContainer/ErrorLabel
 
-@onready var auth_service = get_node("/root/AuthService")
+var register_use_case: RegisterUseCase
 
 func _ready() -> void:
-	auth_service.register_success.connect(_on_register_success)
-	auth_service.register_failed.connect(_on_register_failed)
+	register_use_case = RegisterUseCase.new()
 
 func _on_register_btn_pressed() -> void:
 	var nickname = nickname_input.text.strip_edges()
@@ -45,7 +44,13 @@ func _on_register_btn_pressed() -> void:
 		return
 		
 	register_btn.disabled = true
-	auth_service.register(nickname, email, password)
+	
+	var result = await register_use_case.execute(nickname, email, password)
+	
+	if result["success"]:
+		_on_register_success()
+	else:
+		_on_register_failed(result.get("message", "Erro desconhecido ao cadastrar"))
 	
 func _on_register_success() -> void:
 	print("Cadastro realizado com sucesso!")

@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://b1gbmuj31b2um"]
 
+[ext_resource type="Texture2D" uid="uid://coe1o2c71sjc6" path="res://assets/images/logo/backlal.png" id="1_fd5os"]
+
 [node name="HomeScreen" type="Control" unique_id=2133168357]
 layout_mode = 3
 anchors_preset = 15
@@ -7,3 +9,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="BackgroundLaL" type="TextureRect" parent="." unique_id=1945114364]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_fd5os")

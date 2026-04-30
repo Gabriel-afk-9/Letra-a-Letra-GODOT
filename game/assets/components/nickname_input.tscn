@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://cwgnsmudgn8xa"]
 
 [ext_resource type="StyleBox" uid="uid://dl6uwr3dmjcd3" path="res://assets/styles/input_default.tres" id="1_lupaj"]
-[ext_resource type="Script" uid="uid://bg7inir6k7k6m" path="res://assets/animation/animated_input.gd" id="2_ar2ui"]
+[ext_resource type="Script" uid="uid://bg7inir6k7k6m" path="res://scripts/animation/animated_input.gd" id="2_ar2ui"]
 [ext_resource type="Texture2D" uid="uid://8qd34wfwm1fp" path="res://assets/images/icons/icon-user.png" id="2_lupaj"]
 
 [node name="EmailInput" type="LineEdit" unique_id=145490928]
-custom_minimum_size = Vector2(300, 60)
+custom_minimum_size = Vector2(300, 90)
 offset_left = 61.0
 offset_top = 19.0
 offset_right = 361.0
@@ -25,10 +25,10 @@ texture_filter = 2
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 1
 anchors_preset = -1
-anchor_left = -0.13333334
-anchor_top = 0.33333334
-anchor_right = 0.14047587
-anchor_bottom = 0.9610067
+anchor_left = -0.1
+anchor_top = 0.31111112
+anchor_right = 0.19333333
+anchor_bottom = 0.9777778
 offset_top = -6.0
 offset_right = 34.0
 offset_bottom = 18.000002
