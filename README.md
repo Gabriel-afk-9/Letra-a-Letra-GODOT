@@ -2,7 +2,7 @@
 
 > **Letra a Letra** é um jogo multiplayer competitivo que combina caça-palavras com mecânicas inspiradas em batalha naval, criando partidas estratégicas e dinâmicas em tempo real. Este repositório contém a implementação do **cliente** desenvolvido na engine **Godot**, projetado para oferecer uma experiência de jogo fluida, animada e multiplataforma.
 
-![Godot Engine](https://img.shields.io/badge/Godot-4.x-478cbf?logo=godot-engine&logoColor=white) ![GDScript](https://img.shields.io/badge/GDScript-100%25-478cbf) ![License](https://img.shields.io/badge/license-MIT-green)
+![Godot Engine](https://img.shields.io/badge/Godot-4.x-478cbf?logo=godot-engine&logoColor=white) ![GDScript](https://img.shields.io/badge/GDScript-100%25-478cbf) ![License](https://img.shields.io/badge/license-Proprietary-red)
 
 ---
 
@@ -81,9 +81,11 @@ game/
 ---
 
 
-## 📄 Licença
+## 📄 Licença e Uso
 
-Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
+**Copyright © 2026 Gabriel-afk-9. Todos os direitos reservados.**
+
+Este software é proprietário. Não é permitida a cópia, modificação, distribuição ou uso do código-fonte para qualquer finalidade sem a autorização expressa do autor. O acesso público ao repositório é apenas para fins de visualização e portfólio.
 
 ---
 
