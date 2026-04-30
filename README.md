@@ -5,9 +5,6 @@
 ![Godot Engine](https://img.shields.io/badge/Godot-4.x-478cbf?logo=godot-engine&logoColor=white) ![GDScript](https://img.shields.io/badge/GDScript-100%25-478cbf) ![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
-## 🎮 Preview
-
-![Gameplay](./assets/images/logo/backlal.png)
 
 ## 📝 Sobre o Projeto
 
