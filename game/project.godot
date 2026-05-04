@@ -13,12 +13,15 @@ config_version=5
 config/name="Letra a Letra"
 run/main_scene="res://scenes/login/login_screen.tscn"
 config/features=PackedStringArray("4.6", "Mobile")
-config/icon="uid://d21ogefatq3eu"
+boot_splash/bg_color=Color(0.20942885, 0.20942888, 0.20942888, 1)
+config/icon="uid://dy1fknvv40pop"
 
 [autoload]
 
 GlobalEnvironment="*uid://d13gwhhypaefa"
 ApiManager="*uid://6letqv2xt2me"
+AuthManager="*uid://cmfm5w4xywucc"
+WebSocketManager="*uid://b7uf81xbmhkjg"
 
 [display]
 
@@ -41,3 +44,4 @@ theme/custom_font="uid://dvu6lduki633w"
 
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true

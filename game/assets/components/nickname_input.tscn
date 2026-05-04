@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cwgnsmudgn8xa"]
 
-[ext_resource type="StyleBox" uid="uid://dl6uwr3dmjcd3" path="res://assets/styles/input_default.tres" id="1_lupaj"]
+[ext_resource type="StyleBox" uid="uid://dl6uwr3dmjcd3" path="res://assets/styles/input/input_default.tres" id="1_lupaj"]
 [ext_resource type="Script" uid="uid://bg7inir6k7k6m" path="res://scripts/animation/animated_input.gd" id="2_ar2ui"]
 [ext_resource type="Texture2D" uid="uid://8qd34wfwm1fp" path="res://assets/images/icons/icon-user.png" id="2_lupaj"]
 

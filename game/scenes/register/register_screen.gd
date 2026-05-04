@@ -3,8 +3,8 @@ extends Control
 @onready var nickname_input: LineEdit = $ScrollContainer/CenterContainer/VBoxContainer/NicknameInput
 @onready var email_input: LineEdit = $ScrollContainer/CenterContainer/VBoxContainer/EmailInput
 @onready var password_input: LineEdit = $ScrollContainer/CenterContainer/VBoxContainer/PasswordInput
-@onready var register_btn = $ScrollContainer/CenterContainer/VBoxContainer/RegisterBtn
-@onready var error_label = $ScrollContainer/CenterContainer/VBoxContainer/ErrorLabel
+@onready var register_btn: Button = $ScrollContainer/CenterContainer/VBoxContainer/RegisterBtn
+@onready var error_label: Label = $ScrollContainer/CenterContainer/VBoxContainer/ErrorLabel
 
 var register_use_case: RegisterUseCase
 

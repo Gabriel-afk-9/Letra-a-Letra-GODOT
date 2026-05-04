@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://doxwh16a1romg"
-path="res://.godot/imported/Comic-Hintergrund im Kampfdesign_ Vektorgrafik 1.svg-fc2d8ce6d2c7ea95057a6f390c9d083b.ctex"
+uid="uid://cf6sutetdeefk"
+path="res://.godot/imported/refresh.png-9b728a3df460b2fab2c6c6041f5a0147.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://domain/Comic-Hintergrund im Kampfdesign_ Vektorgrafik 1.svg"
-dest_files=["res://.godot/imported/Comic-Hintergrund im Kampfdesign_ Vektorgrafik 1.svg-fc2d8ce6d2c7ea95057a6f390c9d083b.ctex"]
+source_file="res://assets/images/icons/refresh.png"
+dest_files=["res://.godot/imported/refresh.png-9b728a3df460b2fab2c6c6041f5a0147.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
