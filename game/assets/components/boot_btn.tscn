@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://d0iu2kvhddnlj"]
+
+[ext_resource type="StyleBox" uid="uid://56kmahps8ako" path="res://assets/styles/buttons/green_button_default.tres" id="1_c6p1d"]
+[ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="2_4wcqj"]
+
+[node name="BootBtn" type="Button" unique_id=790580343]
+theme_override_styles/normal = ExtResource("1_c6p1d")
+theme_override_styles/pressed = ExtResource("1_c6p1d")
+theme_override_styles/hover = ExtResource("1_c6p1d")
+theme_override_styles/disabled = ExtResource("2_4wcqj")

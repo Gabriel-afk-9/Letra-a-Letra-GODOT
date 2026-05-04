@@ -1,9 +1,9 @@
 extends Control
 
-@onready var email_input = $ScrollContainer/CenterContainer/VBoxContainer/EmailInput
-@onready var password_input = $ScrollContainer/CenterContainer/VBoxContainer/PasswordInput
-@onready var login_btn = $ScrollContainer/CenterContainer/VBoxContainer/LoginBtn
-@onready var error_label = $ScrollContainer/CenterContainer/VBoxContainer/ErrorLabel
+@onready var email_input: LineEdit = $ScrollContainer/CenterContainer/VBoxContainer/EmailInput
+@onready var password_input: LineEdit = $ScrollContainer/CenterContainer/VBoxContainer/PasswordInput
+@onready var login_btn: Button = $ScrollContainer/CenterContainer/VBoxContainer/LoginBtn
+@onready var error_label: Label = $ScrollContainer/CenterContainer/VBoxContainer/ErrorLabel
 
 var login_usecase: LoginUseCase
 

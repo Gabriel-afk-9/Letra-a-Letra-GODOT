@@ -3,11 +3,13 @@
 [ext_resource type="Script" uid="uid://bwdthdufgde5k" path="res://scenes/login/login_screen.gd" id="1_nkr1e"]
 [ext_resource type="PackedScene" uid="uid://c6cjcpgmkn7yb" path="res://assets/components/email_input.tscn" id="3_0gs85"]
 [ext_resource type="PackedScene" uid="uid://bhq774fbmvd8f" path="res://assets/components/password_input.tscn" id="4_dmiep"]
-[ext_resource type="Texture2D" uid="uid://tnkct7fjvybr" path="res://assets/images/logo/lal.png" id="4_rt4ph"]
 [ext_resource type="PackedScene" uid="uid://c1mkvlunchsxe" path="res://assets/components/orange_btn.tscn" id="5_ga6py"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://scripts/animation/animated_error_label.gd" id="5_so766"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://scripts/animation/animated_btn.gd" id="6_dmiep"]
 [ext_resource type="PackedScene" uid="uid://cksusds5ucrfa" path="res://assets/components/link_btn_orange.tscn" id="6_so766"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dmiep"]
+load_path = "res://.godot/imported/lal.png-da2ffcf1a11c2456d04a7e63f1f1bab1.ctex"
 
 [node name="LoginScreen" type="Control" unique_id=1884107508]
 layout_mode = 3
@@ -36,27 +38,30 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -200.0
+offset_top = 4.0
 offset_right = 200.0
-offset_bottom = 390.0
+offset_bottom = 394.0
 grow_horizontal = 2
 localize_numeral_system = false
-texture = ExtResource("4_rt4ph")
+texture = SubResource("CompressedTexture2D_dmiep")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=926601718]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = -1
+anchor_left = -0.0030627872
+anchor_top = 0.3123924
+anchor_right = 1.0000001
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="CenterContainer" type="CenterContainer" parent="ScrollContainer" unique_id=127049610]
 custom_minimum_size = Vector2(0, 333)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 size_flags_stretch_ratio = 1.06
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/CenterContainer" unique_id=1945757522]
@@ -85,6 +90,7 @@ placeholder_text = "Senha"
 
 [node name="LoginBtn" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1224227437 instance=ExtResource("5_ga6py")]
 layout_mode = 2
+theme_override_font_sizes/font_size = 30
 script = ExtResource("6_dmiep")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=658482929]

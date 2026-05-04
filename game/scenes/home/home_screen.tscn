@@ -1,6 +1,45 @@
 [gd_scene format=3 uid="uid://b1gbmuj31b2um"]
 
 [ext_resource type="Texture2D" uid="uid://coe1o2c71sjc6" path="res://assets/images/logo/backlal.png" id="1_fd5os"]
+[ext_resource type="Script" uid="uid://etjq1t31kn71" path="res://scenes/home/home_screen.gd" id="1_maytv"]
+[ext_resource type="PackedScene" uid="uid://c1mkvlunchsxe" path="res://assets/components/orange_btn.tscn" id="2_vrvdr"]
+[ext_resource type="PackedScene" uid="uid://dl64eom2m0cg8" path="res://assets/components/blue_btn.tscn" id="3_5kic8"]
+[ext_resource type="PackedScene" uid="uid://mye5xoekljxw" path="res://assets/components/profile_card.tscn" id="3_d2d04"]
+[ext_resource type="Script" uid="uid://51s1le2pfu5b" path="res://assets/components/components_script/profile_card.gd" id="4_6dfdf"]
+[ext_resource type="Texture2D" uid="uid://c6bifs6l41y1w" path="res://assets/images/icons/config-icon.png" id="4_lsjqi"]
+[ext_resource type="Texture2D" uid="uid://cr4t6afr6ll8p" path="res://assets/images/logo/lal.png" id="5_04qn2"]
+[ext_resource type="Texture2D" uid="uid://e753xeshtu33" path="res://assets/images/icons/Play.png" id="7_04qn2"]
+[ext_resource type="StyleBox" uid="uid://7mj12tjr63g1" path="res://assets/styles/buttons/orange_button_home.tres" id="7_sotyy"]
+[ext_resource type="Texture2D" uid="uid://qy6k3fcwndys" path="res://assets/images/icons/room-icon.png" id="9_8vncu"]
+[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://scripts/animation/animated_btn.gd" id="9_82bes"]
+[ext_resource type="StyleBox" uid="uid://c5kob6xbifitw" path="res://assets/styles/buttons/blue_button_home.tres" id="10_82bes"]
+[ext_resource type="PackedScene" uid="uid://d0iu2kvhddnlj" path="res://assets/components/boot_btn.tscn" id="13_rw75k"]
+[ext_resource type="StyleBox" uid="uid://br8xv828524au" path="res://assets/styles/buttons/green_button_home.tres" id="14_d2d04"]
+[ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="15_6dfdf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sotyy"]
+bg_color = Color(1, 1, 1, 0.6313726)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vsnff"]
+bg_color = Color(1, 1, 1, 0.6784314)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
 
 [node name="HomeScreen" type="Control" unique_id=2133168357]
 layout_mode = 3
@@ -9,6 +48,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_maytv")
 
 [node name="BackgroundLaL" type="TextureRect" parent="." unique_id=1945114364]
 layout_mode = 1
@@ -18,3 +58,121 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_fd5os")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=726361923]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 35
+theme_override_constants/margin_top = 35
+theme_override_constants/margin_right = 35
+theme_override_constants/margin_bottom = 35
+
+[node name="MainLayout" type="VBoxContainer" parent="MarginContainer" unique_id=1990357549]
+layout_mode = 2
+alignment = 1
+
+[node name="Header" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=870841090]
+layout_mode = 2
+
+[node name="ProfileCard" parent="MarginContainer/MainLayout/Header" unique_id=799552687 instance=ExtResource("3_d2d04")]
+layout_mode = 2
+script = ExtResource("4_6dfdf")
+
+[node name="Spacer" type="Control" parent="MarginContainer/MainLayout/Header" unique_id=593550104]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SettingBtn" type="Button" parent="MarginContainer/MainLayout/Header" unique_id=5570231]
+clip_contents = true
+custom_minimum_size = Vector2(110, 60)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_sotyy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_sotyy")
+theme_override_styles/hover = SubResource("StyleBoxFlat_sotyy")
+icon = ExtResource("4_lsjqi")
+icon_alignment = 1
+script = ExtResource("9_82bes")
+
+[node name="TopSpacer" type="Control" parent="MarginContainer/MainLayout" unique_id=886091915]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CenterPanel" type="PanelContainer" parent="MarginContainer/MainLayout" unique_id=842649325]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vsnff")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MainLayout/CenterPanel" unique_id=1052945474]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="ContentVBox" type="VBoxContainer" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer" unique_id=857368710]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="logo" type="TextureRect" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=1825039917]
+custom_minimum_size = Vector2(100, 300)
+layout_mode = 2
+texture = ExtResource("5_04qn2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayBtn" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=1224227437 instance=ExtResource("2_vrvdr")]
+custom_minimum_size = Vector2(300, 80)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = ExtResource("7_sotyy")
+theme_override_styles/pressed = ExtResource("7_sotyy")
+theme_override_styles/hover = ExtResource("7_sotyy")
+text = "Jogar"
+icon = ExtResource("7_04qn2")
+expand_icon = true
+script = ExtResource("9_82bes")
+
+[node name="RoomBtn" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=2137511839 instance=ExtResource("3_5kic8")]
+custom_minimum_size = Vector2(300, 80)
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = ExtResource("10_82bes")
+theme_override_styles/pressed = ExtResource("10_82bes")
+theme_override_styles/hover = ExtResource("10_82bes")
+text = "Salas"
+icon = ExtResource("9_8vncu")
+expand_icon = true
+script = ExtResource("9_82bes")
+
+[node name="BootBtn" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=790580343 instance=ExtResource("13_rw75k")]
+custom_minimum_size = Vector2(300, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = ExtResource("14_d2d04")
+theme_override_styles/pressed = ExtResource("14_d2d04")
+theme_override_styles/hover = ExtResource("14_d2d04")
+text = "Treino"
+icon = ExtResource("15_6dfdf")
+expand_icon = true
+script = ExtResource("9_82bes")
+
+[node name="ContentSpacer" type="Control" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=400231549]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BottomSpacer" type="Control" parent="MarginContainer/MainLayout" unique_id=1689906567]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/RoomBtn" to="." method="_on_room_btn_pressed"]

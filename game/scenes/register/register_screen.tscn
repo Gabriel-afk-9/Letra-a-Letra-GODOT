@@ -1,16 +1,17 @@
 [gd_scene format=3 uid="uid://c50cbbtkr55tk"]
 
 [ext_resource type="Script" uid="uid://jmcihk8p8lu" path="res://scenes/register/register_screen.gd" id="1_ui3s0"]
-[ext_resource type="Texture2D" uid="uid://tnkct7fjvybr" path="res://assets/images/logo/lal.png" id="2_wmx5g"]
 [ext_resource type="PackedScene" uid="uid://cwgnsmudgn8xa" path="res://assets/components/nickname_input.tscn" id="3_pk2yw"]
 [ext_resource type="FontFile" uid="uid://dvu6lduki633w" path="res://assets/fonts/LilitaOne-Regular.ttf" id="4_f7u8l"]
 [ext_resource type="PackedScene" uid="uid://c6cjcpgmkn7yb" path="res://assets/components/email_input.tscn" id="4_jtm01"]
 [ext_resource type="PackedScene" uid="uid://bhq774fbmvd8f" path="res://assets/components/password_input.tscn" id="5_5v8rl"]
 [ext_resource type="PackedScene" uid="uid://dl64eom2m0cg8" path="res://assets/components/blue_btn.tscn" id="6_f7u8l"]
-[ext_resource type="StyleBox" uid="uid://cxd05n5v24ui3" path="res://assets/styles/blue_button_pressed.tres" id="7_5v8rl"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://scripts/animation/animated_error_label.gd" id="7_ig2pb"]
 [ext_resource type="PackedScene" uid="uid://drih5in0kah48" path="res://assets/components/link_btn_blue.tscn" id="7_v2kv0"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://scripts/animation/animated_btn.gd" id="8_5v8rl"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dmiep"]
+load_path = "res://.godot/imported/lal.png-da2ffcf1a11c2456d04a7e63f1f1bab1.ctex"
 
 [node name="RegisterScreen" type="Control" unique_id=1884107508]
 layout_mode = 3
@@ -33,15 +34,16 @@ color = Color(0.8983909, 0.898391, 0.8983909, 1)
 [node name="Logo" type="TextureRect" parent="." unique_id=700000135]
 custom_minimum_size = Vector2(400, 390)
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -200.0
-offset_right = 200.0
-offset_bottom = 390.0
+anchors_preset = -1
+anchor_left = 0.194
+anchor_right = 0.80600005
+anchor_bottom = 0.33600003
+offset_left = -0.18200684
+offset_right = 0.1819458
+offset_bottom = -0.43203735
 grow_horizontal = 2
 localize_numeral_system = false
-texture = ExtResource("2_wmx5g")
+texture = SubResource("CompressedTexture2D_dmiep")
 expand_mode = 1
 stretch_mode = 5
 
@@ -94,7 +96,7 @@ placeholder_text = "Senha (mínimo 8)"
 
 [node name="RegisterBtn" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1224227437 instance=ExtResource("6_f7u8l")]
 layout_mode = 2
-theme_override_styles/pressed = ExtResource("7_5v8rl")
+theme_override_font_sizes/font_size = 30
 text = "Cadastrar"
 script = ExtResource("8_5v8rl")
 
