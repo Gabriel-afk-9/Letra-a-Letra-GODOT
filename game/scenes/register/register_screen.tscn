@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://c50cbbtkr55tk"]
 
 [ext_resource type="Script" uid="uid://jmcihk8p8lu" path="res://scenes/register/register_screen.gd" id="1_ui3s0"]
-[ext_resource type="PackedScene" uid="uid://cwgnsmudgn8xa" path="res://assets/components/nickname_input.tscn" id="3_pk2yw"]
+[ext_resource type="PackedScene" uid="uid://cwgnsmudgn8xa" path="res://assets/components/confirm_input.tscn" id="3_pk2yw"]
 [ext_resource type="FontFile" uid="uid://dvu6lduki633w" path="res://assets/fonts/LilitaOne-Regular.ttf" id="4_f7u8l"]
 [ext_resource type="PackedScene" uid="uid://c6cjcpgmkn7yb" path="res://assets/components/email_input.tscn" id="4_jtm01"]
 [ext_resource type="PackedScene" uid="uid://bhq774fbmvd8f" path="res://assets/components/password_input.tscn" id="5_5v8rl"]
+[ext_resource type="Script" uid="uid://038oeino2833" path="res://assets/components/components_script/custom_input.gd" id="5_v2kv0"]
 [ext_resource type="PackedScene" uid="uid://dl64eom2m0cg8" path="res://assets/components/blue_btn.tscn" id="6_f7u8l"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://scripts/animation/animated_error_label.gd" id="7_ig2pb"]
 [ext_resource type="PackedScene" uid="uid://drih5in0kah48" path="res://assets/components/link_btn_blue.tscn" id="7_v2kv0"]
@@ -80,11 +81,6 @@ vertical_alignment = 1
 autowrap_mode = 2
 script = ExtResource("7_ig2pb")
 
-[node name="NicknameInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=145490928 instance=ExtResource("3_pk2yw")]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("4_f7u8l")
-theme_override_font_sizes/font_size = 25
-
 [node name="EmailInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1664070884 instance=ExtResource("4_jtm01")]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
@@ -93,6 +89,14 @@ theme_override_font_sizes/font_size = 25
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 placeholder_text = "Senha (mínimo 8)"
+script = ExtResource("5_v2kv0")
+
+[node name="ConfirmInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=145490928 instance=ExtResource("3_pk2yw")]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_f7u8l")
+theme_override_font_sizes/font_size = 25
+secret = true
+script = ExtResource("5_v2kv0")
 
 [node name="RegisterBtn" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1224227437 instance=ExtResource("6_f7u8l")]
 layout_mode = 2

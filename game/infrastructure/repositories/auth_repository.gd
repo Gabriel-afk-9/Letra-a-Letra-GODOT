@@ -16,8 +16,8 @@ func login(email: String, password: String) -> Dictionary:
 	
 	return { "success": false, "message": body.get("message", "Erro desconhecido ao logar") }
 
-func register(nickname: String, email: String, password: String) -> Dictionary:
-	var payload = { "nickname": nickname, "email": email, "password": password }
+func register(email: String, password: String) -> Dictionary:
+	var payload = { "email": email, "password": password }
 	var response = await api.post_async("/user", payload)
 	
 	var body = response["body"]

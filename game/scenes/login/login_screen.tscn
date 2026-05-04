@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bwdthdufgde5k" path="res://scenes/login/login_screen.gd" id="1_nkr1e"]
 [ext_resource type="PackedScene" uid="uid://c6cjcpgmkn7yb" path="res://assets/components/email_input.tscn" id="3_0gs85"]
 [ext_resource type="PackedScene" uid="uid://bhq774fbmvd8f" path="res://assets/components/password_input.tscn" id="4_dmiep"]
+[ext_resource type="Script" uid="uid://038oeino2833" path="res://assets/components/components_script/custom_input.gd" id="5_0ltig"]
 [ext_resource type="PackedScene" uid="uid://c1mkvlunchsxe" path="res://assets/components/orange_btn.tscn" id="5_ga6py"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://scripts/animation/animated_error_label.gd" id="5_so766"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://scripts/animation/animated_btn.gd" id="6_dmiep"]
@@ -87,6 +88,7 @@ theme_override_font_sizes/font_size = 25
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 placeholder_text = "Senha"
+script = ExtResource("5_0ltig")
 
 [node name="LoginBtn" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1224227437 instance=ExtResource("5_ga6py")]
 layout_mode = 2

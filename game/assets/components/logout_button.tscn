@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://l1kbqj1dqb4h"]
+
+[ext_resource type="StyleBox" uid="uid://b6nvfx34smt17" path="res://assets/styles/buttons/red_button_default.tres" id="1_jgosj"]
+
+[node name="LogoutButton" type="Button" unique_id=2144671933]
+custom_minimum_size = Vector2(200, 80)
+offset_right = 8.0
+offset_bottom = 8.0
+theme_override_styles/normal = ExtResource("1_jgosj")
+theme_override_styles/pressed = ExtResource("1_jgosj")
+theme_override_styles/hover = ExtResource("1_jgosj")
+text = "Sair"
