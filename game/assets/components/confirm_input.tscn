@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://cwgnsmudgn8xa"]
 
 [ext_resource type="StyleBox" uid="uid://dl6uwr3dmjcd3" path="res://assets/styles/input/input_default.tres" id="1_lupaj"]
-[ext_resource type="Script" uid="uid://bg7inir6k7k6m" path="res://scripts/animation/animated_input.gd" id="2_ar2ui"]
-[ext_resource type="Texture2D" uid="uid://8qd34wfwm1fp" path="res://assets/images/icons/icon-user.png" id="2_lupaj"]
+[ext_resource type="Script" uid="uid://038oeino2833" path="res://assets/components/components_script/custom_input.gd" id="2_oewnm"]
+[ext_resource type="Texture2D" uid="uid://d3vjpdb2ej7rl" path="res://assets/images/icons/password.svg" id="3_ar2ui"]
+[ext_resource type="Texture2D" uid="uid://bl3n5igylccxd" path="res://assets/images/icons/eye_closed.png" id="4_oewnm"]
 
-[node name="EmailInput" type="LineEdit" unique_id=145490928]
+[node name="ConfirmInput" type="LineEdit" unique_id=145490928]
 custom_minimum_size = Vector2(300, 90)
 offset_left = 61.0
 offset_top = 19.0
@@ -16,9 +17,9 @@ theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = ExtResource("1_lupaj")
 theme_override_styles/focus = ExtResource("1_lupaj")
-placeholder_text = "Nickname"
+placeholder_text = "Confirmar Senha"
 caret_blink = true
-script = ExtResource("2_ar2ui")
+script = ExtResource("2_oewnm")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1971652273]
 texture_filter = 2
@@ -33,6 +34,23 @@ offset_top = -6.0
 offset_right = 34.0
 offset_bottom = 18.000002
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_lupaj")
+texture = ExtResource("3_ar2ui")
 stretch_mode = 5
 metadata/_edit_use_anchors_ = true
+
+[node name="ToggleBtn" type="TextureButton" parent="." unique_id=51294833]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.92
+anchor_top = 0.344
+anchor_right = 1.0530001
+anchor_bottom = 0.78900003
+offset_left = -4.0
+offset_top = -5.960001
+offset_right = -3.9000244
+offset_bottom = -6.010002
+grow_horizontal = 0
+grow_vertical = 2
+texture_normal = ExtResource("4_oewnm")
+ignore_texture_size = true
+stretch_mode = 5

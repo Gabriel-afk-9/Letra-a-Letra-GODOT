@@ -16,6 +16,8 @@
 [ext_resource type="PackedScene" uid="uid://d0iu2kvhddnlj" path="res://assets/components/boot_btn.tscn" id="13_rw75k"]
 [ext_resource type="StyleBox" uid="uid://br8xv828524au" path="res://assets/styles/buttons/green_button_home.tres" id="14_d2d04"]
 [ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="15_6dfdf"]
+[ext_resource type="PackedScene" uid="uid://l1kbqj1dqb4h" path="res://assets/components/logout_button.tscn" id="17_fq8fn"]
+[ext_resource type="Script" uid="uid://cskmnchpbve6w" path="res://assets/components/components_script/logout_button.gd" id="18_mxkjd"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sotyy"]
 bg_color = Color(1, 1, 1, 0.6313726)
@@ -136,7 +138,6 @@ theme_override_styles/hover = ExtResource("7_sotyy")
 text = "Jogar"
 icon = ExtResource("7_04qn2")
 expand_icon = true
-script = ExtResource("9_82bes")
 
 [node name="RoomBtn" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=2137511839 instance=ExtResource("3_5kic8")]
 custom_minimum_size = Vector2(300, 80)
@@ -148,7 +149,6 @@ theme_override_styles/hover = ExtResource("10_82bes")
 text = "Salas"
 icon = ExtResource("9_8vncu")
 expand_icon = true
-script = ExtResource("9_82bes")
 
 [node name="BootBtn" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=790580343 instance=ExtResource("13_rw75k")]
 custom_minimum_size = Vector2(300, 80)
@@ -174,5 +174,16 @@ size_flags_vertical = 3
 [node name="BottomSpacer" type="Control" parent="MarginContainer/MainLayout" unique_id=1689906567]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="LogoutButton" parent="MarginContainer/MainLayout" unique_id=2144671933 instance=ExtResource("17_fq8fn")]
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 30
+script = ExtResource("18_mxkjd")
 
 [connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/RoomBtn" to="." method="_on_room_btn_pressed"]

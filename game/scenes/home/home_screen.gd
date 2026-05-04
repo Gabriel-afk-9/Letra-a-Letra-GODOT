@@ -1,7 +1,5 @@
 extends Control
 
-#BOTAO DE LOGOUT
-
 @onready var profile_card: PanelContainer = $MarginContainer/MainLayout/Header/ProfileCard
 @onready var setting_btn: Button = $MarginContainer/MainLayout/Header/SettingBtn
 @onready var play_btn: Button = $MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn
