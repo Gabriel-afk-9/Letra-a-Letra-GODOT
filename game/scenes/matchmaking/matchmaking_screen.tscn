@@ -1,0 +1,278 @@
+[gd_scene format=3 uid="uid://34b41ohver2s"]
+
+[ext_resource type="Texture2D" uid="uid://rjss1wkcijtv" path="res://assets/images/backgrounds/buscando.png" id="1_60nig"]
+[ext_resource type="StyleBox" uid="uid://b6nvfx34smt17" path="res://assets/styles/buttons/red_button_default.tres" id="2_646bw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_646bw"]
+bg_color = Color(1, 1, 1, 0.5411765)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="FontVariation" id="FontVariation_ditkf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g4v7s"]
+bg_color = Color(0.54901963, 0.54901963, 0.54901963, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+expand_margin_left = 8.0
+expand_margin_top = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf5fn"]
+bg_color = Color(0.105882354, 0.6156863, 0.87058824, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_57qmd"]
+bg_color = Color(0, 0, 0, 1)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3gngh"]
+bg_color = Color(0, 0, 0, 1)
+draw_center = false
+corner_detail = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_duhp4"]
+bg_color = Color(0, 0, 0, 0.1882353)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c66ux"]
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fcnqv"]
+
+[node name="MatchmakingScreen" type="Control" unique_id=1981277903]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackgroundMatch" type="TextureRect" parent="." unique_id=164828925]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_60nig")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1069306817]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ModalPanel" type="PanelContainer" parent="CenterContainer" unique_id=1255068673]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_646bw")
+
+[node name="ModalMargin" type="MarginContainer" parent="CenterContainer/ModalPanel" unique_id=589489889]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="MainVBox" type="VBoxContainer" parent="CenterContainer/ModalPanel/ModalMargin" unique_id=1192752402]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox" unique_id=1880115261]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = SubResource("FontVariation_ditkf")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_g4v7s")
+text = "Buscando Oponente"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TopSpacer2" type="Control" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox" unique_id=1458593514]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox" unique_id=210320580]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TopSpacer" type="Control" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox" unique_id=545371935]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="MyCard" type="PanelContainer" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox" unique_id=296426629]
+custom_minimum_size = Vector2(250, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_yf5fn")
+
+[node name="CardMargin" type="MarginContainer" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/MyCard" unique_id=1048065458]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CardHBox" type="HBoxContainer" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/MyCard/CardMargin" unique_id=626531629]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="AvatarBG" type="PanelContainer" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/MyCard/CardMargin/CardHBox" unique_id=1294662082]
+custom_minimum_size = Vector2(65, 65)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_57qmd")
+
+[node name="AvatarIcon" type="TextureRect" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/MyCard/CardMargin/CardHBox/AvatarBG" unique_id=2030071649]
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Control" type="Control" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/MyCard/CardMargin/CardHBox" unique_id=342642399]
+custom_minimum_size = Vector2(5, 0)
+layout_mode = 2
+
+[node name="NameBox" type="PanelContainer" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/MyCard/CardMargin/CardHBox" unique_id=130027245]
+custom_maximum_size = Vector2(150, -1)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+size_flags_stretch_ratio = 0.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_3gngh")
+
+[node name="NameLabel" type="Label" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/MyCard/CardMargin/CardHBox/NameBox" unique_id=342494723]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_duhp4")
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="VsLabel" type="Label" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox" unique_id=675150222]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/font_size = 30
+text = "VS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnemyCard" type="PanelContainer" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox" unique_id=1661680276]
+custom_minimum_size = Vector2(250, 80)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_c66ux")
+
+[node name="CardMargin" type="MarginContainer" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/EnemyCard" unique_id=1179424696]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CardHBox" type="HBoxContainer" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/EnemyCard/CardMargin" unique_id=1587982834]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="SpinnerBG" type="PanelContainer" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/EnemyCard/CardMargin/CardHBox" unique_id=1003030323]
+custom_minimum_size = Vector2(65, 65)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_57qmd")
+
+[node name="LoadingSpinner" type="TextureRect" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/EnemyCard/CardMargin/CardHBox/SpinnerBG" unique_id=1443096415]
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Control" type="Control" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/EnemyCard/CardMargin/CardHBox" unique_id=1414094911]
+custom_minimum_size = Vector2(5, 0)
+layout_mode = 2
+
+[node name="NameBox" type="PanelContainer" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/EnemyCard/CardMargin/CardHBox" unique_id=822476998]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+size_flags_stretch_ratio = 0.38
+theme_override_styles/panel = SubResource("StyleBoxFlat_fcnqv")
+
+[node name="NameLabel" type="Label" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox/EnemyCard/CardMargin/CardHBox/NameBox" unique_id=1604365110]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_duhp4")
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="BottomSpacer" type="Control" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox" unique_id=2139937546]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="CancelBtn" type="Button" parent="CenterContainer/ModalPanel/ModalMargin/MainVBox" unique_id=245144778]
+custom_minimum_size = Vector2(160, 0)
+custom_maximum_size = Vector2(160, -1)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = ExtResource("2_646bw")
+text = "Cancelar"

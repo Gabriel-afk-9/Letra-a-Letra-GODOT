@@ -14,6 +14,7 @@ func _ready() -> void:
 func _on_register_btn_pressed() -> void:
 	var email = email_input.text.strip_edges()
 	var password = password_input.text.strip_edges()
+	var nickname = null
 	var confirm_password = confirm_password_input.text.strip_edges()
 	
 	var has_error = false

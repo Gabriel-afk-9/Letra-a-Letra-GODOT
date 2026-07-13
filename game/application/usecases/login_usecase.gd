@@ -8,9 +8,8 @@ func _init() -> void:
 
 func execute(email: String, password: String) -> Dictionary:
 	var result = await repository.login(email, password)
-	
 	if result["success"]:
 		var auth_manager = Engine.get_main_loop().root.get_node("AuthManager")
+		auth_manager.load_profile()
 		auth_manager.set_user(result["data"])
-		
 	return result
