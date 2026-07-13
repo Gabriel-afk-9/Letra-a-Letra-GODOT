@@ -2,14 +2,11 @@
 
 [ext_resource type="Script" uid="uid://jmcihk8p8lu" path="res://scenes/register/register_screen.gd" id="1_ui3s0"]
 [ext_resource type="PackedScene" uid="uid://cwgnsmudgn8xa" path="res://assets/components/confirm_input.tscn" id="3_pk2yw"]
-[ext_resource type="FontFile" uid="uid://dvu6lduki633w" path="res://assets/fonts/LilitaOne-Regular.ttf" id="4_f7u8l"]
 [ext_resource type="PackedScene" uid="uid://c6cjcpgmkn7yb" path="res://assets/components/email_input.tscn" id="4_jtm01"]
 [ext_resource type="PackedScene" uid="uid://bhq774fbmvd8f" path="res://assets/components/password_input.tscn" id="5_5v8rl"]
-[ext_resource type="Script" uid="uid://038oeino2833" path="res://assets/components/components_script/custom_input.gd" id="5_v2kv0"]
 [ext_resource type="PackedScene" uid="uid://dl64eom2m0cg8" path="res://assets/components/blue_btn.tscn" id="6_f7u8l"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://scripts/animation/animated_error_label.gd" id="7_ig2pb"]
 [ext_resource type="PackedScene" uid="uid://drih5in0kah48" path="res://assets/components/link_btn_blue.tscn" id="7_v2kv0"]
-[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://scripts/animation/animated_btn.gd" id="8_5v8rl"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dmiep"]
 load_path = "res://.godot/imported/lal.png-da2ffcf1a11c2456d04a7e63f1f1bab1.ctex"
@@ -33,15 +30,17 @@ grow_vertical = 2
 color = Color(0.8983909, 0.898391, 0.8983909, 1)
 
 [node name="Logo" type="TextureRect" parent="." unique_id=700000135]
-custom_minimum_size = Vector2(400, 390)
+custom_minimum_size = Vector2(200, 200)
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.194
-anchor_right = 0.80600005
-anchor_bottom = 0.33600003
-offset_left = -0.18200684
-offset_right = 0.1819458
-offset_bottom = -0.43203735
+anchor_left = 0.503
+anchor_top = 0.164
+anchor_right = 0.503
+anchor_bottom = 0.164
+offset_left = -125.08
+offset_top = -124.96001
+offset_right = 124.92
+offset_bottom = 125.03999
 grow_horizontal = 2
 localize_numeral_system = false
 texture = SubResource("CompressedTexture2D_dmiep")
@@ -63,11 +62,11 @@ size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/CenterContainer" unique_id=2072352183]
 layout_mode = 2
-theme_override_constants/separation = 44
+theme_override_constants/separation = 25
 alignment = 1
 
 [node name="Separation" type="Control" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=613671958]
-custom_minimum_size = Vector2(0, 90)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 
 [node name="ErrorLabel" type="Label" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=549722903]
@@ -83,26 +82,17 @@ script = ExtResource("7_ig2pb")
 
 [node name="EmailInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1664070884 instance=ExtResource("4_jtm01")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 25
 
 [node name="PasswordInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=933791737 instance=ExtResource("5_5v8rl")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 25
-placeholder_text = "Senha (mínimo 8)"
-script = ExtResource("5_v2kv0")
 
 [node name="ConfirmInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=145490928 instance=ExtResource("3_pk2yw")]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_f7u8l")
-theme_override_font_sizes/font_size = 25
-secret = true
-script = ExtResource("5_v2kv0")
 
 [node name="RegisterBtn" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1224227437 instance=ExtResource("6_f7u8l")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 17
 text = "Cadastrar"
-script = ExtResource("8_5v8rl")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=259214965]
 layout_mode = 2
@@ -114,14 +104,13 @@ layout_mode = 2
 size_flags_horizontal = 6
 theme_override_colors/font_color = Color(0, 0, 0, 0.43529412)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.43529412)
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 20
 text = "Já tem uma conta? "
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SignInButton" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1593634469 instance=ExtResource("7_v2kv0")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 25
 
 [connection signal="pressed" from="ScrollContainer/CenterContainer/VBoxContainer/RegisterBtn" to="." method="_on_register_btn_pressed"]
 [connection signal="pressed" from="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer/SignInButton" to="." method="_on_sign_in_button_pressed"]

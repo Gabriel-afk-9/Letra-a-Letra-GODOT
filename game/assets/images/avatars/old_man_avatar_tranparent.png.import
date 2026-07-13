@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://coe1o2c71sjc6"
-path="res://.godot/imported/backlal.png-8dc6f70674a08e4a2309807ca76afb9a.ctex"
+uid="uid://7go1i87fcuj8"
+path="res://.godot/imported/old_man_avatar_tranparent.png-8320ccc4e0c6e248f189d2bf1dc0026a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/logo/backlal.png"
-dest_files=["res://.godot/imported/backlal.png-8dc6f70674a08e4a2309807ca76afb9a.ctex"]
+source_file="res://assets/images/avatars/old_man_avatar_tranparent.png"
+dest_files=["res://.godot/imported/old_man_avatar_tranparent.png-8320ccc4e0c6e248f189d2bf1dc0026a.ctex"]
 
 [params]
 

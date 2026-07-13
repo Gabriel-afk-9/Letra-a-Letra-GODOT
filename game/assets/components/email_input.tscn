@@ -5,15 +5,15 @@
 [ext_resource type="Script" uid="uid://bg7inir6k7k6m" path="res://scripts/animation/animated_input.gd" id="2_gwde0"]
 
 [node name="EmailInput" type="LineEdit" unique_id=145490928]
-custom_minimum_size = Vector2(300, 90)
+custom_minimum_size = Vector2(200, 55)
 offset_left = 61.0
 offset_top = 19.0
-offset_right = 361.0
-offset_bottom = 79.0
+offset_right = 261.0
+offset_bottom = 74.0
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = ExtResource("1_1hhny")
 theme_override_styles/focus = ExtResource("1_1hhny")
 placeholder_text = "Email"
@@ -25,13 +25,13 @@ texture_filter = 2
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 1
 anchors_preset = -1
-anchor_left = -0.07333333
-anchor_top = 0.356
-anchor_right = 0.06966667
-anchor_bottom = 0.75555557
-offset_top = -0.040000916
-offset_right = 47.1
-offset_bottom = 18.000002
+anchor_left = -0.15
+anchor_top = 0.32700002
+anchor_right = 0.039
+anchor_bottom = 0.69100004
+offset_top = 0.014997482
+offset_right = 37.899998
+offset_bottom = 20.010555
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_cdn0j")
 stretch_mode = 5
