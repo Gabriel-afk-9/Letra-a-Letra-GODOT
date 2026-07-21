@@ -1,13 +1,12 @@
 extends Node
-class_name SessionStore
 
 ## ============================================================================
 ## Signals
 ## ============================================================================
 
+signal session_started(user: User)
+signal session_ended
 signal session_changed
-signal user_logged_in(user: User)
-signal user_logged_out
 
 
 ## ============================================================================
@@ -19,31 +18,34 @@ var _access_token: String = ""
 
 
 ## ============================================================================
-## Public API
+## Session
 ## ============================================================================
 
 func start_session(user: User, access_token: String) -> void:
 	_current_user = user
 	_access_token = access_token
 
-	user_logged_in.emit(user)
+	session_started.emit(user)
 	session_changed.emit()
 
 
 func end_session() -> void:
-	clear()
+	_clear_session()
 
-
-func clear() -> void:
-	_current_user = null
-	_access_token = ""
-
-	user_logged_out.emit()
+	session_ended.emit()
 	session_changed.emit()
 
 
+## ============================================================================
+## Queries
+## ============================================================================
+
 func is_authenticated() -> bool:
 	return _current_user != null and not _access_token.is_empty()
+
+
+func has_user() -> bool:
+	return _current_user != null
 
 
 func has_token() -> bool:
@@ -59,8 +61,9 @@ func get_token() -> String:
 
 
 ## ============================================================================
-## Helpers
+## Internal
 ## ============================================================================
 
-func has_user() -> bool:
-	return _current_user != null
+func _clear_session() -> void:
+	_current_user = null
+	_access_token = ""

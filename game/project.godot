@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Letra a Letra"
-run/main_scene="res://scenes/login/login_screen.tscn"
+run/main_scene="uid://fc4l1gye488"
 config/features=PackedStringArray("4.7", "Mobile")
 boot_splash/bg_color=Color(0.20942885, 0.20942888, 0.20942888, 1)
 config/icon="uid://dy1fknvv40pop"
@@ -22,6 +22,7 @@ GlobalEnvironment="*uid://d13gwhhypaefa"
 ApiManager="*uid://6letqv2xt2me"
 AuthManager="*uid://cmfm5w4xywucc"
 WebSocketManager="*uid://b7uf81xbmhkjg"
+ServiceRegistry="*uid://h4t2ukucfhrk"
 
 [display]
 
