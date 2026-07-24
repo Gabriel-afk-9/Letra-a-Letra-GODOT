@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://mye5xoekljxw"]
 
 [ext_resource type="Texture2D" uid="uid://jhxx3mqt6bxj" path="res://assets/images/icons/godot-game-engine-icon.png" id="1_vf15d"]
-[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://scripts/animation/animated_btn.gd" id="2_ve4co"]
+[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="2_ve4co"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_maytv"]
 bg_color = Color(1, 1, 1, 0.83137256)

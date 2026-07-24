@@ -34,32 +34,6 @@ Desenvolvido em Godot para oferecer uma experiência moderna, fluida e multiplat
 
 ---
 
-## 🧠 Arquitetura
-
-O projeto segue princípios de Domain-Driven Design (DDD), garantindo organização, escalabilidade e separação clara de responsabilidades:
-
-- **Domain:** Regras de negócio e entidades
-- **Application:** Casos de uso
-- **Infrastructure:** Comunicação externa (API, WebSockets)
-
----
-
-## 🏗 Estrutura do Projeto
-
-```
-game/
-├── application/        # Casos de uso e lógica de aplicação
-├── domain/             # Entidades e regras de negócio (Domain-Driven Design)
-├── infrastructure/     # Implementações técnicas (API, Persistência)
-├── scenes/             # Cenas da interface (Login, Lobby, Game)
-├── scripts/            # Scripts de suporte e animações
-├── assets/             # Sprites, fontes e recursos visuais
-├── project.godot       # Arquivo principal do projeto Godot
-└── .editorconfig       # Configurações do editor
-```
-
----
-
 ## ⚙️ Como Executar
 
 1. **Pré-requisitos:**

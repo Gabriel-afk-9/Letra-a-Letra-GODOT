@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cwgnsmudgn8xa"]
 
 [ext_resource type="StyleBox" uid="uid://dl6uwr3dmjcd3" path="res://assets/styles/input/input_default.tres" id="1_lupaj"]
-[ext_resource type="Script" uid="uid://038oeino2833" path="res://assets/components/components_script/custom_input.gd" id="2_oewnm"]
+[ext_resource type="Script" uid="uid://038oeino2833" path="res://assets/scripts/custom_input.gd" id="2_oewnm"]
 [ext_resource type="Texture2D" uid="uid://d3vjpdb2ej7rl" path="res://assets/images/icons/password.svg" id="3_ar2ui"]
 [ext_resource type="Texture2D" uid="uid://bl3n5igylccxd" path="res://assets/images/icons/eye_closed.png" id="4_oewnm"]
 

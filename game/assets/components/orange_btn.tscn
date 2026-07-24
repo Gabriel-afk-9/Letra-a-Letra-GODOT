@@ -3,7 +3,7 @@
 [ext_resource type="StyleBox" uid="uid://brk4w17avnm65" path="res://assets/styles/buttons/orange_button_default.tres" id="1_klygr"]
 [ext_resource type="StyleBox" uid="uid://b74bkmcljqghy" path="res://assets/styles/buttons/orange_button_pressed.tres" id="2_2p3mw"]
 [ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="3_npdv2"]
-[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://scripts/animation/animated_btn.gd" id="4_sbc6q"]
+[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="4_sbc6q"]
 
 [node name="LoginBtn" type="Button" unique_id=1224227437]
 custom_minimum_size = Vector2(140, 10)
