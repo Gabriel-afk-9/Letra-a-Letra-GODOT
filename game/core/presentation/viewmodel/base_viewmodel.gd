@@ -2,26 +2,14 @@ extends RefCounted
 
 class_name BaseViewModel
 
-
-# ============================================================================
-# Signals
-# ============================================================================
-
+#signal initialized
+#signal disposed
 signal loading_changed(is_loading: bool)
 signal error_changed(message: String)
 
 
-# ============================================================================
-# State
-# ============================================================================
-
 var _loading: bool = false
 var _error_message: String = ""
-
-
-# ============================================================================
-# Protected
-# ============================================================================
 
 func _set_loading(value: bool) -> void:
 
@@ -40,11 +28,6 @@ func _set_error(message: String) -> void:
 
 func _clear_error() -> void:
 	_set_error("")
-
-
-# ============================================================================
-# Public API
-# ============================================================================
 
 func is_loading() -> bool:
 	return _loading

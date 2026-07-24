@@ -19,10 +19,9 @@ config/icon="uid://dy1fknvv40pop"
 [autoload]
 
 GlobalEnvironment="*uid://d13gwhhypaefa"
-ApiManager="*uid://6letqv2xt2me"
-AuthManager="*uid://cmfm5w4xywucc"
 WebSocketManager="*uid://b7uf81xbmhkjg"
 ServiceRegistry="*uid://h4t2ukucfhrk"
+SessionStore="*uid://b3xp5k2p2c4ip"
 
 [display]
 

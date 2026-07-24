@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://fc4l1gye488"]
 
 [ext_resource type="Script" uid="uid://cf1ivup0di3jb" path="res://features/login/presentation/views/login_screen.gd" id="1_wrfck"]
-[ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://scripts/animation/animated_error_label.gd" id="2_u1eoo"]
+[ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="2_u1eoo"]
 [ext_resource type="PackedScene" uid="uid://c6cjcpgmkn7yb" path="res://assets/components/email_input.tscn" id="3_fec44"]
 [ext_resource type="PackedScene" uid="uid://bhq774fbmvd8f" path="res://assets/components/password_input.tscn" id="4_3gw1i"]
 [ext_resource type="PackedScene" uid="uid://c1mkvlunchsxe" path="res://assets/components/orange_btn.tscn" id="5_r6ykx"]

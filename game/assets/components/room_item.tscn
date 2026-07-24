@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b5vjgqaymhhg1"]
 
 [ext_resource type="StyleBox" uid="uid://bwx12tjd5y2dv" path="res://assets/styles/buttons/white_button_default.tres" id="1_o73jn"]
-[ext_resource type="Script" uid="uid://bthxlnskid3sw" path="res://assets/components/components_script/room_item.gd" id="2_u6rw0"]
+[ext_resource type="Script" uid="uid://bthxlnskid3sw" path="res://assets/scripts/room_item.gd" id="2_u6rw0"]
 
 [sub_resource type="FontVariation" id="FontVariation_e3gle"]
 

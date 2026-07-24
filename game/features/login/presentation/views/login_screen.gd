@@ -21,7 +21,6 @@ func _connect_view_model() -> void:
 
 	_view_model.loading_changed.connect(_on_loading_changed)
 	_view_model.error_changed.connect(_on_error_changed)
-	_view_model.login_succeeded.connect(_on_login_succeeded)
 
 
 func _on_login_btn_pressed() -> void:
@@ -32,7 +31,7 @@ func _on_login_btn_pressed() -> void:
 	if not _validate_inputs(email, password):
 		return
 
-	await _view_model.login(
+	_view_model.login(
 		email,
 		password
 	)
@@ -91,17 +90,5 @@ func _on_error_changed(
 	password_input.shake()
 
 
-func _on_login_succeeded(
-	_user: User
-) -> void:
-
-	get_tree().change_scene_to_file(
-		"res://game/features/home/presentation/views/home_screen.tscn"
-	)
-
-
 func _on_sign_up_button_pressed() -> void:
-
-	get_tree().change_scene_to_file(
-		"res://game/features/register/presentation/views/register_screen.tscn"
-	)
+	_view_model.go_to_register()

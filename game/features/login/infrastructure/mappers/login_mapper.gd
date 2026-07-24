@@ -1,25 +1,48 @@
 extends RefCounted
+
 class_name LoginMapper
 
 
-static func from_response_body(body: Dictionary) -> LoginResult:
+static func from_response_body(
+	body: Dictionary
+) -> LoginResult:
 
-	if not body.get("success", false):
+	var success: bool = body.get("success", false) as bool
+
+	if not success:
+
+		var error_message: String = body.get(
+			"message",
+			"Erro ao autenticar."
+		) as String
 
 		return LoginResult.new(
 			false,
 			null,
 			"",
-			body.get("message", "Erro ao autenticar.")
+			error_message
 		)
 
-	var data: Dictionary = body.get("data", {})
+	var data: Dictionary = body.get(
+		"data",
+		{}
+	) as Dictionary
 
 	var user: User = User.from_dictionary(data)
+
+	var token: String = data.get(
+		"token",
+		""
+	) as String
+
+	var success_message: String = body.get(
+		"message",
+		""
+	) as String
 
 	return LoginResult.new(
 		true,
 		user,
-		data.get("token", ""),
-		body.get("message", "")
+		token,
+		success_message
 	)

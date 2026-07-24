@@ -1,30 +1,24 @@
 extends Node
 
+var _initialized: bool = false
+
 var _session_persistence: SessionPersistence
 var _http_client: HttpClient
 var _navigation_service: NavigationService
 
 
-func _ready() -> void:
-	_register_dependencies()
-
-
-func _register_dependencies() -> void:
-
-	# Persistência
+func _enter_tree() -> void:
+	if _initialized: return
+	_initialized = true
+	
 	_session_persistence = SessionPersistence.new()
-
-	# Cliente HTTP
-	_http_client = HttpClient.new(SessionStore)
+	
+	var auth_adapter: SessionStoreAuthProvider = SessionStoreAuthProvider.new(SessionStore)
+	_http_client = HttpClient.new(auth_adapter)
 	add_child(_http_client)
-
-	# Navegação
+	
 	_navigation_service = NavigationService.new()
 
-
-# ============================================================================
-# Getters
-# ============================================================================
 
 func session_persistence() -> SessionPersistence:
 	return _session_persistence

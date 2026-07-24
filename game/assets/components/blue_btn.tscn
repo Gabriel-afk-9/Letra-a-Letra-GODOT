@@ -4,7 +4,7 @@
 [ext_resource type="StyleBox" uid="uid://cxd05n5v24ui3" path="res://assets/styles/buttons/blue_button_pressed.tres" id="2_63l3l"]
 [ext_resource type="StyleBox" uid="uid://d0pic7fl8tl7d" path="res://assets/styles/buttons/blue_button_hover.tres" id="3_2p3mw"]
 [ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="3_63l3l"]
-[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://scripts/animation/animated_btn.gd" id="5_stcx3"]
+[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="5_stcx3"]
 
 [node name="CodeBtn" type="Button" unique_id=1224227437]
 custom_minimum_size = Vector2(150, 20)

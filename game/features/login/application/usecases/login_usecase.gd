@@ -1,4 +1,5 @@
 extends RefCounted
+
 class_name LoginUseCase
 
 
@@ -16,8 +17,14 @@ func _init(
 
 
 func execute(
-	request: LoginRequest
+	email: String,
+	password: String
 ) -> LoginResult:
+
+	var request := LoginRequest.new(
+		email,
+		password
+	)
 
 	var result: LoginResult = await _repository.login(request)
 

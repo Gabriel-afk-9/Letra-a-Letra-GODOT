@@ -17,3 +17,15 @@ func _init(
 	success = p_success
 	body = p_body
 	error_message = p_error_message
+
+func is_client_error() -> bool:
+	return status_code >= 400 and status_code < 500
+
+func is_server_error() -> bool:
+	return status_code >= 500 and status_code < 600
+
+func is_unauthorized() -> bool:
+	return status_code == 401
+
+func is_not_found() -> bool:
+	return status_code == 404

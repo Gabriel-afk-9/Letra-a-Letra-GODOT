@@ -1,4 +1,5 @@
 extends RefCounted
+
 class_name RemoteLoginRepository
 
 
@@ -12,17 +13,13 @@ func _init(
 	_http_client = http_client
 
 
-func login(
-	request: LoginRequest
-) -> LoginResult:
-
+func login(request: LoginRequest) -> LoginResult:
 	var response: HttpResponse = await _http_client.http_post(
-		"/auth",
+		"/user/auth",
 		request.to_dictionary()
 	)
 
 	if not response.success:
-
 		return LoginResult.new(
 			false,
 			null,

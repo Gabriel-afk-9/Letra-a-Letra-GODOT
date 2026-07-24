@@ -3,16 +3,16 @@ extends BaseViewModel
 class_name LoginViewModel
 
 
-var _controller: LoginController
+var _usecase: LoginUseCase
 var _navigation: NavigationService
 
 
 func _init(
-	controller: LoginController,
+	usecase: LoginUseCase,
 	navigation: NavigationService
 ) -> void:
 
-	_controller = controller
+	_usecase = usecase
 	_navigation = navigation
 
 
@@ -25,7 +25,7 @@ func login(
 
 	_set_loading(true)
 
-	var result: LoginResult = await _controller.login(
+	var result: LoginResult = await _usecase.execute(
 		email,
 		password
 	)
@@ -33,7 +33,11 @@ func login(
 	_set_loading(false)
 
 	if result.success:
-		_navigation.go_to_home()
+
+		_navigation.go_to(AppRoutes.HOME)
 		return
 
 	_set_error(result.message)
+
+func go_to_register() -> void:
+	_navigation.go_to(AppRoutes.REGISTER)

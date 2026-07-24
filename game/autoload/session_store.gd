@@ -1,25 +1,12 @@
 extends Node
 
-## ============================================================================
-## Signals
-## ============================================================================
-
 signal session_started(user: User)
 signal session_ended
 signal session_changed
 
-
-## ============================================================================
-## State
-## ============================================================================
-
 var _current_user: User = null
 var _access_token: String = ""
 
-
-## ============================================================================
-## Session
-## ============================================================================
 
 func start_session(user: User, access_token: String) -> void:
 	_current_user = user
@@ -35,10 +22,6 @@ func end_session() -> void:
 	session_ended.emit()
 	session_changed.emit()
 
-
-## ============================================================================
-## Queries
-## ============================================================================
 
 func is_authenticated() -> bool:
 	return _current_user != null and not _access_token.is_empty()
@@ -60,10 +43,9 @@ func get_token() -> String:
 	return _access_token
 
 
-## ============================================================================
-## Internal
-## ============================================================================
-
 func _clear_session() -> void:
 	_current_user = null
 	_access_token = ""
+
+func has_session() -> bool:
+	return has_user() and has_token()

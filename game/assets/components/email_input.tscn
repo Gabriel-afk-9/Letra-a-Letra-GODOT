@@ -2,7 +2,7 @@
 
 [ext_resource type="StyleBox" uid="uid://dl6uwr3dmjcd3" path="res://assets/styles/input/input_default.tres" id="1_1hhny"]
 [ext_resource type="Texture2D" uid="uid://dqs86ekigl3gn" path="res://assets/images/icons/email.svg" id="2_cdn0j"]
-[ext_resource type="Script" uid="uid://bg7inir6k7k6m" path="res://scripts/animation/animated_input.gd" id="2_gwde0"]
+[ext_resource type="Script" uid="uid://bg7inir6k7k6m" path="res://shared/animation/animated_input.gd" id="2_gwde0"]
 
 [node name="EmailInput" type="LineEdit" unique_id=145490928]
 custom_minimum_size = Vector2(200, 55)
