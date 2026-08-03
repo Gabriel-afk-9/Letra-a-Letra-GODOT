@@ -255,7 +255,7 @@ script = ExtResource("16_xtv2u")
 
 [connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn" to="." method="_on_play_btn_pressed"]
 [connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/RoomBtn" to="." method="_on_room_btn_pressed"]
-[connection signal="pressed" from="MarginContainer/MainLayout/ExitButton" to="." method="_on_exit_button_pressed"]
 [connection signal="pressed" from="MarginContainer/MainLayout/ExitButton" to="." method="_on_logout_button_pressed"]
+[connection signal="pressed" from="MarginContainer/MainLayout/ExitButton" to="." method="_on_exit_button_pressed"]
 
 [editable path="MarginContainer/MainLayout/Header/ProfileCard"]

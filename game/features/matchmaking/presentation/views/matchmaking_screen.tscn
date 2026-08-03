@@ -1,0 +1,135 @@
+[gd_scene format=3 uid="uid://btbouudv4uxmi"]
+
+[ext_resource type="Script" uid="uid://nruv4gkpcs4c" path="res://features/matchmaking/presentation/views/matchmaking_screen.gd" id="1_d6mlc"]
+[ext_resource type="Texture2D" uid="uid://rjss1wkcijtv" path="res://assets/images/backgrounds/buscando.png" id="2_xpmfm"]
+[ext_resource type="PackedScene" uid="uid://bntemtnyff4y2" path="res://assets/components/new/PlayerCard.tscn" id="3_xpmfm"]
+[ext_resource type="StyleBox" uid="uid://b6nvfx34smt17" path="res://assets/styles/buttons/red_button_default.tres" id="4_1kjjo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf5fn"]
+bg_color = Color(0.7019608, 0.7019608, 0.7019608, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+corner_detail = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g4v7s"]
+bg_color = Color(0.88235295, 0.94509804, 1, 0.6745098)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.9297146, 0.9297147, 0.9297146, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 4
+
+[node name="MatchmakingScreen" type="Control" unique_id=1921060327]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_d6mlc")
+
+[node name="BackgroundMatchmaking" type="TextureRect" parent="." unique_id=882961004]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_xpmfm")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=2011866132]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="MainLayout" type="VBoxContainer" parent="MarginContainer" unique_id=1438633677]
+layout_mode = 2
+theme_override_constants/separation = -30
+alignment = 1
+
+[node name="TitleBadge" type="PanelContainer" parent="MarginContainer/MainLayout" unique_id=1843712116]
+z_index = 1
+custom_minimum_size = Vector2(250, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_yf5fn")
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/MainLayout/TitleBadge" unique_id=1397472618]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
+text_overrun_behavior = 1
+
+[node name="CenterPanel" type="PanelContainer" parent="MarginContainer/MainLayout" unique_id=41862356]
+custom_minimum_size = Vector2(280, 450)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_g4v7s")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MainLayout/CenterPanel" unique_id=1847788817]
+layout_mode = 2
+
+[node name="ContentVBox" type="VBoxContainer" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer" unique_id=1880850060]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=422687645]
+layout_mode = 2
+
+[node name="TopSpacer" type="Control" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=1938216401]
+layout_mode = 2
+size_flags_vertical = 2
+
+[node name="PlayersContainer" type="VBoxContainer" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=1316976862]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="MyPlayerCard" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayersContainer" unique_id=1864201814 instance=ExtResource("3_xpmfm")]
+layout_mode = 2
+
+[node name="VSLabel" type="Label" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayersContainer" unique_id=365480686]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 40
+text = "VS"
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 1
+
+[node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayersContainer" unique_id=852180188 instance=ExtResource("3_xpmfm")]
+layout_mode = 2
+
+[node name="BottomSpacer" type="Control" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=98928491]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CancelButton" type="Button" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=1919069521]
+layout_mode = 2
+theme_override_styles/normal = ExtResource("4_1kjjo")

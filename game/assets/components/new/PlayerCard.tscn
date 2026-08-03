@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://bntemtnyff4y2"]
+
+[ext_resource type="Script" uid="uid://moavy8u3crh7" path="res://assets/scripts/player_card.gd" id="1_ddx8p"]
+[ext_resource type="StyleBox" uid="uid://c16yoywnoyft6" path="res://assets/styles/player_color/azul.tres" id="1_ea4aa"]
+
+[node name="PlayerCard" type="PanelContainer" unique_id=1864201814]
+custom_minimum_size = Vector2(210, 80)
+custom_maximum_size = Vector2(320, -1)
+offset_right = 242.0
+offset_bottom = 88.0
+theme_override_styles/panel = ExtResource("1_ea4aa")
+script = ExtResource("1_ddx8p")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=2109669189]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1064369548]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="AvatarTexture" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=1771369700]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Spinner" type="AnimatedSprite2D" parent="MarginContainer/HBoxContainer/AvatarTexture" unique_id=1232436622]
+unique_name_in_owner = true
+
+[node name="NameBackground" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=384194472]
+custom_minimum_size = Vector2(0, 10)
+custom_maximum_size = Vector2(120, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NicknameLabel" type="Label" parent="MarginContainer/HBoxContainer/NameBackground" unique_id=1086036629]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 12
+text = "SSSSSSSSSSSSSSS"
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 1

@@ -30,8 +30,6 @@ func execute(
 	if not register_result.success:
 		return register_result
 
-	# O backend gera o nickname; register_result.user já vem com ele
-	# (mas SEM email, porque a API nunca devolve email em nenhum endpoint).
 	var real_nickname: String = ""
 	if register_result.user != null:
 		real_nickname = register_result.user.nickname
@@ -47,8 +45,6 @@ func execute(
 			"Cadastro realizado! Mas houve um problema ao entrar automaticamente, tente fazer login."
 		)
 
-	# Login só devolve id + token — montamos o User completo aqui,
-	# combinando o que cada resposta realmente tem.
 	var final_user := User.new(
 		login_result.user.id,
 		email,

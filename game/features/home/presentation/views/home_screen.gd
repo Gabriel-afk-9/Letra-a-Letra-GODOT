@@ -41,12 +41,10 @@ func _on_room_btn_pressed() -> void:
 
 
 func _on_avatar_pressed() -> void:
-	# TODO: abrir galeria/modal de avatar (fora de escopo por enquanto)
 	pass
 
 
 func _on_settings_pressed() -> void:
-	# TODO: abrir tela de configurações (fora de escopo por enquanto)
 	pass
 
 
