@@ -27,4 +27,4 @@ func is_valid() -> bool:
 	return not email.is_empty()
 
 func copy() -> User:
-	return User.new(id, nickname, email)
+	return User.new(id, email, nickname)

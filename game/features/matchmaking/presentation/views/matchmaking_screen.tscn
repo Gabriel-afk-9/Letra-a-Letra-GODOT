@@ -3,7 +3,8 @@
 [ext_resource type="Script" uid="uid://nruv4gkpcs4c" path="res://features/matchmaking/presentation/views/matchmaking_screen.gd" id="1_d6mlc"]
 [ext_resource type="Texture2D" uid="uid://rjss1wkcijtv" path="res://assets/images/backgrounds/buscando.png" id="2_xpmfm"]
 [ext_resource type="PackedScene" uid="uid://bntemtnyff4y2" path="res://assets/components/new/PlayerCard.tscn" id="3_xpmfm"]
-[ext_resource type="StyleBox" uid="uid://b6nvfx34smt17" path="res://assets/styles/buttons/red_button_default.tres" id="4_1kjjo"]
+[ext_resource type="PackedScene" uid="uid://l1kbqj1dqb4h" path="res://assets/components/exit_button.tscn" id="4_78wdp"]
+[ext_resource type="Script" uid="uid://cskmnchpbve6w" path="res://assets/scripts/exit_button.gd" id="5_n0x0i"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf5fn"]
 bg_color = Color(0.7019608, 0.7019608, 0.7019608, 1)
@@ -92,6 +93,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_g4v7s")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MainLayout/CenterPanel" unique_id=1847788817]
 layout_mode = 2
+theme_override_constants/margin_bottom = 20
 
 [node name="ContentVBox" type="VBoxContainer" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer" unique_id=1880850060]
 layout_mode = 2
@@ -130,6 +132,15 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CancelButton" type="Button" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=1919069521]
+[node name="CancelButton" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=2144671933 instance=ExtResource("4_78wdp")]
+custom_minimum_size = Vector2(140, 0)
+custom_maximum_size = Vector2(150, -1)
 layout_mode = 2
-theme_override_styles/normal = ExtResource("4_1kjjo")
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 16
+text = "CANCELAR"
+script = ExtResource("5_n0x0i")
+
+[connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/CancelButton" to="." method="_on_cancel_button_pressed"]

@@ -24,8 +24,8 @@ func load_user() -> void:
 
 	user_loaded.emit(user)
 
-#func go_to_matchmaking() -> void:
-	#_navigation.go_to(AppRoutes.MATCHMAKING)
+func go_to_matchmaking() -> void:
+	_navigation.go_to(AppRoutes.MATCHMAKING)
 
 #func go_to_room() -> void:
 	#_navigation.go_to(AppRoutes.ROOM)

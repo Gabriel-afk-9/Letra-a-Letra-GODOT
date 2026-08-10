@@ -6,6 +6,7 @@ class_name LoginMapper
 static func from_response_body(
 	body: Dictionary
 ) -> LoginResult:
+	print(body)
 
 	var success: bool = body.get("success", false) as bool
 

@@ -3,7 +3,7 @@ extends RefCounted
 class_name MatchmakingRepository
 
 
-signal searching_started
+signal searching
 signal search_cancelled
 signal match_found(event: MatchmakingFoundEvent)
 signal error(message: String)
