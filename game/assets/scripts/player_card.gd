@@ -8,7 +8,7 @@ enum CardState { CLEAR, SEARCHING, LOCAL, OPPONENT }
 @export var searching_style: StyleBoxFlat
 
 @onready var avatar: TextureRect = %AvatarTexture
-@onready var spinner: Control = %Spinner
+@onready var spinner: AnimatedSprite2D = %Spinner
 @onready var nickname: Label = %NicknameLabel
 
 var _current_state: CardState = CardState.CLEAR

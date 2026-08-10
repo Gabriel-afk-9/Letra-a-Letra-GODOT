@@ -1,38 +1,31 @@
 extends RefCounted
-
 class_name LoginUseCase
 
-
-var _repository: RemoteLoginRepository
+var _login_repository: LoginRepository
+var _user_repository: UserRepository
 var _session_store
 
-
 func _init(
-	repository: RemoteLoginRepository,
+	login_repository: LoginRepository,
+	user_repository: UserRepository,
 	session_store
 ) -> void:
-
-	_repository = repository
+	_login_repository = login_repository
+	_user_repository = user_repository
 	_session_store = session_store
 
+func execute(email: String, password: String) -> LoginResult:
+	var request := LoginRequest.new(email, password)
+	var result: LoginResult = await _login_repository.login(request)
 
-func execute(
-	email: String,
-	password: String
-) -> LoginResult:
+	if not result.success:
+		return result
 
-	var request := LoginRequest.new(
-		email,
-		password
-	)
+	var user := await _user_repository.fetch_current_user(result.access_token)
 
-	var result: LoginResult = await _repository.login(request)
+	if user == null:
+		return LoginResult.new(false, null, "", "Unable to load user profile.")
 
-	if result.success:
+	_session_store.start_session(user, result.access_token)
 
-		_session_store.start_session(
-			result.user,
-			result.access_token
-		)
-
-	return result
+	return LoginResult.new(true, user, result.access_token, result.message)

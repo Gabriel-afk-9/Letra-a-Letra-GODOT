@@ -19,7 +19,6 @@ config/icon="uid://dy1fknvv40pop"
 [autoload]
 
 GlobalEnvironment="*uid://d13gwhhypaefa"
-WebSocketManager="*uid://b7uf81xbmhkjg"
 ServiceRegistry="*uid://h4t2ukucfhrk"
 SessionStore="*uid://b3xp5k2p2c4ip"
 
@@ -30,7 +29,6 @@ window/size/viewport_height=640
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=1
->>>>>>>31aac2a7d74da1880b6f54e41f1e2942051af48dwindow/stretch/mode="canvas_items"
 
 [gui]
 

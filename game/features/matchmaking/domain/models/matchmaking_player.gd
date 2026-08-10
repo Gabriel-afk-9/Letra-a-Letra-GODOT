@@ -27,15 +27,15 @@ static func from_dictionary(
 	var raw_id = data.get("id")
 	var raw_nickname = data.get("nickname")
 
-	var id := ""
+	var player_id := ""
 	if raw_id != null:
-		id = str(raw_id)
+		player_id = str(raw_id)
 
-	var nickname := ""
+	var player_nickname := ""
 	if raw_nickname != null:
-		nickname = str(raw_nickname)
+		player_nickname = str(raw_nickname)
 
 	return MatchmakingPlayer.new(
-		id,
-		nickname
+		player_id,
+		player_nickname
 	)
