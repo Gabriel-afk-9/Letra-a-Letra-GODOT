@@ -30,16 +30,17 @@ corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vsnff"]
-bg_color = Color(18.892157, 18.892157, 18.892157, 0.56078434)
+bg_color = Color(18.892, 18.892, 18.892, 0.561)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
-border_color = Color(1.0409964, 1.0409964, 1.0409964, 1)
-corner_radius_top_left = 30
-corner_radius_top_right = 30
-corner_radius_bottom_right = 30
-corner_radius_bottom_left = 30
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+corner_detail = 20
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_fq8fn"]
 load_path = "res://.godot/imported/lal.png-da2ffcf1a11c2456d04a7e63f1f1bab1.ctex"
@@ -255,8 +256,8 @@ theme_override_font_sizes/font_size = 16
 text = "SAIR"
 script = ExtResource("16_xtv2u")
 
-[connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn" to="." method="_on_play_btn_pressed"]
 [connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn" to="." method="_navigate_to_matchmaking"]
+[connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn" to="." method="_on_play_btn_pressed"]
 [connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/RoomBtn" to="." method="_on_room_btn_pressed"]
 [connection signal="pressed" from="MarginContainer/MainLayout/ExitButton" to="." method="_on_logout_button_pressed"]
 [connection signal="pressed" from="MarginContainer/MainLayout/ExitButton" to="." method="_on_exit_button_pressed"]

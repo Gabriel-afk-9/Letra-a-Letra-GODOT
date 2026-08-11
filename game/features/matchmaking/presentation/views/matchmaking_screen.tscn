@@ -4,10 +4,13 @@
 [ext_resource type="Texture2D" uid="uid://rjss1wkcijtv" path="res://assets/images/backgrounds/buscando.png" id="2_xpmfm"]
 [ext_resource type="PackedScene" uid="uid://bntemtnyff4y2" path="res://assets/components/new/PlayerCard.tscn" id="3_xpmfm"]
 [ext_resource type="PackedScene" uid="uid://l1kbqj1dqb4h" path="res://assets/components/exit_button.tscn" id="4_78wdp"]
+[ext_resource type="StyleBox" uid="uid://c16yoywnoyft6" path="res://assets/styles/player_color/azul.tres" id="4_f07jv"]
+[ext_resource type="StyleBox" uid="uid://dxdcv60l8cgah" path="res://assets/styles/player_color/orange.tres" id="5_2n4b4"]
 [ext_resource type="Script" uid="uid://cskmnchpbve6w" path="res://assets/scripts/exit_button.gd" id="5_n0x0i"]
+[ext_resource type="StyleBox" uid="uid://xspcjx3u8mci" path="res://assets/styles/player_color/cinza.tres" id="6_nntng"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf5fn"]
-bg_color = Color(0.7019608, 0.7019608, 0.7019608, 1)
+bg_color = Color(0.8980392, 0.49803922, 0.1254902, 1)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
@@ -25,12 +28,12 @@ border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
-border_color = Color(0.9297146, 0.9297147, 0.9297146, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-corner_detail = 4
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+corner_detail = 20
 
 [node name="MatchmakingScreen" type="Control" unique_id=1921060327]
 layout_mode = 3
@@ -81,8 +84,9 @@ custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 12
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 23
+text = "PARTIDA RÁPIDA"
 horizontal_alignment = 1
 text_overrun_behavior = 1
 
@@ -98,12 +102,22 @@ theme_override_constants/margin_bottom = 20
 [node name="ContentVBox" type="VBoxContainer" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer" unique_id=1880850060]
 layout_mode = 2
 
-[node name="StatusLabel" type="Label" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=422687645]
-layout_mode = 2
-
 [node name="TopSpacer" type="Control" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=1938216401]
 layout_mode = 2
-size_flags_vertical = 2
+size_flags_vertical = 3
+
+[node name="StatusLabel" type="Label" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=422687645]
+layout_mode = 2
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "swswsws"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="TopSpacer2" type="Control" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=1525117252]
+custom_maximum_size = Vector2(0, 5)
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="PlayersContainer" type="VBoxContainer" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=1316976862]
 layout_mode = 2
@@ -112,6 +126,9 @@ alignment = 1
 
 [node name="MyPlayerCard" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayersContainer" unique_id=1864201814 instance=ExtResource("3_xpmfm")]
 layout_mode = 2
+local_style = ExtResource("4_f07jv")
+opponent_style = ExtResource("5_2n4b4")
+searching_style = ExtResource("6_nntng")
 
 [node name="VSLabel" type="Label" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayersContainer" unique_id=365480686]
 custom_minimum_size = Vector2(90, 0)
@@ -127,6 +144,9 @@ text_overrun_behavior = 1
 
 [node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayersContainer" unique_id=852180188 instance=ExtResource("3_xpmfm")]
 layout_mode = 2
+local_style = ExtResource("4_f07jv")
+opponent_style = ExtResource("5_2n4b4")
+searching_style = ExtResource("6_nntng")
 
 [node name="BottomSpacer" type="Control" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=98928491]
 layout_mode = 2

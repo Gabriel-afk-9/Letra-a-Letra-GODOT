@@ -20,7 +20,6 @@ func _init(websocket: WebSocketClient, current_user_provider: CurrentUserProvide
 	_websocket.disconnected.connect(_on_disconnected)
 
 
-
 # Public API
 
 func start_search() -> void:
