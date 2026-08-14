@@ -1,7 +1,7 @@
 extends Control
 
 
-@onready var profile_card: ProfileCard = $MarginContainer/MainLayout/Header/ProfileCard
+@onready var player_card: PlayerCard = $MarginContainer/MainLayout/Header/PlayerCard
 @onready var setting_btn: Button = $MarginContainer/MainLayout/Header/SettingBtn
 @onready var play_btn: Button = $MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn
 @onready var room_btn: Button = $MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/RoomBtn
@@ -21,7 +21,7 @@ func _connect_view_model() -> void:
 	_view_model.error_changed.connect(_on_error_changed)
 
 func _on_user_loaded(user: User) -> void:
-	profile_card.setup(user.nickname)
+	player_card.show_local(user.nickname)
 
 func _on_loading_changed(is_loading: bool) -> void:
 	exit_btn.disabled = is_loading
