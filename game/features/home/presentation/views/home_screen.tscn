@@ -2,8 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cdaar7k8dj5rc" path="res://features/home/presentation/views/home_screen.gd" id="1_xtv2u"]
 [ext_resource type="Texture2D" uid="uid://ckoyn5cjw0v60" path="res://assets/images/backgrounds/home.png" id="2_6ks1k"]
-[ext_resource type="PackedScene" uid="uid://mye5xoekljxw" path="res://assets/components/profile_card.tscn" id="3_urxju"]
-[ext_resource type="Script" uid="uid://51s1le2pfu5b" path="res://assets/scripts/profile_card.gd" id="4_xtv2u"]
+[ext_resource type="PackedScene" uid="uid://bntemtnyff4y2" path="res://assets/components/new/PlayerCard.tscn" id="3_tjqq1"]
 [ext_resource type="Texture2D" uid="uid://c6bifs6l41y1w" path="res://assets/images/icons/config-icon.png" id="5_8nrkw"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="6_0kgn5"]
 [ext_resource type="StyleBox" uid="uid://7mj12tjr63g1" path="res://assets/styles/buttons/orange_button_home.tres" id="7_mq5ll"]
@@ -18,23 +17,23 @@
 [ext_resource type="Script" uid="uid://cskmnchpbve6w" path="res://assets/scripts/exit_button.gd" id="16_xtv2u"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sotyy"]
-bg_color = Color(1, 1, 1, 0.6313726)
+bg_color = Color(0, 0.38178387, 0.626266, 0.8352941)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vsnff"]
-bg_color = Color(18.892, 18.892, 18.892, 0.561)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
+bg_color = Color(18.903103, 18.903103, 18.903103, 0.83137256)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
 border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 25
 corner_radius_top_right = 25
@@ -85,14 +84,23 @@ alignment = 1
 [node name="Header" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=870841090]
 layout_mode = 2
 
-[node name="ProfileCard" parent="MarginContainer/MainLayout/Header" unique_id=799552687 instance=ExtResource("3_urxju")]
-custom_minimum_size = Vector2(180, 60)
+[node name="PlayerCard" parent="MarginContainer/MainLayout/Header" unique_id=1864201814 instance=ExtResource("3_tjqq1")]
+custom_minimum_size = Vector2(230, 80)
 layout_mode = 2
-script = ExtResource("4_xtv2u")
 
-[node name="NickLabel" parent="MarginContainer/MainLayout/Header/ProfileCard/MarginContainer/ProfileHBox" parent_id_path=PackedInt32Array(799552687, 2132814062) index="1" unique_id=1513860728]
-theme_override_font_sizes/font_size = 12
-text_overrun_behavior = 1
+[node name="AvatarFrame" parent="MarginContainer/MainLayout/Header/PlayerCard/MarginContainer/HBoxContainer" parent_id_path=PackedInt32Array(1864201814, 1064369548) index="0" unique_id=213700357]
+custom_minimum_size = Vector2(60, 60)
+clip_contents = true
+
+[node name="AvatarTexture" parent="MarginContainer/MainLayout/Header/PlayerCard/MarginContainer/HBoxContainer/AvatarFrame" index="0" unique_id=1771369700]
+custom_minimum_size = Vector2(60, 40)
+clip_contents = true
+
+[node name="NameBackground" parent="MarginContainer/MainLayout/Header/PlayerCard/MarginContainer/HBoxContainer" parent_id_path=PackedInt32Array(1864201814, 1064369548) index="1" unique_id=384194472]
+custom_minimum_size = Vector2(100, 10)
+
+[node name="NicknameLabel" parent="MarginContainer/MainLayout/Header/PlayerCard/MarginContainer/HBoxContainer/NameBackground" index="0" unique_id=1086036629]
+theme_override_font_sizes/font_size = 13
 
 [node name="Spacer" type="Control" parent="MarginContainer/MainLayout/Header" unique_id=593550104]
 layout_mode = 2
@@ -262,4 +270,4 @@ script = ExtResource("16_xtv2u")
 [connection signal="pressed" from="MarginContainer/MainLayout/ExitButton" to="." method="_on_logout_button_pressed"]
 [connection signal="pressed" from="MarginContainer/MainLayout/ExitButton" to="." method="_on_exit_button_pressed"]
 
-[editable path="MarginContainer/MainLayout/Header/ProfileCard"]
+[editable path="MarginContainer/MainLayout/Header/PlayerCard"]

@@ -11,6 +11,7 @@ static func bind(view: MatchmakingScreen) -> void:
 	)
 
 	var navigation := ServiceRegistry.navigation_service()
-	var view_model := MatchmakingViewModel.new(usecase, navigation)
+	var pending_navigation_payload := ServiceRegistry.pending_navigation_payload()
+	var view_model := MatchmakingViewModel.new(usecase, navigation, pending_navigation_payload)
 
 	view.setup(view_model)

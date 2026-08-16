@@ -109,7 +109,7 @@ func _handle_closed_state() -> void:
 
 func _process_packet() -> void:
 	var text := _socket.get_packet().get_string_from_utf8()
-	AppLogger.debug("WS IN -> " + text)
+	#AppLogger.debug("WS IN -> " + text)
 
 	var decoded: Variant = JsonSerializer.decode(text)
 
