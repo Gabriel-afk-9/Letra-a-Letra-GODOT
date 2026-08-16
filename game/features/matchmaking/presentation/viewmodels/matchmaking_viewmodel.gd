@@ -15,11 +15,13 @@ signal opponent_found(event: MatchmakingFoundEvent)
 var _state: MatchmakingState = MatchmakingState.IDLE
 var _usecase: MatchmakingUseCase
 var _navigation: NavigationService
+var _pending_navigation_payload: PendingNavigationPayload
 
 
-func _init(usecase: MatchmakingUseCase, navigation: NavigationService) -> void:
+func _init(usecase: MatchmakingUseCase, navigation: NavigationService, pending_navigation_payload: PendingNavigationPayload) -> void:
 	_usecase = usecase
 	_navigation = navigation
+	_pending_navigation_payload = pending_navigation_payload
 
 	_usecase.searching.connect(_on_searching)
 	_usecase.search_cancelled.connect(_on_search_cancelled)
@@ -74,4 +76,5 @@ func _on_match_found(event: MatchmakingFoundEvent) -> void:
 		return
 
 	_set_state(MatchmakingState.CONNECTING)
+	_pending_navigation_payload.set_payload(event)
 	_navigation.go_to(AppRoutes.GAME)

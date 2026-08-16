@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://baf1iwy43ll3o"]
+
+[ext_resource type="Texture2D" uid="uid://np7c3tdw6y6s" path="res://assets/images/backgrounds/partida.png" id="1_0o6i8"]
+[ext_resource type="Script" uid="uid://ul113dm7j71v" path="res://features/game/presentation/views/game_screen.gd" id="1_1u5yy"]
+[ext_resource type="PackedScene" uid="uid://bntemtnyff4y2" path="res://assets/components/new/PlayerCard.tscn" id="2_1u5yy"]
+
+[node name="GameScreen" type="Control" unique_id=1142999134]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1u5yy")
+
+[node name="BackgroundGame" type="TextureRect" parent="." unique_id=1400359882]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_0o6i8")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=22574436]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="MainLayout" type="VBoxContainer" parent="MarginContainer" unique_id=324246635]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=2024784364]
+layout_mode = 2
+
+[node name="MyPlayerCard" parent="MarginContainer/MainLayout/TopBar" unique_id=1864201814 instance=ExtResource("2_1u5yy")]
+layout_mode = 2
+
+[node name="TurnLabel" type="Label" parent="MarginContainer/MainLayout/TopBar" unique_id=1595885812]
+layout_mode = 2
+
+[node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/TopBar" unique_id=585961095 instance=ExtResource("2_1u5yy")]
+layout_mode = 2
+
+[node name="WordsContainer" type="HFlowContainer" parent="MarginContainer/MainLayout" unique_id=380998444]
+layout_mode = 2
+
+[node name="BoardGrid" type="GridContainer" parent="MarginContainer/MainLayout" unique_id=1938968061]
+layout_mode = 2
+
+[node name="BottomBar" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=1690820103]
+layout_mode = 2
+
+[node name="LeaveButton" type="Button" parent="MarginContainer/MainLayout/BottomBar" unique_id=633011315]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="MarginContainer/MainLayout/BottomBar" unique_id=2005904587]
+layout_mode = 2
