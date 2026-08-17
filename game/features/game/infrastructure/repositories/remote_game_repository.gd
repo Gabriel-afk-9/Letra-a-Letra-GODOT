@@ -180,6 +180,7 @@ func _clear_game_state() -> void:
 	_pending_turn_player_id = ""
 	_pending_turn_ends_at = ""
 	_game_id = ""
+	_websocket.disconnect_socket()
 
 
 # Internal — ciclo de vida do socket

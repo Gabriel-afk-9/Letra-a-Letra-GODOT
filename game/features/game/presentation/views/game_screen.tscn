@@ -4,6 +4,13 @@
 [ext_resource type="Script" uid="uid://ul113dm7j71v" path="res://features/game/presentation/views/game_screen.gd" id="1_1u5yy"]
 [ext_resource type="PackedScene" uid="uid://bntemtnyff4y2" path="res://assets/components/new/PlayerCard.tscn" id="2_1u5yy"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inv"]
+bg_color = Color(0, 0, 0, 0.25)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [node name="GameScreen" type="Control" unique_id=1142999134]
 layout_mode = 3
 anchors_preset = 15
@@ -44,13 +51,32 @@ alignment = 1
 [node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=2024784364]
 layout_mode = 2
 
-[node name="MyPlayerCard" parent="MarginContainer/MainLayout/TopBar" unique_id=1864201814 instance=ExtResource("2_1u5yy")]
+[node name="PlayerCardHost" type="Control" parent="MarginContainer/MainLayout/TopBar" unique_id=1702989824]
 layout_mode = 2
+
+[node name="MyPlayerCard" parent="MarginContainer/MainLayout/TopBar/PlayerCardHost" unique_id=1864201814 instance=ExtResource("2_1u5yy")]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 254.0
+
+[node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/TopBar/PlayerCardHost" unique_id=585961095 instance=ExtResource("2_1u5yy")]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 254.0
+
+[node name="CountLabel" type="Label" parent="MarginContainer/MainLayout/TopBar/PlayerCardHost" unique_id=1188332679]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 60.0
+offset_right = 254.0
+offset_bottom = 78.0
+theme_override_colors/font_color = Color(1, 1, 1, 0.9)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
 
 [node name="TurnLabel" type="Label" parent="MarginContainer/MainLayout/TopBar" unique_id=1595885812]
-layout_mode = 2
-
-[node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/TopBar" unique_id=585961095 instance=ExtResource("2_1u5yy")]
 layout_mode = 2
 
 [node name="WordsContainer" type="HFlowContainer" parent="MarginContainer/MainLayout" unique_id=380998444]
@@ -58,6 +84,15 @@ layout_mode = 2
 
 [node name="BoardGrid" type="GridContainer" parent="MarginContainer/MainLayout" unique_id=1938968061]
 layout_mode = 2
+
+[node name="InventoryPanel" type="PanelContainer" parent="MarginContainer/MainLayout" unique_id=1784113057]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_inv")
+
+[node name="InventoryContainer" type="HBoxContainer" parent="MarginContainer/MainLayout/InventoryPanel" unique_id=1204559819]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
 
 [node name="BottomBar" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=1690820103]
 layout_mode = 2
