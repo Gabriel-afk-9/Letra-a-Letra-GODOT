@@ -24,6 +24,8 @@ const COLOR_TEXT_NEUTRAL := Color(0.45, 0.45, 0.45, 1)
 @onready var board_grid: GridContainer = $MarginContainer/MainLayout/BoardGrid
 @onready var leave_button: Button = $MarginContainer/MainLayout/BottomBar/LeaveButton
 @onready var status_label: Label = $MarginContainer/MainLayout/BottomBar/StatusLabel
+@onready var inventory_container: HBoxContainer = $MarginContainer/MainLayout/InventoryPanel/InventoryContainer
+@onready var inventory_count_label: Label = $MarginContainer/MainLayout/TopBar/PlayerCardHost/CountLabel
 
 var _view_model: GameViewModel
 var _cell_buttons: Dictionary = {}
@@ -34,11 +36,17 @@ var _cached_seconds_remaining: float = 0.0
 var _my_nickname := ""
 var _opponent_nickname := ""
 
+var _cached_my_inventory: Array = []
+var _cached_opponent_inventory: Array = []
+var _inventory_slots: Array = []
+var _icon_cache: Dictionary = {}
+
 var _navigation_started: bool = false
 
 
 func _ready() -> void:
 	leave_button.pressed.connect(_on_leave_button_pressed)
+	_build_inventory_slots()
 	GameFactory.bind(self)
 
 
@@ -169,13 +177,84 @@ func _rebuild_words(words: Array) -> void:
 
 
 # Internal — inventário
+#
+# O inventário não vive mais dentro dos PlayerCards: há um único InventoryPanel
+# no MainLayout que exibe o inventário do jogador da vez (mesma separação
+# me/opponent já feita pelo UseCase/ViewModel). A View só cacheia os dois
+# inventários e reage ao turno para escolher qual exibir.
 
 func _on_my_inventory_changed(inventory: Array) -> void:
-	my_player_card.set_inventory(inventory)
+	_cached_my_inventory = inventory
+	_update_inventory_panel()
 
 
 func _on_opponent_inventory_changed(inventory: Array) -> void:
-	opponent_player_card.set_inventory(inventory)
+	_cached_opponent_inventory = inventory
+	_update_inventory_panel()
+
+
+func _update_inventory_panel() -> void:
+	var inventory := _cached_my_inventory if _cached_is_my_turn else _cached_opponent_inventory
+	var occupied := 0
+
+	for index in GamePlayerState.INVENTORY_SIZE:
+		if index >= _inventory_slots.size():
+			continue
+
+		var slot_variant = _inventory_slots[index]
+
+		if not slot_variant is TextureRect:
+			continue
+
+		var slot: TextureRect = slot_variant
+		var power = inventory[index] if index < inventory.size() else null
+
+		if power is GamePower:
+			slot.texture = _power_icon(power.type)
+			occupied += 1
+		else:
+			slot.texture = null
+
+	if occupied > 0:
+		inventory_count_label.text = "● ".repeat(occupied).trim_suffix(" ")
+		inventory_count_label.show()
+	else:
+		inventory_count_label.text = ""
+		inventory_count_label.hide()
+
+
+func _build_inventory_slots() -> void:
+	for index in GamePlayerState.INVENTORY_SIZE:
+		var slot_frame := PanelContainer.new()
+		slot_frame.custom_minimum_size = Vector2(24, 24)
+
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(0, 0, 0, 0.2)
+		style.set_corner_radius_all(4)
+		slot_frame.add_theme_stylebox_override("panel", style)
+
+		var slot_icon := TextureRect.new()
+		slot_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		slot_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		slot_frame.add_child(slot_icon)
+
+		inventory_container.add_child(slot_frame)
+		_inventory_slots.append(slot_icon)
+
+
+func _power_icon(power_type: String) -> Texture2D:
+	if _icon_cache.has(power_type):
+		return _icon_cache[power_type]
+
+	var path = PlayerCard.POWER_ICON_PATHS.get(power_type)
+
+	if path == null:
+		return null
+
+	var texture := load(str(path)) as Texture2D
+	_icon_cache[power_type] = texture
+
+	return texture
 
 
 # Internal — turno
@@ -184,6 +263,7 @@ func _on_turn_state_changed(is_my_turn: bool) -> void:
 	_cached_is_my_turn = is_my_turn
 	_update_player_cards()
 	_update_turn_label()
+	_update_inventory_panel()
 
 
 # Apenas o card do jogador que está com a vez fica visível — o outro é
