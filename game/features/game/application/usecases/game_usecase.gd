@@ -69,12 +69,6 @@ func leave_game() -> void:
 	_repository.leave_game()
 
 
-# Classifica um player_id em relação ao jogador local: "me" (jogador local),
-# "opponent" (oponente) ou "" (desconhecido — ex: célula nunca revelada, sem
-# revelador). A comparação de identidade fica aqui no UseCase, que já guarda o
-# CurrentUserProvider e o _opponent_id desde o start() — a View nunca toca o
-# provider diretamente.
-
 func classify_player(player_id: String) -> String:
 	var user := _current_user_provider.current_user()
 
@@ -130,10 +124,6 @@ func _on_error(error_code: String, cell_x: int, cell_y: int) -> void:
 	action_rejected.emit(error_code, cell_x, cell_y)
 
 
-# game_over unifica três origens do repository: vencedor real, W.O. do oponente
-# (vitória) e remoção por inatividade (derrota). O reason repassa a origem:
-# "WORDS" | "OPPONENT_LEFT" | "INACTIVITY". O MVP legado não rastreava efeitos
-# do oponente — my_effect_event só existe para o jogador local.
 
 func _on_game_over(winner_player_id: String) -> void:
 	var user := _current_user_provider.current_user()

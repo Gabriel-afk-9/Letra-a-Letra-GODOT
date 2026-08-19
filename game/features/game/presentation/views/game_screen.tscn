@@ -11,6 +11,13 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot"]
+bg_color = Color(0, 0, 0, 0.2)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [node name="GameScreen" type="Control" unique_id=1142999134]
 layout_mode = 3
 anchors_preset = 15
@@ -51,30 +58,26 @@ alignment = 1
 [node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=2024784364]
 layout_mode = 2
 
-[node name="PlayerCardHost" type="Control" parent="MarginContainer/MainLayout/TopBar" unique_id=1702989824]
+[node name="TurnCardsRow" type="HBoxContainer" parent="MarginContainer/MainLayout/TopBar" unique_id=1702989824]
 layout_mode = 2
 
-[node name="MyPlayerCard" parent="MarginContainer/MainLayout/TopBar/PlayerCardHost" unique_id=1864201814 instance=ExtResource("2_1u5yy")]
-layout_mode = 0
-offset_left = 4.0
-offset_right = 254.0
+[node name="MyPlayerCard" parent="MarginContainer/MainLayout/TopBar/TurnCardsRow" unique_id=1864201814 instance=ExtResource("2_1u5yy")]
+layout_mode = 2
 
-[node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/TopBar/PlayerCardHost" unique_id=585961095 instance=ExtResource("2_1u5yy")]
-layout_mode = 0
-offset_left = 4.0
-offset_right = 254.0
-
-[node name="CountLabel" type="Label" parent="MarginContainer/MainLayout/TopBar/PlayerCardHost" unique_id=1188332679]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 60.0
-offset_right = 254.0
-offset_bottom = 78.0
+[node name="MyCountLabel" type="Label" parent="MarginContainer/MainLayout/TopBar/TurnCardsRow" unique_id=2088274691]
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 0.9)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 14
-horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/TopBar/TurnCardsRow" unique_id=585961095 instance=ExtResource("2_1u5yy")]
+layout_mode = 2
+
+[node name="OpponentCountLabel" type="Label" parent="MarginContainer/MainLayout/TopBar/TurnCardsRow" unique_id=-795085055]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.9)
+theme_override_font_sizes/font_size = 14
+vertical_alignment = 1
 
 [node name="TurnLabel" type="Label" parent="MarginContainer/MainLayout/TopBar" unique_id=1595885812]
 layout_mode = 2
@@ -93,6 +96,56 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_inv")
 layout_mode = 2
 theme_override_constants/separation = 6
 alignment = 1
+
+[node name="InventorySlot1" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=999503917]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot1" unique_id=1613913038]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InventorySlot2" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=-1580476884]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot2" unique_id=524205495]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InventorySlot3" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=-1801834279]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot3" unique_id=-393139932]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InventorySlot4" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=-334932771]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot4" unique_id=2056103993]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InventorySlot5" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=1177332914]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot5" unique_id=463358725]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="BottomBar" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=1690820103]
 layout_mode = 2

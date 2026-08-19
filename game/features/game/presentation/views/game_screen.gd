@@ -17,15 +17,20 @@ const COLOR_TEXT_DARK := Color(0.15, 0.15, 0.15, 1)
 const COLOR_TEXT_NEUTRAL := Color(0.45, 0.45, 0.45, 1)
 
 
-@onready var my_player_card = $MarginContainer/MainLayout/TopBar/MyPlayerCard
+@onready var my_player_card = $MarginContainer/MainLayout/TopBar/TurnCardsRow/MyPlayerCard
+@onready var my_count_label: Label = $MarginContainer/MainLayout/TopBar/TurnCardsRow/MyCountLabel
+@onready var opponent_player_card = $MarginContainer/MainLayout/TopBar/TurnCardsRow/OpponentPlayerCard
+@onready var opponent_count_label: Label = $MarginContainer/MainLayout/TopBar/TurnCardsRow/OpponentCountLabel
 @onready var turn_label: Label = $MarginContainer/MainLayout/TopBar/TurnLabel
-@onready var opponent_player_card = $MarginContainer/MainLayout/TopBar/OpponentPlayerCard
 @onready var words_container: HFlowContainer = $MarginContainer/MainLayout/WordsContainer
 @onready var board_grid: GridContainer = $MarginContainer/MainLayout/BoardGrid
 @onready var leave_button: Button = $MarginContainer/MainLayout/BottomBar/LeaveButton
 @onready var status_label: Label = $MarginContainer/MainLayout/BottomBar/StatusLabel
-@onready var inventory_container: HBoxContainer = $MarginContainer/MainLayout/InventoryPanel/InventoryContainer
-@onready var inventory_count_label: Label = $MarginContainer/MainLayout/TopBar/PlayerCardHost/CountLabel
+@onready var inventory_slot_1: TextureRect = $MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot1/Icon
+@onready var inventory_slot_2: TextureRect = $MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot2/Icon
+@onready var inventory_slot_3: TextureRect = $MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot3/Icon
+@onready var inventory_slot_4: TextureRect = $MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot4/Icon
+@onready var inventory_slot_5: TextureRect = $MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot5/Icon
 
 var _view_model: GameViewModel
 var _cell_buttons: Dictionary = {}
@@ -46,7 +51,13 @@ var _navigation_started: bool = false
 
 func _ready() -> void:
 	leave_button.pressed.connect(_on_leave_button_pressed)
-	_build_inventory_slots()
+	_inventory_slots = [
+		inventory_slot_1,
+		inventory_slot_2,
+		inventory_slot_3,
+		inventory_slot_4,
+		inventory_slot_5,
+	]
 	GameFactory.bind(self)
 
 
@@ -89,9 +100,7 @@ func _build_board_buttons() -> void:
 			board_grid.add_child(button)
 			_cell_buttons[Vector2i(x, y)] = button
 
-	# Aplica o estilo oculto já na criação: além de pintar o estado inicial,
-	# garante que o StyleBoxFlat do "normal" seja o que define o tamanho mínimo
-	# do botão (sem margens de conteúdo do tema), mantendo a grade compacta.
+
 	for cell_position in _cell_buttons:
 		_apply_cell_style(cell_position)
 
@@ -177,11 +186,6 @@ func _rebuild_words(words: Array) -> void:
 
 
 # Internal — inventário
-#
-# O inventário não vive mais dentro dos PlayerCards: há um único InventoryPanel
-# no MainLayout que exibe o inventário do jogador da vez (mesma separação
-# me/opponent já feita pelo UseCase/ViewModel). A View só cacheia os dois
-# inventários e reage ao turno para escolher qual exibir.
 
 func _on_my_inventory_changed(inventory: Array) -> void:
 	_cached_my_inventory = inventory
@@ -190,13 +194,17 @@ func _on_my_inventory_changed(inventory: Array) -> void:
 
 func _on_opponent_inventory_changed(inventory: Array) -> void:
 	_cached_opponent_inventory = inventory
-	_update_inventory_panel()
+	_update_opponent_count_label()
 
+
+# A barra detalhada de inventário (5 slots grandes) SEMPRE mostra os poderes do
+# jogador local, independentemente de quem está na vez. Já a contagem do
+# oponente (quantidade, não quais) aparece no OpponentCountLabel, ao lado do
+# card dele. Os 5 slots são nós fixos na cena (quantidade fixa e pequena),
+# enquanto tabuleiro (100 células) e palavras (quantidade variável por partida)
+# continuam gerados por código — muitos/variáveis demais para autoria manual.
 
 func _update_inventory_panel() -> void:
-	var inventory := _cached_my_inventory if _cached_is_my_turn else _cached_opponent_inventory
-	var occupied := 0
-
 	for index in GamePlayerState.INVENTORY_SIZE:
 		if index >= _inventory_slots.size():
 			continue
@@ -207,39 +215,37 @@ func _update_inventory_panel() -> void:
 			continue
 
 		var slot: TextureRect = slot_variant
-		var power = inventory[index] if index < inventory.size() else null
+		var power = _cached_my_inventory[index] if index < _cached_my_inventory.size() else null
 
 		if power is GamePower:
 			slot.texture = _power_icon(power.type)
-			occupied += 1
 		else:
 			slot.texture = null
 
+	_update_count_label(my_count_label, _cached_my_inventory)
+
+
+func _update_opponent_count_label() -> void:
+	_update_count_label(opponent_count_label, _cached_opponent_inventory)
+
+
+func _count_occupied(inventory: Array) -> int:
+	var occupied := 0
+
+	for power in inventory:
+		if power is GamePower:
+			occupied += 1
+
+	return occupied
+
+
+func _update_count_label(label: Label, inventory: Array) -> void:
+	var occupied := _count_occupied(inventory)
+
 	if occupied > 0:
-		inventory_count_label.text = "● ".repeat(occupied).trim_suffix(" ")
-		inventory_count_label.show()
+		label.text = "● ".repeat(occupied).trim_suffix(" ")
 	else:
-		inventory_count_label.text = ""
-		inventory_count_label.hide()
-
-
-func _build_inventory_slots() -> void:
-	for index in GamePlayerState.INVENTORY_SIZE:
-		var slot_frame := PanelContainer.new()
-		slot_frame.custom_minimum_size = Vector2(24, 24)
-
-		var style := StyleBoxFlat.new()
-		style.bg_color = Color(0, 0, 0, 0.2)
-		style.set_corner_radius_all(4)
-		slot_frame.add_theme_stylebox_override("panel", style)
-
-		var slot_icon := TextureRect.new()
-		slot_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		slot_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		slot_frame.add_child(slot_icon)
-
-		inventory_container.add_child(slot_frame)
-		_inventory_slots.append(slot_icon)
+		label.text = ""
 
 
 func _power_icon(power_type: String) -> Texture2D:
@@ -266,17 +272,17 @@ func _on_turn_state_changed(is_my_turn: bool) -> void:
 	_update_inventory_panel()
 
 
-# Apenas o card do jogador que está com a vez fica visível — o outro é
-# ocultado via clear() (que chama hide()), liberando o espaço no TopBar.
-# Decisão vem do estado de turno do ViewModel; a View só reage ao sinal.
-
 func _update_player_cards() -> void:
 	if _cached_is_my_turn:
 		my_player_card.show_local(_my_nickname)
+		my_count_label.show()
 		opponent_player_card.clear()
+		opponent_count_label.hide()
 	else:
 		opponent_player_card.show_opponent(_opponent_nickname)
+		opponent_count_label.show()
 		my_player_card.clear()
+		my_count_label.hide()
 
 
 func _on_turn_timer_updated(seconds_remaining: float) -> void:
@@ -316,17 +322,10 @@ func _on_leave_button_pressed() -> void:
 	_navigate_home()
 
 
-# O backend já encerrou a partida (oponente saiu, GAME_OVER ou inatividade).
-# Encerra a Game local e retorna ao fluxo inicial. NÃO envia LEFT_GAME: o
-# evento recebido já representa o encerramento da participação do oponente.
-
 func _on_game_ended(_is_winner: bool, _title: String, _subtitle: String) -> void:
 	leave_button.disabled = true
 	_navigate_home()
 
-
-# Participante B pode receber PARTICIPANT_LEAVE e GAME_OVER em sequência — ambos
-# disparam game_ended. A navegação é guardada para não trocar de cena duas vezes.
 
 func _navigate_home() -> void:
 	if _navigation_started:
