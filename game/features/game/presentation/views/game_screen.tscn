@@ -4,6 +4,13 @@
 [ext_resource type="Script" uid="uid://ul113dm7j71v" path="res://features/game/presentation/views/game_screen.gd" id="1_1u5yy"]
 [ext_resource type="PackedScene" uid="uid://bntemtnyff4y2" path="res://assets/components/new/PlayerCard.tscn" id="2_1u5yy"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dot"]
+bg_color = Color(0.5, 0.5, 0.5, 0.6)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inv"]
 bg_color = Color(0, 0, 0, 0.25)
 corner_radius_top_left = 8
@@ -12,7 +19,12 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot"]
-bg_color = Color(0, 0, 0, 0.2)
+bg_color = Color(0, 0, 0, 0.5)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.15)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -55,32 +67,119 @@ layout_mode = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=2024784364]
+[node name="TopBar" type="VBoxContainer" parent="MarginContainer/MainLayout" unique_id=2024784364]
 layout_mode = 2
 
-[node name="TurnCardsRow" type="HBoxContainer" parent="MarginContainer/MainLayout/TopBar" unique_id=1702989824]
+[node name="CardsCenter" type="CenterContainer" parent="MarginContainer/MainLayout/TopBar" unique_id=1702989824]
 layout_mode = 2
 
-[node name="MyPlayerCard" parent="MarginContainer/MainLayout/TopBar/TurnCardsRow" unique_id=1864201814 instance=ExtResource("2_1u5yy")]
+[node name="MyCardWrapper" type="Control" parent="MarginContainer/MainLayout/TopBar/CardsCenter" unique_id=2088274691]
+custom_minimum_size = Vector2(250, 80)
 layout_mode = 2
 
-[node name="MyCountLabel" type="Label" parent="MarginContainer/MainLayout/TopBar/TurnCardsRow" unique_id=2088274691]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 0.9)
-theme_override_font_sizes/font_size = 14
-vertical_alignment = 1
+[node name="MyPlayerCard" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper" unique_id=1864201814 instance=ExtResource("2_1u5yy")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/TopBar/TurnCardsRow" unique_id=585961095 instance=ExtResource("2_1u5yy")]
+[node name="MyPowerDots" type="HBoxContainer" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper" unique_id=-182516675]
+layout_mode = 0
+offset_top = 65.0
+offset_right = 250.0
+offset_bottom = 75.0
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="Dot1" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=-1190188844]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
+
+[node name="Dot2" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=-575520833]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
+
+[node name="Dot3" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=1775362802]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
+
+[node name="Dot4" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=738907175]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
+
+[node name="Dot5" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=-1727857975]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
+
+[node name="OpponentCardWrapper" type="Control" parent="MarginContainer/MainLayout/TopBar/CardsCenter" unique_id=-795085055]
+custom_minimum_size = Vector2(250, 80)
 layout_mode = 2
 
-[node name="OpponentCountLabel" type="Label" parent="MarginContainer/MainLayout/TopBar/TurnCardsRow" unique_id=-795085055]
+[node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper" unique_id=585961095 instance=ExtResource("2_1u5yy")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OpponentPowerDots" type="HBoxContainer" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper" unique_id=1198898847]
+layout_mode = 0
+offset_top = 65.0
+offset_right = 250.0
+offset_bottom = 75.0
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="Dot1" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=-1169063031]
+custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 0.9)
-theme_override_font_sizes/font_size = 14
-vertical_alignment = 1
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
+
+[node name="Dot2" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=1953396278]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
+
+[node name="Dot3" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=188751706]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
+
+[node name="Dot4" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=1844588448]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
+
+[node name="Dot5" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=312299825]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
 
 [node name="TurnLabel" type="Label" parent="MarginContainer/MainLayout/TopBar" unique_id=1595885812]
 layout_mode = 2
+horizontal_alignment = 1
 
 [node name="WordsContainer" type="HFlowContainer" parent="MarginContainer/MainLayout" unique_id=380998444]
 layout_mode = 2

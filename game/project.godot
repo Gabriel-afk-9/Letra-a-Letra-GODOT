@@ -27,7 +27,7 @@ SessionStore="*uid://b3xp5k2p2c4ip"
 window/size/viewport_width=360
 window/size/viewport_height=640
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+window/stretch/aspect="keep"
 window/handheld/orientation=1
 
 [editor_plugins]

@@ -3,12 +3,12 @@ class_name GameScreen
 
 
 const BOARD_SIZE := 10
-const CELL_SIZE := Vector2(22, 22)
+const CELL_SIZE := Vector2(30, 30)
 
 const COLOR_BLUE := Color(0.101960786, 0.57254905, 0.9019608, 1)
 const COLOR_ORANGE := Color(0.9529412, 0.52156866, 0.09411765, 1)
 
-const CELL_BORDER_WIDTH := 1
+const CELL_BORDER_WIDTH := 2
 const CELL_CORNER_RADIUS := 5
 
 const COLOR_WHITE := Color(1, 1, 1, 1)
@@ -17,10 +17,10 @@ const COLOR_TEXT_DARK := Color(0.15, 0.15, 0.15, 1)
 const COLOR_TEXT_NEUTRAL := Color(0.45, 0.45, 0.45, 1)
 
 
-@onready var my_player_card = $MarginContainer/MainLayout/TopBar/TurnCardsRow/MyPlayerCard
-@onready var my_count_label: Label = $MarginContainer/MainLayout/TopBar/TurnCardsRow/MyCountLabel
-@onready var opponent_player_card = $MarginContainer/MainLayout/TopBar/TurnCardsRow/OpponentPlayerCard
-@onready var opponent_count_label: Label = $MarginContainer/MainLayout/TopBar/TurnCardsRow/OpponentCountLabel
+@onready var my_player_card = $MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPlayerCard
+@onready var my_power_dots: HBoxContainer = $MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots
+@onready var opponent_player_card = $MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPlayerCard
+@onready var opponent_power_dots: HBoxContainer = $MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots
 @onready var turn_label: Label = $MarginContainer/MainLayout/TopBar/TurnLabel
 @onready var words_container: HFlowContainer = $MarginContainer/MainLayout/WordsContainer
 @onready var board_grid: GridContainer = $MarginContainer/MainLayout/BoardGrid
@@ -44,6 +44,8 @@ var _opponent_nickname := ""
 var _cached_my_inventory: Array = []
 var _cached_opponent_inventory: Array = []
 var _inventory_slots: Array = []
+var _my_dots: Array = []
+var _opponent_dots: Array = []
 var _icon_cache: Dictionary = {}
 
 var _navigation_started: bool = false
@@ -58,6 +60,8 @@ func _ready() -> void:
 		inventory_slot_4,
 		inventory_slot_5,
 	]
+	_my_dots = my_power_dots.get_children()
+	_opponent_dots = opponent_power_dots.get_children()
 	GameFactory.bind(self)
 
 
@@ -90,12 +94,13 @@ func _build_board_buttons() -> void:
 	board_grid.columns = BOARD_SIZE
 	board_grid.add_theme_constant_override("h_separation", 1)
 	board_grid.add_theme_constant_override("v_separation", 1)
+	board_grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 
 	for x in BOARD_SIZE:
 		for y in BOARD_SIZE:
 			var button := Button.new()
 			button.custom_minimum_size = CELL_SIZE
-			button.add_theme_font_size_override("font_size", 10)
+			button.add_theme_font_size_override("font_size", 12)
 			button.pressed.connect(_on_cell_pressed.bind(x, y))
 			board_grid.add_child(button)
 			_cell_buttons[Vector2i(x, y)] = button
@@ -165,11 +170,22 @@ func _rebuild_words(words: Array) -> void:
 	for child in words_container.get_children():
 		child.queue_free()
 
+	var pill_style := StyleBoxFlat.new()
+	pill_style.bg_color = Color(0, 0, 0, 0.4)
+	pill_style.set_corner_radius_all(8)
+	pill_style.content_margin_left = 6
+	pill_style.content_margin_right = 6
+	pill_style.content_margin_top = 2
+	pill_style.content_margin_bottom = 2
+
 	for word_variant in words:
 		if not word_variant is GameWord:
 			continue
 
 		var word: GameWord = word_variant
+		var pill := PanelContainer.new()
+		pill.add_theme_stylebox_override("panel", pill_style)
+
 		var label := Label.new()
 		label.text = word.word
 		label.add_theme_font_size_override("font_size", 16)
@@ -182,7 +198,8 @@ func _rebuild_words(words: Array) -> void:
 			_:
 				label.add_theme_color_override("font_color", COLOR_TEXT_NEUTRAL)
 
-		words_container.add_child(label)
+		pill.add_child(label)
+		words_container.add_child(pill)
 
 
 # Internal — inventário
@@ -194,15 +211,15 @@ func _on_my_inventory_changed(inventory: Array) -> void:
 
 func _on_opponent_inventory_changed(inventory: Array) -> void:
 	_cached_opponent_inventory = inventory
-	_update_opponent_count_label()
+	_update_opponent_power_dots()
 
 
 # A barra detalhada de inventário (5 slots grandes) SEMPRE mostra os poderes do
 # jogador local, independentemente de quem está na vez. Já a contagem do
-# oponente (quantidade, não quais) aparece no OpponentCountLabel, ao lado do
-# card dele. Os 5 slots são nós fixos na cena (quantidade fixa e pequena),
-# enquanto tabuleiro (100 células) e palavras (quantidade variável por partida)
-# continuam gerados por código — muitos/variáveis demais para autoria manual.
+# oponente (quantidade, não quais) aparece nas bolinhas sobre o card dele.
+# Os 5 slots são nós fixos na cena (quantidade fixa e pequena), enquanto
+# tabuleiro (100 células) e palavras (quantidade variável por partida) continuam
+# gerados por código — muitos/variáveis demais para autoria manual.
 
 func _update_inventory_panel() -> void:
 	for index in GamePlayerState.INVENTORY_SIZE:
@@ -215,18 +232,32 @@ func _update_inventory_panel() -> void:
 			continue
 
 		var slot: TextureRect = slot_variant
+		var frame := slot.get_parent() as PanelContainer
 		var power = _cached_my_inventory[index] if index < _cached_my_inventory.size() else null
+
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(0, 0, 0, 0.5)
+		style.set_corner_radius_all(4)
+		style.border_width_left = 2
+		style.border_width_top = 2
+		style.border_width_right = 2
+		style.border_width_bottom = 2
 
 		if power is GamePower:
 			slot.texture = _power_icon(power.type)
+			style.border_color = Color(1, 1, 1, 0.6)
 		else:
 			slot.texture = null
+			style.border_color = Color(1, 1, 1, 0.15)
 
-	_update_count_label(my_count_label, _cached_my_inventory)
+		if frame:
+			frame.add_theme_stylebox_override("panel", style)
+
+	_update_power_dots(_my_dots, _cached_my_inventory)
 
 
-func _update_opponent_count_label() -> void:
-	_update_count_label(opponent_count_label, _cached_opponent_inventory)
+func _update_opponent_power_dots() -> void:
+	_update_power_dots(_opponent_dots, _cached_opponent_inventory)
 
 
 func _count_occupied(inventory: Array) -> int:
@@ -239,13 +270,25 @@ func _count_occupied(inventory: Array) -> int:
 	return occupied
 
 
-func _update_count_label(label: Label, inventory: Array) -> void:
+func _update_power_dots(dots: Array, inventory: Array) -> void:
 	var occupied := _count_occupied(inventory)
 
-	if occupied > 0:
-		label.text = "● ".repeat(occupied).trim_suffix(" ")
-	else:
-		label.text = ""
+	for index in dots.size():
+		var dot_variant = dots[index]
+
+		if not dot_variant is Panel:
+			continue
+
+		var dot: Panel = dot_variant
+		var style := StyleBoxFlat.new()
+		style.set_corner_radius_all(5)
+
+		if index < occupied:
+			style.bg_color = Color(1, 1, 1, 0.95)
+		else:
+			style.bg_color = Color(0.5, 0.5, 0.5, 0.6)
+
+		dot.add_theme_stylebox_override("panel", style)
 
 
 func _power_icon(power_type: String) -> Texture2D:
@@ -275,14 +318,14 @@ func _on_turn_state_changed(is_my_turn: bool) -> void:
 func _update_player_cards() -> void:
 	if _cached_is_my_turn:
 		my_player_card.show_local(_my_nickname)
-		my_count_label.show()
+		my_power_dots.show()
 		opponent_player_card.clear()
-		opponent_count_label.hide()
+		opponent_power_dots.hide()
 	else:
 		opponent_player_card.show_opponent(_opponent_nickname)
-		opponent_count_label.show()
+		opponent_power_dots.show()
 		my_player_card.clear()
-		my_count_label.hide()
+		my_power_dots.hide()
 
 
 func _on_turn_timer_updated(seconds_remaining: float) -> void:
