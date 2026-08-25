@@ -4,7 +4,7 @@ class_name RemoteMatchmakingRepository
 
 const MATCHMAKING_EVENT := "MATCHMAKING_GAME"
 const STATUS_FOUND := "FOUNDED"
-const DEFAULT_GAME_MODE := "INSANE"
+const DEFAULT_GAME_MODE := "CATACLYSM"
 
 var _websocket: WebSocketClient
 var _current_user_provider: CurrentUserProvider
@@ -131,6 +131,6 @@ func _find_opponent(players: Array, my_id: String) -> MatchmakingPlayer:
 		if id == my_id:
 			continue
 
-		return MatchmakingPlayer.from_dictionary(player)
+		return MatchmakingPlayerMapper.to_domain(player)
 
 	return null

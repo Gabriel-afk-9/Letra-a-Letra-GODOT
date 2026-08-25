@@ -17,48 +17,71 @@ main/factory/            # static Factory.create() -> ViewModel, wires all depen
 application/usecases/    # business logic
 domain/                  # requests, results, models
 infrastructure/repositories/  # RemoteXxxRepository (HTTP/WS)
-infrastructure/mappers/  # API response <-> domain
+infrastructure/mappers/  # API response <-> domain (recommended for new features;
+                         # game/ and matchmaking/ do NOT have it yet — they parse inline)
 presentation/views/      # <name>_screen.tscn + <name>_screen.gd
 presentation/viewmodels/ # extends BaseViewModel
 ```
 
+- Mapper caveat: neither `game/` nor `matchmaking/` has an `infrastructure/mappers/` folder today. JSON → domain parsing is done inline in the domain models (`from_dictionary`/`from_array`) and inside the remote repositories. Prefer adding a real mapper layer for new features, but follow the existing inline style when touching these two.
+
 - Dependency rule: view → viewmodel → usecase → repository. Repository interfaces (contracts) live in `core/application/contracts/` (e.g. `login_repository.gd`) and are `extends`-ed by the remote implementations.
 - **Shared services come only from the `ServiceRegistry` autoload** (`HttpClient`, `WebSocketClient`, `NavigationService`, `UserRepository`, `MatchmakingRepository`). Never instantiate those yourself — features that do are assembled via their factory, e.g. `LoginFactory.create()` in the view's `_ready()`.
 - To add a new screen: build the feature, then register its scene path in `core/presentation/navigation/app_routes.gd` and navigate with `ServiceRegistry.navigation_service().go_to(AppRoutes.X)` (or `NavigationService` injected into the viewmodel).
-- `AppRoutes.GAME` (`features/game/...`) is a **stub — the folder does not exist yet**. The game screen is not implemented.
+- `AppRoutes.GAME` points to `features/game/presentation/views/game_screen.tscn` — implemented; see "Game feature" below.
 - Session state lives in the `SessionStore` autoload; persisted to `user://session.cfg` by `SessionPersistence` (defined in `ServiceRegistry`).
 
 ## Async & code style
 
 - All I/O is `await`-based: repositories `await _http_client.http_post(...)`, usecases `await` repositories, viewmodels `await` usecases and emit `loading_changed` / `error_changed` signals (`BaseViewModel`). Views connect to those signals and never block.
 - `HttpClient` returns `HttpResponse` (`.success`, `.body` Dictionary, `.error_message`). Endpoints are paths relative to `API_BASE_URL` (e.g. `/user/auth`); the Bearer token is attached automatically via `SessionStoreAuthProvider`.
-- WebSocket: `WebSocketClient` exposes signals (`connected`, `disconnected`, `connection_error`, `message_received`) — repositories subscribe in their `_init`. Matchmaking protocol: event `MATCHMAKING_GAME`, status `FOUNDED`, default gameMode `INSANE`; see `RemoteMatchmakingRepository`.
+- WebSocket: `WebSocketClient` exposes signals (`connected`, `disconnected`, `connection_error`, `message_received`) — repositories subscribe in their `_init`. Matchmaking protocol: event `MATCHMAKING_GAME`, status `FOUNDED`, default gameMode `CATACLYSM`; see `RemoteMatchmakingRepository`.
 - Reusable UI components live in `assets/components/*.tscn` (e.g. `PasswordInput.shake()`, error labels with `show_error()`); button styles in `assets/styles/buttons/` are named `<color>_button_<state>` (`orange_button_default/hover/pressed/home`).
 - Tab indentation (Godot default). `* text=auto eol=lf` via `.gitattributes`; `.godot/` is gitignored — never commit it.
-## Game feature (not yet implemented)
+## Game feature (implemented)
 
-`AppRoutes.GAME` points to a scene that doesn't exist yet — `features/game/` needs
-to be scaffolded from scratch following the same layered pattern as `matchmaking/`.
+`features/game/` exists and follows the same layered pattern as `matchmaking/`
+(no mappers layer — parsing is inline):
 
-WS events confirmed via legacy MVP client (`wsEventHandler.js`) and API test flows
-(`matchmaking.flow.js`) — NOT yet implemented in any `.gd` file, treat as reference
-only, re-verify against the live backend before trusting field names:
+```
+application/usecases/game_usecase.gd
+domain/models/            # game_board.gd, game_cell.gd, game_word.gd,
+                          # game_player_state.gd, game_power.gd, game_internal_event.gd
+domain/game_power_catalog.gd   # power metadata: scope GLOBAL/CELL, offensive, usable while frozen
+infrastructure/repositories/remote_game_repository.gd
+main/factory/game_factory.gd   # GameFactory.bind(view) — consumes the MatchmakingFoundEvent navigation payload
+presentation/views/       # game_screen.tscn + game_screen.gd (+ dashed_slot_frame.gd)
+presentation/viewmodels/game_viewmodel.gd
+```
 
-- `PLAYER_ACTION_RESULT` — turn result; `currentTurnPlayerId` and `turnEndsAt` may
-  appear at root OR inside `data` (legacy client checks both: `msg.x || msg.data?.x`)
-- `TURN_EXPIRED` — same currentTurnPlayerId/turnEndsAt shape
-- `GAME_OVER` — `data.winner.id`
-- `PARTICIPANT_LEAVE` / `PARTICIPANT_DISCONNECTED` — opponent left, treat as win by W.O.
-- `REMOVED_BECAUSE_INACTIVITY` — local player kicked for inactivity
+Flow: matchmaking emits `match_found(MatchmakingFoundEvent)` as a navigation payload →
+`GameFactory.bind()` builds usecase + viewmodel → `view.setup(...)` calls
+`RemoteGameRepository.start(game_id)`. The initial board snapshot arrives BEFORE
+`start()` (during matchmaking); the repository buffers it in `_pending_*` fields and
+flushes through the regular signals on `start()` — don't duplicate this mechanism.
+
+WS events handled by `RemoteGameRepository` (confirmed against the backend and the
+legacy MVP client):
+
+- `PLAYER_ACTION_RESULT` / `TURN_EXPIRED` — `currentTurnPlayerId` and `turnEndsAt`
+  may appear at root OR inside `data`; resolved via `_first_string()`, which checks
+  `WebSocketMessage.raw` first, then `data`. No dedicated branch needed: generic
+  handlers run before the event `match`.
+- `GAME_OVER` — `data.winner.id`; repository clears game state afterwards.
+- `PARTICIPANT_LEAVE` / `PARTICIPANT_DISCONNECTED` — opponent left, emitted as
+  win by W.O. (`opponent_disconnected`); repository clears game state.
+- `REMOVED_BECAUSE_INACTIVITY` — local player kicked for inactivity.
 - `ERROR` — `message` field carries an error code string (not just free text),
   e.g. "stepped_on_trap" (with `data.x`/`data.y`), "player_are_immune",
   "player_not_in_game" — client branches on this string, it's not just a display
-  message
+  message.
 
-Board state arrives via `data.board` (shape not yet confirmed).
+Board/inventory state arrives via `data.board` (`GameBoard.from_array`),
+`data.words`, and `data.players[].inventory` (5 fixed slots, each a
+`GamePower{id, type}` or null, parsed by `GamePlayerState.from_dictionary`).
 
 Client sends actions as: `{"type": "PLAYER_ACTION", "gameId": ..., "action": {"type": "REVEAL", "position": {"x": int, "y": int}}}`
 
-`WebSocketMessage.raw` already exists in `core/infrastructure/network/websocket/`
-and gives access to root-level fields beyond `event`/`message`/`data` — use it for
-any of the root-vs-data ambiguity above instead of assuming one or the other.
+`WebSocketMessage.raw` (`core/infrastructure/network/websocket/websocket_message.gd`)
+gives access to root-level fields beyond `event`/`message`/`data` — use it for any
+root-vs-data ambiguity instead of assuming one or the other.

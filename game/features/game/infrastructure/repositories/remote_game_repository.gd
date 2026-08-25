@@ -91,6 +91,17 @@ func use_cell_power(power_id: String, power_type: String, x: int, y: int) -> voi
 	})
 
 
+func use_power_on_cell(power_id: String, power_type: String, x: int, y: int) -> void:
+	_send_action({
+		"type": power_type,
+		"actionId": power_id,
+		"position": {
+			"x": x,
+			"y": y
+		}
+	})
+
+
 func use_global_power(power_id: String, power_type: String, target_id: String) -> void:
 	_send_action({
 		"type": power_type,
@@ -214,7 +225,7 @@ func _on_message_received(message: WebSocketMessage) -> void:
 			_clear_game_state()
 		EVENT_ERROR:
 			_handle_error(message)
-		EVENT_PLAYER_ACTION_RESULT, EVENT_TURN_EXPIRED:
+		EVENT_PLAYER_ACTION_RESULT, EVENT_TURN_EXPIRED: # <--- ADICIONE O EVENTO AQUI
 			pass
 		_:
 			AppLogger.debug("Unhandled websocket event: %s" % message.event)
@@ -242,7 +253,7 @@ func _handle_state_sync(message: WebSocketMessage) -> void:
 		var raw_board = message.data.get("board")
 
 		if raw_board is Array:
-			var board := GameBoard.from_array(raw_board)
+			var board := GameBoardMapper.to_domain(raw_board)
 
 			if _game_id.is_empty():
 				_pending_board = board
@@ -257,7 +268,7 @@ func _handle_state_sync(message: WebSocketMessage) -> void:
 
 			for raw_word in raw_words:
 				if raw_word is Dictionary:
-					parsed_words.append(GameWord.from_dictionary(raw_word))
+					parsed_words.append(GameWordMapper.to_domain(raw_word))
 
 			if _game_id.is_empty():
 				_pending_words = parsed_words
@@ -266,13 +277,14 @@ func _handle_state_sync(message: WebSocketMessage) -> void:
 
 	if message.data.has("players"):
 		var raw_players = message.data.get("players")
-
+		AppLogger.debug("🕵️ RAW PLAYERS DO BACKEND: " + str(raw_players))
+		
 		if raw_players is Array:
 			var parsed_players: Array = []
 
 			for raw_player in raw_players:
 				if raw_player is Dictionary:
-					parsed_players.append(GamePlayerState.from_dictionary(raw_player))
+					parsed_players.append(GamePlayerStateMapper.to_domain(raw_player))
 
 			if _game_id.is_empty():
 				_pending_players = parsed_players
@@ -287,19 +299,8 @@ func _handle_internal_events(message: WebSocketMessage) -> void:
 
 		var event_dict: Dictionary = raw_event
 
-		var raw_event_name = event_dict.get("event")
-		var raw_event_data = event_dict.get("data")
-
-		var parsed_event_name := ""
-		if raw_event_name != null:
-			parsed_event_name = str(raw_event_name)
-
-		var parsed_event_data: Dictionary = {}
-		if raw_event_data is Dictionary:
-			parsed_event_data = raw_event_data
-
 		internal_event_received.emit(
-			GameInternalEvent.from_dictionary(parsed_event_name, parsed_event_data)
+			GameInternalEventMapper.to_domain(event_dict)
 		)
 
 

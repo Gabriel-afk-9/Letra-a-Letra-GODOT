@@ -22,6 +22,7 @@ signal board_changed(board: GameBoard)
 signal words_changed(words: Array)
 signal my_inventory_changed(inventory: Array)
 signal opponent_inventory_changed(inventory: Array)
+signal power_granted(power: GamePower)
 signal turn_state_changed(is_my_turn: bool)
 signal turn_timer_updated(seconds_remaining: float)
 signal action_lock_changed(is_locked: bool)
@@ -31,6 +32,7 @@ signal trap_event_feedback(event_name: String, x: int, y: int)
 signal trap_animation_requested(x: int, y: int)
 signal notification_requested(message: String)
 signal selected_power_changed(power_id: String)
+signal armed_power_changed(power_id: String, power_type: String, scope: String)
 signal game_ended(is_winner: bool, title: String, subtitle: String)
 
 var _usecase: GameUseCase
@@ -70,6 +72,7 @@ func _init(usecase: GameUseCase, navigation: NavigationService) -> void:
 	_usecase.words_updated.connect(_on_words_updated)
 	_usecase.my_inventory_updated.connect(_on_my_inventory_updated)
 	_usecase.opponent_inventory_updated.connect(_on_opponent_inventory_updated)
+	_usecase.power_granted.connect(_on_power_granted)
 	_usecase.turn_changed.connect(_on_turn_changed)
 	_usecase.my_cell_revealed.connect(_on_my_cell_revealed)
 	_usecase.word_found.connect(_on_word_found)
@@ -93,10 +96,12 @@ func on_cell_clicked(x: int, y: int) -> void:
 		return
 
 	if not _armed_power_id.is_empty() and GamePowerCatalog.get_scope(_armed_power_type) == GamePowerCatalog.SCOPE_CELL:
-		_usecase.use_cell_power(_armed_power_id, _armed_power_type, x, y)
+		_usecase.use_power_on_cell(_armed_power_id, _armed_power_type, x, y)
+		# Desarmar após uso
 		_armed_power_id = ""
 		_armed_power_type = ""
 		selected_power_changed.emit("")
+		armed_power_changed.emit("", "", "")
 	else:
 		_usecase.reveal_cell(x, y)
 
@@ -115,12 +120,59 @@ func select_power(power_id: String, power_type: String) -> void:
 	_armed_power_id = power_id
 	_armed_power_type = power_type
 	selected_power_changed.emit(power_id)
+	armed_power_changed.emit(power_id, power_type, GamePowerCatalog.get_scope(power_type))
+
+
+func on_power_clicked(power_id: String) -> void:
+	if _is_action_locked:
+		return
+
+	# Buscar o poder no inventário do jogador local
+	var power: GamePower = null
+	for p in _my_inventory:
+		if p is GamePower and p.id == power_id:
+			power = p
+			break
+
+	if power == null:
+		return
+
+	# Bloqueio: se congelado, só permite poderes que podem ser usados congelado
+	if _is_frozen and not GamePowerCatalog.can_use_while_frozen(power.type):
+		return
+
+	var scope := GamePowerCatalog.get_scope(power.type)
+
+	# GLOBAL agora também apenas arma — o disparo real acontece em
+	# confirm_armed_global_power() (confirmação da View numa próxima etapa).
+	# CELL mantém o comportamento: executa no clique na célula.
+	if _armed_power_id == power_id:
+		clear_selected_power()
+		return
+
+	_armed_power_id = power_id
+	_armed_power_type = power.type
+	selected_power_changed.emit(power_id)
+	armed_power_changed.emit(power_id, power.type, scope)
+
+
+func confirm_armed_global_power() -> void:
+	if _armed_power_id.is_empty():
+		return
+
+	if GamePowerCatalog.get_scope(_armed_power_type) != GamePowerCatalog.SCOPE_GLOBAL:
+		return
+
+	_usecase.use_global_power(_armed_power_id, _armed_power_type)
+	_lock_action()
+	clear_selected_power()
 
 
 func clear_selected_power() -> void:
 	_armed_power_id = ""
 	_armed_power_type = ""
 	selected_power_changed.emit("")
+	armed_power_changed.emit("", "", "")
 
 
 func discard_power(power_id: String) -> void:
@@ -282,6 +334,10 @@ func _on_opponent_inventory_updated(inventory: Array) -> void:
 	opponent_inventory_changed.emit(inventory)
 
 
+func _on_power_granted(power: GamePower) -> void:
+	power_granted.emit(power)
+
+
 # Sem estado a atualizar nesta fase: a View pode reagir depois, se precisar.
 
 func _on_my_cell_revealed() -> void:
@@ -424,6 +480,10 @@ func _on_action_rejected(error_code: String, cell_x: int, cell_y: int) -> void:
 		notification_requested.emit("Ataque bloqueado! O oponente está imune 🛡️")
 	elif error_code == "player_not_in_game":
 		_show_game_over(true, REASON_OPPONENT_LEFT)
+	elif error_code == "the selected cell has already been revealed":
+		# Clique redundante do próprio usuário em célula já revelada —
+		# ignorado sem feedback de erro (a trava já foi liberada acima).
+		pass
 	else:
 		notification_requested.emit("Ação inválida.")
 		AppLogger.debug("GameViewModel: código de erro desconhecido: %s" % error_code)

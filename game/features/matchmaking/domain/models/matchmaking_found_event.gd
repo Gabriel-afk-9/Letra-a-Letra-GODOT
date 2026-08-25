@@ -29,9 +29,4 @@ func to_dictionary() -> Dictionary:
 
 
 static func from_dictionary(data: Dictionary) -> MatchmakingFoundEvent:
-	return MatchmakingFoundEvent.new(
-		str(data.get("game_id", "")),
-		MatchmakingPlayer.from_dictionary(data.get("me", {})),
-		MatchmakingPlayer.from_dictionary(data.get("opponent", {})),
-		str(data.get("current_turn_player_id", ""))
-	)
+	return MatchmakingFoundEventMapper.to_domain(data)

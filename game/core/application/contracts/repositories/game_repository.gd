@@ -27,6 +27,10 @@ func use_cell_power(power_id: String, power_type: String, x: int, y: int) -> voi
 	push_error("GameRepository.use_cell_power() must be implemented.")
 
 
+func use_power_on_cell(power_id: String, power_type: String, x: int, y: int) -> void:
+	push_error("GameRepository.use_power_on_cell() must be implemented.")
+
+
 func use_global_power(power_id: String, power_type: String, target_id: String) -> void:
 	push_error("GameRepository.use_global_power() must be implemented.")
 

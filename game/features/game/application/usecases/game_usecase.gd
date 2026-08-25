@@ -6,6 +6,7 @@ signal board_updated(board: GameBoard)
 signal words_updated(words: Array)
 signal my_inventory_updated(inventory: Array)
 signal opponent_inventory_updated(inventory: Array)
+signal power_granted(power: GamePower)
 signal turn_changed(current_turn_player_id: String, turn_ends_at: String, is_my_turn: bool)
 signal my_cell_revealed
 signal word_found(cells: Array, found_by_player_id: String, is_me: bool)
@@ -18,6 +19,12 @@ signal action_rejected(error_code: String, cell_x: int, cell_y: int)
 var _repository: GameRepository
 var _current_user_provider: CurrentUserProvider
 var _opponent_id: String = ""
+
+# Baseline do inventário local para detecção de poder novo (diff por id,
+# mesma estratégia do MVP legado que comparava serverPowers contra
+# orderedInventory). O primeiro sync apenas popula o baseline.
+var _previous_my_inventory_ids: Dictionary = {}
+var _my_inventory_synced: bool = false
 
 
 func _init(repository: GameRepository, current_user_provider: CurrentUserProvider) -> void:
@@ -49,6 +56,10 @@ func reveal_cell(x: int, y: int) -> void:
 
 func use_cell_power(power_id: String, power_type: String, x: int, y: int) -> void:
 	_repository.use_cell_power(power_id, power_type, x, y)
+
+
+func use_power_on_cell(power_id: String, power_type: String, x: int, y: int) -> void:
+	_repository.use_power_on_cell(power_id, power_type, x, y)
 
 
 func use_global_power(power_id: String, power_type: String) -> void:
@@ -105,8 +116,34 @@ func _on_players_updated(players: Array) -> void:
 
 		if player.player_id == user.id:
 			my_inventory_updated.emit(player.inventory)
+			_emit_power_granted(player.inventory)
 		elif player.player_id == _opponent_id:
 			opponent_inventory_updated.emit(player.inventory)
+
+
+# Compara o inventário recém-sincronizado contra o snapshot anterior (por id
+# do GamePower) e emite power_granted para cada id que não existia antes.
+# my_inventory_updated é emitido ANTES deste sinal: quando a View tratar
+# power_granted, _cached_my_inventory já contém o poder novo e o slot é
+# encontrável.
+func _emit_power_granted(inventory: Array) -> void:
+	var current_ids := {}
+	var new_powers: Array = []
+
+	for power in inventory:
+		if not power is GamePower:
+			continue
+
+		current_ids[power.id] = true
+
+		if _my_inventory_synced and not _previous_my_inventory_ids.has(power.id):
+			new_powers.append(power)
+
+	_previous_my_inventory_ids = current_ids
+	_my_inventory_synced = true
+
+	for power in new_powers:
+		power_granted.emit(power)
 
 
 func _on_turn_updated(current_turn_player_id: String, turn_ends_at: String) -> void:

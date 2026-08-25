@@ -2,6 +2,10 @@ extends Node
 class_name WebSocketClient
 
 
+# Log bruto de toda mensagem WS recebida (aditivo, abaixo dos logs
+# seletivos). Deixe false para silenciar o terminal.
+const DEBUG_RAW_WS := true
+
 signal connected
 signal disconnected
 signal connection_error(message: String)
@@ -109,7 +113,9 @@ func _handle_closed_state() -> void:
 
 func _process_packet() -> void:
 	var text := _socket.get_packet().get_string_from_utf8()
-	#AppLogger.debug("WS IN -> " + text)
+
+	if DEBUG_RAW_WS:
+		AppLogger.debug("WS IN -> " + text)
 
 	var decoded: Variant = JsonSerializer.decode(text)
 

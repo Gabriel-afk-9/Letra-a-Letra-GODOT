@@ -4,33 +4,29 @@ class_name GamePower
 
 var id: String
 var type: String
+# Raridade é opcional: o payload atual do backend (InventoryResponse) só manda
+# {"id", "name"} — se um dia vier "rarity", ela é preservada; caso contrário,
+# cai no fallback da GamePowerCatalog (metadado fixo por tipo, PowerType.java).
+var rarity: String = ""
 
 
 func _init(
 	p_id: String,
-	p_type: String
+	p_type: String,
+	p_rarity: String = ""
 ) -> void:
 	id = p_id
 	type = p_type
+	rarity = p_rarity
 
 
 func to_dictionary() -> Dictionary:
 	return {
 		"id": id,
-		"name": type
+		"name": type,
+		"rarity": rarity
 	}
 
 
 static func from_dictionary(data: Dictionary) -> GamePower:
-	var raw_id = data.get("id")
-	var raw_type = data.get("name")
-
-	var parsed_id := ""
-	if raw_id != null:
-		parsed_id = str(raw_id)
-
-	var parsed_type := ""
-	if raw_type != null:
-		parsed_type = str(raw_type)
-
-	return GamePower.new(parsed_id, parsed_type)
+	return GamePowerMapper.to_domain(data)
