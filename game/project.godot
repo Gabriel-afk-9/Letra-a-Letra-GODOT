@@ -31,7 +31,7 @@ window/handheld/orientation=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/tattomoosa.spinner/plugin.cfg")
+enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/tattomoosa.spinner/plugin.cfg")
 
 [gui]
 
