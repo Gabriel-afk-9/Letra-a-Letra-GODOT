@@ -35,6 +35,10 @@ func use_global_power(power_id: String, power_type: String, target_id: String) -
 	push_error("GameRepository.use_global_power() must be implemented.")
 
 
+func use_self_power(power_id: String, power_type: String) -> void:
+	push_error("GameRepository.use_self_power() must be implemented.")
+
+
 func discard_power(power_id: String) -> void:
 	push_error("GameRepository.discard_power() must be implemented.")
 

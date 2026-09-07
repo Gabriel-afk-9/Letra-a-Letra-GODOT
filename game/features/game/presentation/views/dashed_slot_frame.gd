@@ -5,7 +5,7 @@ extends PanelContainer
 @export var dash_length: float = 6.0
 @export var gap_length: float = 4.0
 @export var border_width: float = 2.0
-@export var corner_radius: float = 6.0
+@export var corner_radius: float = 8.0
 
 
 func _draw() -> void:

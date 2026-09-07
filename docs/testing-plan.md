@@ -1,9 +1,9 @@
 # Plano de Testes — Letra a Letra Godot Client
 
-> **Data:** 2026-09-04
+> **Data:** 2026-09-04 (atualizado 2026-09-06)
 > **Engine:** Godot 4.7, GDScript, `renderer="mobile"` viewport 360x640
 > **Arquitetura:** Clean Architecture + Feature-First (`game/features/<nome>/`)
-> **Estado atual:** 0 testes, 0 linter, 0 CI — validação só via F5
+> **Estado atual:** 82 testes 219 asserts <0.5s GUT 9.7.1 `game/tests/unit` — ver Fase 8; 0 linter, 0 CI
 
 ## 1. Objetivo
 
@@ -71,11 +71,11 @@ Convenção: `extends GutTest`, `func test_*`, AAA, tab indentação, sem `print
 |14 | `test_json_serializer` | roundtrip `{"a":1,"b":[2]}` | `decode(encode(dict))["a"]==1` |
 |15 | `test_websocket_message` | `from_dictionary` ERROR com `data.y` | `event=="ERROR" && data["y"]==1 && raw.has("event")` |
 
-## 6. Fase 2 (próxima)
+## 6. Fase 2 (concluída 2026-09-06)
 
-* `GameViewModel.get_cell_visual_state` com `FakeGameRepository` (claimed vs revealed), `_parse_turn_deadline` trim `Z`, `action_lock` geração.
-* `RemoteGameRepository` buffering `_pending_*` antes de `start(game_id)`, `_first_string` root-vs-data.
-* Contrato WS fixtures `docs/websocket-events-contract.md`.
+* `GameViewModel.get_cell_visual_state` com `FakeGameRepository` (claimed vs revealed), `parse_turn_deadline` trim `Z`, `action_lock` geração — `game/tests/unit/viewmodels/` 23 testes.
+* `RemoteGameRepository` buffering `_pending_*` antes de `start(game_id)`, `_first_string` root-vs-data — `game/tests/unit/integration/test_remote_game_repository_buffering.gd:1` + `infra/test_websocket_first_string.gd:1`.
+* Contrato WS fixtures `docs/websocket-events-contract.md` — `game/tests/unit/integration/test_websocket_contract_fixtures.gd:1` 10 testes + `game/tests/fixtures/*.json`.
 
 ## 7. Execução
 
@@ -90,7 +90,13 @@ CI futuro: `windows-latest` + `godot --headless` step
 
 * 37/37 verdes (15 casos → 37 asserts), <1s, sem `push_error` em `GameRepository` — verificado 2026-09-04: `37 passed` `All tests passed!`
 * Nenhuma alteração em `game/features/game/` (só `tests/` + `addons/gut` + `project.godot` + `.gutconfig.json`)
-* `project.godot` habilita GUT sem quebrar autoloads `GlobalEnvironment/ServiceRegistry/SessionStore`
+* `project.godot` habilita GUT sem quebrar autoloads `GlobalEnvironment/SessionStore/ServiceRegistry` (`game/project.godot:19`)
+
+## 8b. Critérios de Aceite Fase 2/3 (2026-09-06)
+
+* 82/82 verdes 219 asserts <0.5s — Fase 1 37 + Fase 2/3 45 novos (`viewmodels` 23 + `infra` 4 + `integration` 14 + `views` 4)
+* Hardening: `home go_to_room` sem crash (`home_viewmodel.gd:30`), `register` `success=false` sem token (`register_usecase.gd:24`), `WebSocketClient` `disconnected` pós-OPEN (`websocket_client.gd:104`), autoload order fix (`project.godot:19`)
+* Fixtures `game/tests/fixtures/ws_*.json` espelham `docs/websocket-events-contract.md:1` 8 eventos
 
 ## 9. Hardening Futuro
 

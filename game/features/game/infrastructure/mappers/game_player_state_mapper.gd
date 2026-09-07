@@ -32,4 +32,10 @@ static func to_domain(data: Dictionary) -> GamePlayerState:
 		for index in GamePlayerState.INVENTORY_SIZE:
 			parsed_inventory.append(null)
 
-	return GamePlayerState.new(parsed_id, parsed_inventory)
+	var parsed_effects: Array = []
+	var raw_effects = data.get("effects")
+
+	if raw_effects is Array:
+		parsed_effects = (raw_effects as Array).duplicate()
+
+	return GamePlayerState.new(parsed_id, parsed_inventory, parsed_effects)

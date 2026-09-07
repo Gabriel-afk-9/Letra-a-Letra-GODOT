@@ -37,6 +37,9 @@ func _connect_view_model() -> void:
 	if not _view_model.error_changed.is_connected(_on_error_changed):
 		_view_model.error_changed.connect(_on_error_changed)
 
+	if not cancel_button.pressed.is_connected(_on_cancel_button_pressed):
+		cancel_button.pressed.connect(_on_cancel_button_pressed)
+
 
 # Internal — reações a sinais
 
@@ -50,6 +53,17 @@ func _on_opponent_found(event: MatchmakingFoundEvent) -> void:
 
 func _on_error_changed(message: String) -> void:
 	if message.is_empty():
+		return
+
+	if message.to_lower().contains("already in a game"):
+		status_label.text = "Você ainda está em partida. Saindo..."
+		cancel_button.text = "SAIR DA PARTIDA ANTERIOR"
+		cancel_button.show()
+		cancel_button.disabled = false
+		# Desvia o botão de CANCELAR para o force_leave
+		if not cancel_button.pressed.is_connected(_on_force_leave_pressed):
+			cancel_button.pressed.disconnect(_on_cancel_button_pressed)
+			cancel_button.pressed.connect(_on_force_leave_pressed)
 		return
 
 	status_label.text = message
@@ -72,11 +86,13 @@ func _update_ui_for_state(state: MatchmakingViewModel.MatchmakingState) -> void:
 			opponent_player_card.show_searching()
 
 		MatchmakingViewModel.MatchmakingState.FOUND:
-			cancel_button.hide()
+			cancel_button.show()
 			cancel_button.disabled = true
 			status_label.text = "Oponente encontrado!"
 
 		MatchmakingViewModel.MatchmakingState.CONNECTING:
+			cancel_button.show()
+			cancel_button.disabled = true
 			status_label.text = "Iniciando partida..."
 
 		MatchmakingViewModel.MatchmakingState.ERROR:
@@ -91,3 +107,13 @@ func _update_local_player() -> void:
 
 func _on_cancel_button_pressed() -> void:
 	_view_model.cancel_search()
+
+
+func _on_force_leave_pressed() -> void:
+	cancel_button.disabled = true
+	status_label.text = "Saindo da partida anterior..."
+	if cancel_button.pressed.is_connected(_on_force_leave_pressed):
+		cancel_button.pressed.disconnect(_on_force_leave_pressed)
+		cancel_button.pressed.connect(_on_cancel_button_pressed)
+	cancel_button.text = "CANCELAR"
+	_view_model.force_leave_and_retry()

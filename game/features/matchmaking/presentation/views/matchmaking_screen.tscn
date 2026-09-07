@@ -8,6 +8,7 @@
 [ext_resource type="StyleBox" uid="uid://dxdcv60l8cgah" path="res://assets/styles/player_color/orange.tres" id="5_2n4b4"]
 [ext_resource type="Script" uid="uid://cskmnchpbve6w" path="res://assets/scripts/exit_button.gd" id="5_n0x0i"]
 [ext_resource type="StyleBox" uid="uid://xspcjx3u8mci" path="res://assets/styles/player_color/cinza.tres" id="6_nntng"]
+[ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="7_dis"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf5fn"]
 bg_color = Color(0.8980392, 0.49803922, 0.1254902, 1)
@@ -160,6 +161,7 @@ size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 16
+theme_override_styles/disabled = ExtResource("7_dis")
 text = "CANCELAR"
 script = ExtResource("5_n0x0i")
 

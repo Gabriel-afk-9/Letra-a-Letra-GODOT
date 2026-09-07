@@ -7,14 +7,19 @@ const INVENTORY_SIZE := 5
 
 var player_id: String
 var inventory: Array[GamePower]
+# Efeitos ativos vindos do backend (data.players[].effects [{duration}]).
+# Sem tipo no payload atual — presença indica efeito ativo (ex: freeze duration 5).
+var effects: Array = []
 
 
 func _init(
 	p_player_id: String,
-	p_inventory: Array[GamePower] = []
+	p_inventory: Array[GamePower] = [],
+	p_effects: Array = []
 ) -> void:
 	player_id = p_player_id
 	inventory = p_inventory
+	effects = p_effects
 
 
 func to_dictionary() -> Dictionary:
@@ -28,7 +33,8 @@ func to_dictionary() -> Dictionary:
 
 	return {
 		"id": player_id,
-		"inventory": parsed_inventory
+		"inventory": parsed_inventory,
+		"effects": effects.duplicate()
 	}
 
 

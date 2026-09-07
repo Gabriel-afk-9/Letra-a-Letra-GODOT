@@ -10,8 +10,12 @@ static func decode(text: String) -> Dictionary:
 		
 	var json := JSON.new()
 	var error := json.parse(text)
-	
-	if error == OK and typeof(json.data) == TYPE_DICTIONARY:
+
+	if error != OK:
+		AppLogger.debug("[JSON] parse failed: %s" % text.left(200))
+		return {}
+
+	if typeof(json.data) == TYPE_DICTIONARY:
 		return json.data
-		
+
 	return {}

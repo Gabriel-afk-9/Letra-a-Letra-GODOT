@@ -4,7 +4,8 @@
 
 - Godot 4.7 client (GDScript) for "Letra a Letra", a multiplayer word-hunt game. Backend: external Spring Boot API ([Letra-a-Letra-API](https://github.com/Zidan-09/Letra-a-Letra-API)).
 - **The Godot project root is `game/`** — open `game/project.godot` in the editor, not the repo root.
-- No tests, no linters, no CI, no package manager. There is nothing to run besides the game itself: press F5 in the Godot editor. GDScript errors surface only when scenes load at runtime, so verify by actually running the app.
+- Tests: GUT 9.7.1 `game/addons/gut` — 82 tests 219 asserts <0.5s `godot --headless --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests/unit -ginclude_subdirs -gprefix=test_ -gexit` (ou `Project > Tools > GUT > Run All`; Steam sem PATH use caminho completo `C:\Program Files (x86)\Steam\steamapps\common\Godot Engine\godot.windows.opt.tools.64.exe`). GDScript errors also surface via `F5` at runtime.
+- No linters, no CI, no package manager.
 - The backend must be running locally. URLs are hardcoded in `game/core/infrastructure/environment/global_environment.gd`: `API_BASE_URL = "http://127.0.0.1:8080"`, `WS_BASE_URL = "ws://127.0.0.1:8080/ws/game"`. Without it, login/matchmaking fail.
 - Code comments and user-facing strings are PT-BR; identifiers are English. Keep this convention.
 
@@ -17,8 +18,7 @@ main/factory/            # static Factory.create() -> ViewModel, wires all depen
 application/usecases/    # business logic
 domain/                  # requests, results, models
 infrastructure/repositories/  # RemoteXxxRepository (HTTP/WS)
-infrastructure/mappers/  # API response <-> domain (recommended for new features;
-                         # game/ and matchmaking/ do NOT have it yet — they parse inline)
+infrastructure/mappers/  # API response <-> domain (game/ já possui mappers; matchmaking/ ainda parseia inline)
 presentation/views/      # <name>_screen.tscn + <name>_screen.gd
 presentation/viewmodels/ # extends BaseViewModel
 ```
@@ -30,6 +30,7 @@ presentation/viewmodels/ # extends BaseViewModel
 - To add a new screen: build the feature, then register its scene path in `core/presentation/navigation/app_routes.gd` and navigate with `ServiceRegistry.navigation_service().go_to(AppRoutes.X)` (or `NavigationService` injected into the viewmodel).
 - `AppRoutes.GAME` points to `features/game/presentation/views/game_screen.tscn` — implemented; see "Game feature" below.
 - Session state lives in the `SessionStore` autoload; persisted to `user://session.cfg` by `SessionPersistence` (defined in `ServiceRegistry`).
+- Autoload order: `GlobalEnvironment` → `SessionStore` → `ServiceRegistry` (`game/project.godot:19`).
 
 ## Async & code style
 
@@ -41,7 +42,7 @@ presentation/viewmodels/ # extends BaseViewModel
 ## Game feature (implemented)
 
 `features/game/` exists and follows the same layered pattern as `matchmaking/`
-(no mappers layer — parsing is inline):
+(no mappers layer — parsing is inline — `game/` já possui `infrastructure/mappers/` desde Fase 1):
 
 ```
 application/usecases/game_usecase.gd

@@ -8,7 +8,14 @@ const EVENT_GAME_OVER := "GAME_OVER"
 const EVENT_PARTICIPANT_LEAVE := "PARTICIPANT_LEAVE"
 const EVENT_PARTICIPANT_DISCONNECTED := "PARTICIPANT_DISCONNECTED"
 const EVENT_REMOVED_BECAUSE_INACTIVITY := "REMOVED_BECAUSE_INACTIVITY"
+const EVENT_POWER_DISCARDED := "POWER_DISCARDED"
 const EVENT_ERROR := "ERROR"
+
+# Turno provisório quando o backend vira a vez sem mandar deadline
+# (TURN_EXPIRED não traz turnEndsAt): agora + 45s — alinha com a base
+# 45 + 2*events do GameState/DelayQueue do backend. O próximo
+# PLAYER_ACTION_RESULT corrige com o turnEndsAt real.
+const EXPIRED_TURN_FALLBACK_SECONDS := 45
 
 const ACTION_PLAYER_ACTION := "PLAYER_ACTION"
 const ACTION_REVEAL := "REVEAL"
@@ -81,17 +88,12 @@ func reveal_cell(x: int, y: int) -> void:
 
 
 func use_cell_power(power_id: String, power_type: String, x: int, y: int) -> void:
-	_send_action({
-		"type": power_type,
-		"actionId": power_id,
-		"position": {
-			"x": x,
-			"y": y
-		}
-	})
+	# Sprint 4: legado — delega para o caminho único CELL
+	use_power_on_cell(power_id, power_type, x, y)
 
 
 func use_power_on_cell(power_id: String, power_type: String, x: int, y: int) -> void:
+	# CELL (BLOCK/UNBLOCK/TRAP/SPY): actionId + position, sem targetId
 	_send_action({
 		"type": power_type,
 		"actionId": power_id,
@@ -103,10 +105,27 @@ func use_power_on_cell(power_id: String, power_type: String, x: int, y: int) -> 
 
 
 func use_global_power(power_id: String, power_type: String, target_id: String) -> void:
+	# Ofensivos (FREEZE/BLIND) exigem targetId do oponente.
+	# Defesa: se tipo não ofensivo cair aqui por rota legada, omite targetId
+	# para não gerar 500 no backend (SELF só aceita actionId).
+	if GamePowerCatalog.is_offensive(power_type):
+		_send_action({
+			"type": power_type,
+			"actionId": power_id,
+			"targetId": target_id
+		})
+	else:
+		_send_action({
+			"type": power_type,
+			"actionId": power_id
+		})
+
+
+func use_self_power(power_id: String, power_type: String) -> void:
+	# SELF (UNFREEZE/LANTERN/IMMUNITY/DETECT_TRAPS): só actionId, sem targetId nem position
 	_send_action({
 		"type": power_type,
-		"actionId": power_id,
-		"targetId": target_id
+		"actionId": power_id
 	})
 
 
@@ -235,6 +254,24 @@ func _handle_turn_update(message: WebSocketMessage) -> void:
 	var current_turn_player_id := _first_string(message, "currentTurnPlayerId")
 	var turn_ends_at := _first_string(message, "turnEndsAt")
 
+	# DISCARD_POWER responde sem virar o turno (turnEndsAt null): ignorar
+	# sentinelas para não emitir turn_updated inválido e não mexer no relógio.
+	if current_turn_player_id == "null" or current_turn_player_id == "<null>" or current_turn_player_id == "None":
+		current_turn_player_id = ""
+
+	if turn_ends_at == "null" or turn_ends_at == "<null>" or turn_ends_at == "None":
+		turn_ends_at = ""
+
+	# POWER_DISCARDED só atualiza players/board (via _handle_state_sync) —
+	# nunca vira o turno. Sem deadline, não emite turn_updated.
+	if message.event == EVENT_POWER_DISCARDED and turn_ends_at.is_empty():
+		return
+
+	# TURN_EXPIRED vira a vez sem mandar deadline: sintetiza agora + 15s para
+	# o relógio reiniciar. O próximo PLAYER_ACTION_RESULT corrige com o real.
+	if message.event == EVENT_TURN_EXPIRED and turn_ends_at.is_empty() and not current_turn_player_id.is_empty():
+		turn_ends_at = _synthesize_turn_ends_at(EXPIRED_TURN_FALLBACK_SECONDS)
+
 	if current_turn_player_id.is_empty() and turn_ends_at.is_empty():
 		return
 
@@ -277,8 +314,7 @@ func _handle_state_sync(message: WebSocketMessage) -> void:
 
 	if message.data.has("players"):
 		var raw_players = message.data.get("players")
-		AppLogger.debug("🕵️ RAW PLAYERS DO BACKEND: " + str(raw_players))
-		
+
 		if raw_players is Array:
 			var parsed_players: Array = []
 
@@ -338,8 +374,29 @@ func _handle_error(message: WebSocketMessage) -> void:
 	error.emit(error_code, cell_x, cell_y)
 
 
-func _first_string(message: WebSocketMessage, key: String) -> String:
-	if message.has(key):
-		return message.get_string(key)
+# Deadline provisório em ISO-8601 UTC com "Z" (mesmo formato do backend),
+# para o ViewModel reiniciar o countdown sem esperar a próxima jogada.
+func _synthesize_turn_ends_at(seconds_ahead: int) -> String:
+	var deadline_unix := Time.get_unix_time_from_system() + seconds_ahead
+	var datetime_string := Time.get_datetime_string_from_unix_time(deadline_unix, true)
 
-	return str(message.data.get(key, ""))
+	return datetime_string.trim_suffix("Z") + "Z"
+
+
+func _first_string(message: WebSocketMessage, key: String) -> String:
+	# Backend serializa null (ex: turnEndsAt após DISCARD_POWER): str(null)
+	# geraria "null"/"<null>" não-vazio — filtrar para "" em vez disso.
+	if message.has(key):
+		var raw_value = message.raw.get(key)
+
+		if raw_value == null:
+			return ""
+
+		return str(raw_value)
+
+	var data_value = message.data.get(key, "")
+
+	if data_value == null:
+		return ""
+
+	return str(data_value)

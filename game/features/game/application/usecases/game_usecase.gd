@@ -12,6 +12,7 @@ signal my_cell_revealed
 signal word_found(cells: Array, found_by_player_id: String, is_me: bool)
 signal trap_event(event_name: String, x: int, y: int)
 signal my_effect_event(event_name: String)
+signal spy_position_changed(pos: Vector2i, active: bool)
 signal game_over(is_winner: bool, reason: String)
 signal connection_lost(message: String)
 signal action_rejected(error_code: String, cell_x: int, cell_y: int)
@@ -25,6 +26,14 @@ var _opponent_id: String = ""
 # orderedInventory). O primeiro sync apenas popula o baseline.
 var _previous_my_inventory_ids: Dictionary = {}
 var _my_inventory_synced: bool = false
+# Baseline de effects[] para limpar frozen/immune quando o servidor esvazia
+# (ex: PLAYER_UNFREEZE perdido). Primeiro sync só popula baseline.
+var _my_had_effects: bool = false
+var _my_effects_synced: bool = false
+# Fix 1: posição espiada vem em players[].effects[] ({position:{x,y},duration}),
+# não no evento PLAYER_SPIED (data {spiedBy}). Rastrea para emitir o sinal.
+var _my_spy_pos := Vector2i(-1, -1)
+var _my_spy_active: bool = false
 
 
 func _init(repository: GameRepository, current_user_provider: CurrentUserProvider) -> void:
@@ -55,7 +64,8 @@ func reveal_cell(x: int, y: int) -> void:
 
 
 func use_cell_power(power_id: String, power_type: String, x: int, y: int) -> void:
-	_repository.use_cell_power(power_id, power_type, x, y)
+	# Sprint 4: caminho único CELL — delega para use_power_on_cell
+	_repository.use_power_on_cell(power_id, power_type, x, y)
 
 
 func use_power_on_cell(power_id: String, power_type: String, x: int, y: int) -> void:
@@ -63,13 +73,13 @@ func use_power_on_cell(power_id: String, power_type: String, x: int, y: int) -> 
 
 
 func use_global_power(power_id: String, power_type: String) -> void:
-	var target_id := _opponent_id
-
-	if not GamePowerCatalog.is_offensive(power_type):
-		var user := _current_user_provider.current_user()
-		target_id = user.id if user != null else ""
-
-	_repository.use_global_power(power_id, power_type, target_id)
+	# Roteamento por categoria do backend (docs/poderes-e-uso.md:57):
+	# ofensivo FREEZE/BLIND -> actionId + targetId oponente
+	# SELF UNFREEZE/LANTERN/IMMUNITY/DETECT_TRAPS -> só actionId
+	if GamePowerCatalog.is_offensive(power_type):
+		_repository.use_global_power(power_id, power_type, _opponent_id)
+	else:
+		_repository.use_self_power(power_id, power_type)
 
 
 func discard_power(power_id: String) -> void:
@@ -117,6 +127,7 @@ func _on_players_updated(players: Array) -> void:
 		if player.player_id == user.id:
 			my_inventory_updated.emit(player.inventory)
 			_emit_power_granted(player.inventory)
+			_sync_my_effects(player.effects)
 		elif player.player_id == _opponent_id:
 			opponent_inventory_updated.emit(player.inventory)
 
@@ -144,6 +155,61 @@ func _emit_power_granted(inventory: Array) -> void:
 
 	for power in new_powers:
 		power_granted.emit(power)
+
+
+# Sprint 3: effects[] do backend ([{duration}] ou []) como baseline de limpeza.
+# Payload atual não traz tipo, só duração — então só usamos transição
+# tem-efeito -> vazio para limpar frozen/immune locais (idempotente no VM).
+# Nunca marcamos frozen só por effects não-vazio (evita falso-positivo blind).
+# Fix 1: entrada com {position:{x,y}} é o SPY ativo — rastreia a posição para
+# o sinal próprio (expiração silenciosa por duration limpa sozinha).
+func _sync_my_effects(effects: Array) -> void:
+	var has_effects := not effects.is_empty()
+	var spy_pos := Vector2i(-1, -1)
+	var has_spy := false
+
+	for entry in effects:
+		if not entry is Dictionary:
+			continue
+
+		var raw_position = (entry as Dictionary).get("position")
+
+		if not raw_position is Dictionary:
+			continue
+
+		var pos_dict: Dictionary = raw_position
+		var raw_x = pos_dict.get("x")
+		var raw_y = pos_dict.get("y")
+
+		if (raw_x is int or raw_x is float) and (raw_y is int or raw_y is float):
+			spy_pos = Vector2i(int(raw_x), int(raw_y))
+			has_spy = true
+			break
+
+	if not _my_effects_synced:
+		_my_had_effects = has_effects
+		_my_spy_pos = spy_pos
+		_my_spy_active = has_spy
+		_my_effects_synced = true
+
+		if has_spy:
+			spy_position_changed.emit(spy_pos, true)
+
+		return
+
+	if has_spy and (not _my_spy_active or _my_spy_pos != spy_pos):
+		spy_position_changed.emit(spy_pos, true)
+	elif not has_spy and _my_spy_active:
+		spy_position_changed.emit(_my_spy_pos, false)
+
+	_my_spy_pos = spy_pos
+	_my_spy_active = has_spy
+
+	if _my_had_effects and not has_effects:
+		my_effect_event.emit("PLAYER_UNFREEZE")
+		my_effect_event.emit("IMMUNITY_REMOVED")
+
+	_my_had_effects = has_effects
 
 
 func _on_turn_updated(current_turn_player_id: String, turn_ends_at: String) -> void:
@@ -179,7 +245,7 @@ func _on_removed_for_inactivity() -> void:
 
 func _on_internal_event_received(event: GameInternalEvent) -> void:
 	match event.event_name:
-		"TRAP_TRIGGERED", "TRAP_REMOVED", "TRAP_DETECTED":
+		"TRAP_TRIGGERED", "TRAP_REMOVED", "TRAP_DETECTED", "CELL_TRAPPED", "CELL_BLOCKED", "CELL_STILL_BLOCKED", "CELL_UNBLOCKED":
 			trap_event.emit(event.event_name, event.get_cell_x(), event.get_cell_y())
 		"WORD_FOUNDED", "WORD_FOUND":
 			var user := _current_user_provider.current_user()
@@ -189,7 +255,7 @@ func _on_internal_event_received(event: GameInternalEvent) -> void:
 			word_found.emit(event.get_founded_cells(), founded_by, is_me)
 		"CELL_REVEALED":
 			_handle_cell_revealed(event)
-		"PLAYER_BLINDED", "PLAYER_USE_LANTERN", "PLAYER_FROZEN", "PLAYER_UNFREEZE", "PLAYER_USE_IMMUNITY", "IMMUNITY_APPLIED", "IMMUNITY_REMOVED", "TRAPS_DETECTED", "DETECT_TRAPS_REMOVED", "SPY_APPLIED", "SPY_REMOVED":
+		"PLAYER_BLINDED", "PLAYER_USE_LANTERN", "PLAYER_FROZEN", "PLAYER_UNFREEZE", "PLAYER_USE_IMMUNITY", "IMMUNITY_APPLIED", "IMMUNITY_REMOVED", "TRAPS_DETECTED", "DETECT_TRAPS_REMOVED", "SPY_APPLIED", "SPY_REMOVED", "PLAYER_SPIED":
 			_handle_effect_event(event)
 		_:
 			AppLogger.debug("GameUseCase: unhandled internal event: %s" % event.event_name)
@@ -213,3 +279,15 @@ func _handle_effect_event(event: GameInternalEvent) -> void:
 
 	if event.contains_player_id(user.id):
 		my_effect_event.emit(event.event_name)
+
+		# S2 SPY: posição vai em sinal próprio (my_effect_event só carrega nome,
+		# mantido por compat com testes/VM). SPY_REMOVED pode vir sem posição.
+		# Fix 1: backend real manda PLAYER_SPIED com data {spiedBy} sem posição —
+		# a posição chega em players[].effects[] e é rastreada em _sync_my_effects.
+		if event.event_name == "SPY_APPLIED":
+			var pos := event.get_effect_position()
+
+			if pos.x >= 0 and pos.y >= 0:
+				spy_position_changed.emit(pos, true)
+		elif event.event_name == "SPY_REMOVED":
+			spy_position_changed.emit(Vector2i(-1, -1), false)

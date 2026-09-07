@@ -3,8 +3,9 @@ class_name WebSocketClient
 
 
 # Log bruto de toda mensagem WS recebida (aditivo, abaixo dos logs
-# seletivos). Deixe false para silenciar o terminal.
-const DEBUG_RAW_WS := true
+# seletivos). Desligado após fix do timer: reative só para investigar
+# novo bug (liga DEBUG_RAW_WS e o WS IN abaixo).
+const DEBUG_RAW_WS := false
 
 signal connected
 signal disconnected
@@ -14,6 +15,7 @@ signal message_received(message: WebSocketMessage)
 var _socket := WebSocketPeer.new()
 var _auth_provider: AuthProvider
 var _is_connecting: bool = false
+var _was_open: bool = false
 
 
 func _init(auth_provider: AuthProvider) -> void:
@@ -44,7 +46,7 @@ func connect_socket() -> void:
 		connection_error.emit("Authentication required.")
 		return
 
-	var url := "%s?token=%s" % [GlobalEnvironment.WS_BASE_URL, token]
+	var url := "%s?token=%s" % [GlobalEnvironment.ws_base_url(), token]
 
 	AppLogger.info("Connecting websocket...")
 	var error := _socket.connect_to_url(url)
@@ -96,12 +98,19 @@ func _handle_open_state() -> void:
 		_is_connecting = false
 		AppLogger.info("WebSocket connected successfully.")
 		connected.emit()
+	_was_open = true
 
 	while _socket.get_available_packet_count() > 0:
 		_process_packet()
 
 
 func _handle_closed_state() -> void:
+	if _was_open:
+		_was_open = false
+		_is_connecting = false
+		AppLogger.info("WebSocket closed.")
+		disconnected.emit()
+		return
 	if _is_connecting:
 		_is_connecting = false
 		AppLogger.error("WebSocket connection closed or failed.")
@@ -133,7 +142,7 @@ func _process_packet() -> void:
 
 	var message := WebSocketMessage.from_dictionary(body)
 
-	if not message.event.is_empty():
-		AppLogger.debug("WS EVENT -> " + message.event)
+	# Removido WS EVENT duplicado: RemoteGameRepository já loga
+	# "[GAME] received event=" compacto por mensagem.
 
 	message_received.emit(message)

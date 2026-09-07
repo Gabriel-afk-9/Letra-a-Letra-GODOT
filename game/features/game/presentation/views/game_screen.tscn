@@ -7,23 +7,32 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dot"]
 bg_color = Color(0.5, 0.5, 0.5, 0.6)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inv_panel"]
 content_margin_left = 8.0
-content_margin_top = 8.0
+content_margin_top = 12.0
 content_margin_right = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0, 0, 0, 0.85)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-shadow_color = Color(0.1, 0.1, 0.1, 1)
-shadow_size = 3
+content_margin_bottom = 12.0
+bg_color = Color(0.08, 0.08, 0.08, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.25, 0.25, 0.25, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0)
 
 [node name="GameScreen" type="Control" unique_id=1142999134]
 layout_mode = 3
@@ -69,7 +78,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="MyCardWrapper" type="Control" parent="MarginContainer/MainLayout/TopBar/CardsCenter" unique_id=2088274691]
-custom_minimum_size = Vector2(250, 80)
+custom_minimum_size = Vector2(220, 70)
 layout_mode = 2
 
 [node name="MyPlayerCard" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper" unique_id=1864201814 instance=ExtResource("2_1u5yy")]
@@ -84,44 +93,44 @@ grow_vertical = 2
 
 [node name="MyPowerDots" type="HBoxContainer" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper" unique_id=-182516675]
 layout_mode = 0
-offset_top = 65.0
-offset_right = 250.0
-offset_bottom = 75.0
-theme_override_constants/separation = 4
-alignment = 1
+offset_top = 50.0
+offset_right = 210.0
+offset_bottom = 66.0
+theme_override_constants/separation = 6
+alignment = 2
 
 [node name="Dot1" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=-1190188844]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
 
 [node name="Dot2" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=-575520833]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
 
 [node name="Dot3" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=1775362802]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
 
 [node name="Dot4" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=738907175]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
 
 [node name="Dot5" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=-1727857975]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
 
 [node name="OpponentCardWrapper" type="Control" parent="MarginContainer/MainLayout/TopBar/CardsCenter" unique_id=-795085055]
-custom_minimum_size = Vector2(250, 80)
+custom_minimum_size = Vector2(220, 70)
 layout_mode = 2
 
 [node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper" unique_id=585961095 instance=ExtResource("2_1u5yy")]
@@ -136,38 +145,38 @@ grow_vertical = 2
 
 [node name="OpponentPowerDots" type="HBoxContainer" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper" unique_id=1198898847]
 layout_mode = 0
-offset_top = 65.0
-offset_right = 250.0
-offset_bottom = 75.0
-theme_override_constants/separation = 4
-alignment = 1
+offset_top = 50.0
+offset_right = 210.0
+offset_bottom = 66.0
+theme_override_constants/separation = 6
+alignment = 2
 
 [node name="Dot1" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=-1169063031]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
 
 [node name="Dot2" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=1953396278]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
 
 [node name="Dot3" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=188751706]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
 
 [node name="Dot4" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=1844588448]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
 
 [node name="Dot5" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=312299825]
-custom_minimum_size = Vector2(10, 10)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
@@ -182,17 +191,25 @@ layout_mode = 2
 [node name="BoardGrid" type="GridContainer" parent="MarginContainer/MainLayout" unique_id=1938968061]
 layout_mode = 2
 
+[node name="StatusLabel" type="Label" parent="MarginContainer/MainLayout" unique_id=2005904587]
+visible = false
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
 [node name="InventoryPanel" type="PanelContainer" parent="MarginContainer/MainLayout" unique_id=1784113057]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_inv_panel")
 
 [node name="InventoryContainer" type="HBoxContainer" parent="MarginContainer/MainLayout/InventoryPanel" unique_id=1204559819]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 alignment = 1
 
 [node name="InventorySlot1" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=999503917]
-custom_minimum_size = Vector2(36, 36)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 
 [node name="Icon" type="TextureButton" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot1" unique_id=1613913038]
@@ -200,7 +217,7 @@ layout_mode = 2
 stretch_mode = 5
 
 [node name="InventorySlot2" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=-1580476884]
-custom_minimum_size = Vector2(36, 36)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 
 [node name="Icon" type="TextureButton" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot2" unique_id=524205495]
@@ -208,7 +225,7 @@ layout_mode = 2
 stretch_mode = 5
 
 [node name="InventorySlot3" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=-1801834279]
-custom_minimum_size = Vector2(36, 36)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 
 [node name="Icon" type="TextureButton" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot3" unique_id=-393139932]
@@ -216,7 +233,7 @@ layout_mode = 2
 stretch_mode = 5
 
 [node name="InventorySlot4" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=-334932771]
-custom_minimum_size = Vector2(36, 36)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 
 [node name="Icon" type="TextureButton" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot4" unique_id=2056103993]
@@ -224,7 +241,7 @@ layout_mode = 2
 stretch_mode = 5
 
 [node name="InventorySlot5" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=1177332914]
-custom_minimum_size = Vector2(36, 36)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 
 [node name="Icon" type="TextureButton" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot5" unique_id=463358725]
@@ -232,21 +249,28 @@ layout_mode = 2
 stretch_mode = 5
 
 [node name="BottomBar" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=1690820103]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="LeaveButton" type="Button" parent="MarginContainer/MainLayout/BottomBar" unique_id=633011315]
-custom_minimum_size = Vector2(140, 0)
-custom_maximum_size = Vector2(150, -1)
-layout_mode = 2
-size_flags_horizontal = 4
+[node name="TopBarLeaveButton" type="Button" parent="." unique_id=633011318]
+z_index = 10
+custom_minimum_size = Vector2(20, 16)
+custom_maximum_size = Vector2(50, -1)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -92.0
+offset_top = 44.0
+offset_right = -4.0
+offset_bottom = 84.0
+grow_horizontal = 0
+size_flags_horizontal = 0
+size_flags_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 16
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = ExtResource("4_fiugi")
 theme_override_styles/pressed = ExtResource("4_fiugi")
 theme_override_styles/hover = ExtResource("4_fiugi")
-text = "SAIR"
-
-[node name="StatusLabel" type="Label" parent="MarginContainer/MainLayout/BottomBar" unique_id=2005904587]
-layout_mode = 2

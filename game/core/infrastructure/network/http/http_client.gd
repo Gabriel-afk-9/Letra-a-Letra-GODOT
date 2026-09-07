@@ -121,7 +121,7 @@ func _build_payload(body: Dictionary) -> String:
 
 func _build_url(endpoint: String) -> String:
 	return "%s%s" % [
-		GlobalEnvironment.API_BASE_URL,
+		GlobalEnvironment.api_base_url(),
 		endpoint
 	]
 
@@ -160,6 +160,7 @@ func _parse_json(text: String) -> Dictionary:
 	var json := JSON.new()
 
 	if json.parse(text) != OK:
+		AppLogger.debug("[HTTP] JSON parse failed: %s" % text.left(200))
 		return {}
 
 	if json.data is Dictionary:
