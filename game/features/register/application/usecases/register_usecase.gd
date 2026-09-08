@@ -22,7 +22,7 @@ func execute(email: String, password: String, nickname: String = "") -> Register
 
 	if not login_result.success:
 		return RegisterResult.new(
-			true,
+			false,
 			register_result.user,
 			"",
 			"Cadastro realizado! Mas houve um problema ao entrar automaticamente, tente fazer login."

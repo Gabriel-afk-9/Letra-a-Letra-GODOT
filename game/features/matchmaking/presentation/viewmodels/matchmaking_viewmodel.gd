@@ -29,7 +29,6 @@ func _init(usecase: MatchmakingUseCase, navigation: NavigationService, pending_n
 	_usecase.error.connect(_on_error)
 
 
-# Public API
 
 func state() -> MatchmakingState:
 	return _state
@@ -46,8 +45,21 @@ func start_search() -> void:
 func cancel_search() -> void:
 	_usecase.cancel_search()
 
+func force_leave_and_retry() -> void:
+	var game_repo: GameRepository = ServiceRegistry.game_repository()
+	game_repo.leave_game()
+	_clear_error()
+	_set_state(MatchmakingState.IDLE)
+	await (Engine.get_main_loop() as SceneTree).create_timer(0.6).timeout
+	start_search()
 
-# Internal
+func is_already_in_game_error() -> bool:
+	var msg: String = error_message()
+	if msg.is_empty():
+		return false
+	return msg.to_lower().contains("already in a game")
+
+
 
 func _set_state(new_state: MatchmakingState) -> void:
 	if _state == new_state:

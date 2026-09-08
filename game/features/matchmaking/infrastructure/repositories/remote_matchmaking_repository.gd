@@ -4,7 +4,7 @@ class_name RemoteMatchmakingRepository
 
 const MATCHMAKING_EVENT := "MATCHMAKING_GAME"
 const STATUS_FOUND := "FOUNDED"
-const DEFAULT_GAME_MODE := "INSANE"
+const DEFAULT_GAME_MODE := "CATACLYSM"
 
 var _websocket: WebSocketClient
 var _current_user_provider: CurrentUserProvider
@@ -20,7 +20,6 @@ func _init(websocket: WebSocketClient, current_user_provider: CurrentUserProvide
 	_websocket.disconnected.connect(_on_disconnected)
 
 
-# Public API
 
 func start_search() -> void:
 	if _websocket.is_socket_connected():
@@ -36,7 +35,6 @@ func cancel_search() -> void:
 
 
 
-# Internal — ciclo de vida do socket
 
 func _on_connected() -> void:
 	AppLogger.info("Connected to matchmaking server.")
@@ -56,7 +54,6 @@ func _on_connection_error(message: String) -> void:
 
 
 
-# Internal — mensagens recebidas
 
 func _on_message_received(message: WebSocketMessage) -> void:
 	match message.event:
@@ -131,6 +128,6 @@ func _find_opponent(players: Array, my_id: String) -> MatchmakingPlayer:
 		if id == my_id:
 			continue
 
-		return MatchmakingPlayer.from_dictionary(player)
+		return MatchmakingPlayerMapper.to_domain(player)
 
 	return null

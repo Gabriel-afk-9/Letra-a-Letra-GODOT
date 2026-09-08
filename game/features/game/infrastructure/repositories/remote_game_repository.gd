@@ -8,7 +8,10 @@ const EVENT_GAME_OVER := "GAME_OVER"
 const EVENT_PARTICIPANT_LEAVE := "PARTICIPANT_LEAVE"
 const EVENT_PARTICIPANT_DISCONNECTED := "PARTICIPANT_DISCONNECTED"
 const EVENT_REMOVED_BECAUSE_INACTIVITY := "REMOVED_BECAUSE_INACTIVITY"
+const EVENT_POWER_DISCARDED := "POWER_DISCARDED"
 const EVENT_ERROR := "ERROR"
+
+const EXPIRED_TURN_FALLBACK_SECONDS := 45
 
 const ACTION_PLAYER_ACTION := "PLAYER_ACTION"
 const ACTION_REVEAL := "REVEAL"
@@ -21,12 +24,6 @@ var _current_user_provider: CurrentUserProvider
 var _game_id: String = ""
 var _leave_started: bool = false
 
-# Estado inicial da partida. O backend envia o snapshot (board, palavras,
-# players com inventário e turno) no momento do matchmaking — ANTES de o
-# game_id ser setado pelo start(). Como _handle_turn_update/_handle_state_sync
-# descartavam mensagens com game_id vazio, o estado inicial era perdido e a UI
-# só "acordava" após o primeiro clique. Guardamos aqui o último snapshot e o
-# reemitimos no start(), reaproveitando exatamente os mesmos sinais.
 var _pending_board: GameBoard = null
 var _pending_words: Array = []
 var _pending_players: Array = []
@@ -81,6 +78,10 @@ func reveal_cell(x: int, y: int) -> void:
 
 
 func use_cell_power(power_id: String, power_type: String, x: int, y: int) -> void:
+	use_power_on_cell(power_id, power_type, x, y)
+
+
+func use_power_on_cell(power_id: String, power_type: String, x: int, y: int) -> void:
 	_send_action({
 		"type": power_type,
 		"actionId": power_id,
@@ -92,10 +93,23 @@ func use_cell_power(power_id: String, power_type: String, x: int, y: int) -> voi
 
 
 func use_global_power(power_id: String, power_type: String, target_id: String) -> void:
+	if GamePowerCatalog.is_offensive(power_type):
+		_send_action({
+			"type": power_type,
+			"actionId": power_id,
+			"targetId": target_id
+		})
+	else:
+		_send_action({
+			"type": power_type,
+			"actionId": power_id
+		})
+
+
+func use_self_power(power_id: String, power_type: String) -> void:
 	_send_action({
 		"type": power_type,
-		"actionId": power_id,
-		"targetId": target_id
+		"actionId": power_id
 	})
 
 
@@ -167,11 +181,6 @@ func _can_send() -> bool:
 	return true
 
 
-# Limpa exclusivamente o estado da partida que acabou de terminar (game_id e
-# snapshot pendente). Chamado ao sair e quando eventos terminais chegam do
-# backend. A trava de saída (_leave_started) NÃO é resetada aqui: ela só é
-# liberada no start() da próxima partida, garantindo que LEFT_GAME nunca seja
-# reenviado para a mesma partida já encerrada.
 
 func _clear_game_state() -> void:
 	_pending_board = null
@@ -183,7 +192,6 @@ func _clear_game_state() -> void:
 	_websocket.disconnect_socket()
 
 
-# Internal — ciclo de vida do socket
 
 func _on_connection_error(message: String) -> void:
 	connection_lost.emit(message)
@@ -193,7 +201,6 @@ func _on_disconnected() -> void:
 	connection_lost.emit("")
 
 
-# Internal — mensagens recebidas
 
 func _on_message_received(message: WebSocketMessage) -> void:
 	AppLogger.debug("[GAME][%s] received event=%s" % [_current_user_id(), message.event])
@@ -214,7 +221,7 @@ func _on_message_received(message: WebSocketMessage) -> void:
 			_clear_game_state()
 		EVENT_ERROR:
 			_handle_error(message)
-		EVENT_PLAYER_ACTION_RESULT, EVENT_TURN_EXPIRED:
+		EVENT_PLAYER_ACTION_RESULT, EVENT_TURN_EXPIRED: # <--- ADICIONE O EVENTO AQUI
 			pass
 		_:
 			AppLogger.debug("Unhandled websocket event: %s" % message.event)
@@ -224,11 +231,21 @@ func _handle_turn_update(message: WebSocketMessage) -> void:
 	var current_turn_player_id := _first_string(message, "currentTurnPlayerId")
 	var turn_ends_at := _first_string(message, "turnEndsAt")
 
+	if current_turn_player_id == "null" or current_turn_player_id == "<null>" or current_turn_player_id == "None":
+		current_turn_player_id = ""
+
+	if turn_ends_at == "null" or turn_ends_at == "<null>" or turn_ends_at == "None":
+		turn_ends_at = ""
+
+	if message.event == EVENT_POWER_DISCARDED and turn_ends_at.is_empty():
+		return
+
+	if message.event == EVENT_TURN_EXPIRED and turn_ends_at.is_empty() and not current_turn_player_id.is_empty():
+		turn_ends_at = _synthesize_turn_ends_at(EXPIRED_TURN_FALLBACK_SECONDS)
+
 	if current_turn_player_id.is_empty() and turn_ends_at.is_empty():
 		return
 
-	# Snapshot recebido antes do start() (ex: durante o matchmaking) — guarda
-	# para reemitir no _flush_pending_state() em vez de descartar.
 	if _game_id.is_empty():
 		_pending_turn_player_id = current_turn_player_id
 		_pending_turn_ends_at = turn_ends_at
@@ -242,7 +259,7 @@ func _handle_state_sync(message: WebSocketMessage) -> void:
 		var raw_board = message.data.get("board")
 
 		if raw_board is Array:
-			var board := GameBoard.from_array(raw_board)
+			var board := GameBoardMapper.to_domain(raw_board)
 
 			if _game_id.is_empty():
 				_pending_board = board
@@ -257,7 +274,7 @@ func _handle_state_sync(message: WebSocketMessage) -> void:
 
 			for raw_word in raw_words:
 				if raw_word is Dictionary:
-					parsed_words.append(GameWord.from_dictionary(raw_word))
+					parsed_words.append(GameWordMapper.to_domain(raw_word))
 
 			if _game_id.is_empty():
 				_pending_words = parsed_words
@@ -272,7 +289,7 @@ func _handle_state_sync(message: WebSocketMessage) -> void:
 
 			for raw_player in raw_players:
 				if raw_player is Dictionary:
-					parsed_players.append(GamePlayerState.from_dictionary(raw_player))
+					parsed_players.append(GamePlayerStateMapper.to_domain(raw_player))
 
 			if _game_id.is_empty():
 				_pending_players = parsed_players
@@ -287,19 +304,8 @@ func _handle_internal_events(message: WebSocketMessage) -> void:
 
 		var event_dict: Dictionary = raw_event
 
-		var raw_event_name = event_dict.get("event")
-		var raw_event_data = event_dict.get("data")
-
-		var parsed_event_name := ""
-		if raw_event_name != null:
-			parsed_event_name = str(raw_event_name)
-
-		var parsed_event_data: Dictionary = {}
-		if raw_event_data is Dictionary:
-			parsed_event_data = raw_event_data
-
 		internal_event_received.emit(
-			GameInternalEvent.from_dictionary(parsed_event_name, parsed_event_data)
+			GameInternalEventMapper.to_domain(event_dict)
 		)
 
 
@@ -337,8 +343,25 @@ func _handle_error(message: WebSocketMessage) -> void:
 	error.emit(error_code, cell_x, cell_y)
 
 
+func _synthesize_turn_ends_at(seconds_ahead: int) -> String:
+	var deadline_unix := Time.get_unix_time_from_system() + seconds_ahead
+	var datetime_string := Time.get_datetime_string_from_unix_time(deadline_unix, true)
+
+	return datetime_string.trim_suffix("Z") + "Z"
+
+
 func _first_string(message: WebSocketMessage, key: String) -> String:
 	if message.has(key):
-		return message.get_string(key)
+		var raw_value = message.raw.get(key)
 
-	return str(message.data.get(key, ""))
+		if raw_value == null:
+			return ""
+
+		return str(raw_value)
+
+	var data_value = message.data.get(key, "")
+
+	if data_value == null:
+		return ""
+
+	return str(data_value)

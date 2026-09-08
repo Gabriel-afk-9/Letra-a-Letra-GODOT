@@ -19,10 +19,6 @@ static func bind(view: GameScreen) -> void:
 
 	var view_model := GameViewModel.new(usecase, ServiceRegistry.navigation_service())
 
-	# start() é chamado DE DENTRO de view.setup(), depois que a View já
-	# conectou os sinais — chamar aqui perderia as emissões de loading_changed.
-	# Nicknames são repassados do evento do matchmaking para a View preencher
-	# os PlayerCards sem buscar dados no backend por conta própria.
 	view.setup(
 		view_model,
 		event.game_id,

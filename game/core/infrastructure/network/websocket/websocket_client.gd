@@ -2,6 +2,8 @@ extends Node
 class_name WebSocketClient
 
 
+const DEBUG_RAW_WS := false
+
 signal connected
 signal disconnected
 signal connection_error(message: String)
@@ -10,6 +12,7 @@ signal message_received(message: WebSocketMessage)
 var _socket := WebSocketPeer.new()
 var _auth_provider: AuthProvider
 var _is_connecting: bool = false
+var _was_open: bool = false
 
 
 func _init(auth_provider: AuthProvider) -> void:
@@ -28,7 +31,6 @@ func _process(_delta: float) -> void:
 
 
 
-# Public API
 
 func connect_socket() -> void:
 	disconnect_socket()
@@ -40,7 +42,7 @@ func connect_socket() -> void:
 		connection_error.emit("Authentication required.")
 		return
 
-	var url := "%s?token=%s" % [GlobalEnvironment.WS_BASE_URL, token]
+	var url := "%s?token=%s" % [GlobalEnvironment.ws_base_url(), token]
 
 	AppLogger.info("Connecting websocket...")
 	var error := _socket.connect_to_url(url)
@@ -85,19 +87,25 @@ func send(payload: Dictionary) -> void:
 
 
 
-# Internal — estado da conexão
 
 func _handle_open_state() -> void:
 	if _is_connecting:
 		_is_connecting = false
 		AppLogger.info("WebSocket connected successfully.")
 		connected.emit()
+	_was_open = true
 
 	while _socket.get_available_packet_count() > 0:
 		_process_packet()
 
 
 func _handle_closed_state() -> void:
+	if _was_open:
+		_was_open = false
+		_is_connecting = false
+		AppLogger.info("WebSocket closed.")
+		disconnected.emit()
+		return
 	if _is_connecting:
 		_is_connecting = false
 		AppLogger.error("WebSocket connection closed or failed.")
@@ -105,11 +113,12 @@ func _handle_closed_state() -> void:
 
 
 
-# Internal — pacotes recebidos
 
 func _process_packet() -> void:
 	var text := _socket.get_packet().get_string_from_utf8()
-	#AppLogger.debug("WS IN -> " + text)
+
+	if DEBUG_RAW_WS:
+		AppLogger.debug("WS IN -> " + text)
 
 	var decoded: Variant = JsonSerializer.decode(text)
 
@@ -127,7 +136,5 @@ func _process_packet() -> void:
 
 	var message := WebSocketMessage.from_dictionary(body)
 
-	if not message.event.is_empty():
-		AppLogger.debug("WS EVENT -> " + message.event)
 
 	message_received.emit(message)

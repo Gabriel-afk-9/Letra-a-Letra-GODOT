@@ -104,10 +104,6 @@ func _apply_style(
 		avatar_frame.add_theme_stylebox_override("panel", avatar_style)
 
 
-# Inventário — exibição de leitura dos 5 slots. O card é compartilhado
-# (home/matchmaking usam a mesma cena com overrides de path), então os slots
-# NÃO são adicionados à cena: a fileira é montada em runtime apenas quando
-# set_inventory() é chamado, preservando as outras telas intactas.
 
 func set_inventory(inventory: Array) -> void:
 	_ensure_inventory_row()

@@ -21,7 +21,6 @@ func _init(repository: MatchmakingRepository, current_user_provider: CurrentUser
 	_repository.error.connect(_on_error)
 
 
-# Public API
 
 func start_search() -> void:
 	_repository.start_search()
@@ -36,7 +35,6 @@ func current_player_nickname() -> String:
 	return user.nickname if user != null else ""
 
 
-# Internal
 
 func _on_searching() -> void:
 	searching.emit()

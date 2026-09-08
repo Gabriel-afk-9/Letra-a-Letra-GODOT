@@ -15,24 +15,25 @@ run/main_scene="uid://fc4l1gye488"
 config/features=PackedStringArray("4.7", "Mobile")
 boot_splash/bg_color=Color(0.20942885, 0.20942888, 0.20942888, 1)
 config/icon="uid://dy1fknvv40pop"
+config/api_base_url="http://127.0.0.1:8080"
+config/ws_base_url="ws://127.0.0.1:8080/ws/game"
 
 [autoload]
 
 GlobalEnvironment="*uid://d13gwhhypaefa"
-ServiceRegistry="*uid://h4t2ukucfhrk"
 SessionStore="*uid://b3xp5k2p2c4ip"
+ServiceRegistry="*uid://h4t2ukucfhrk"
 
 [display]
 
 window/size/viewport_width=360
 window/size/viewport_height=640
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
 window/handheld/orientation=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/tattomoosa.spinner/plugin.cfg")
+enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/tattomoosa.spinner/plugin.cfg")
 
 [gui]
 

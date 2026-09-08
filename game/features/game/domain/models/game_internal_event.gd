@@ -29,10 +29,33 @@ func get_cell_y() -> int:
 
 func get_founded_cells() -> Array[Vector2i]:
 	var parsed_cells: Array[Vector2i] = []
+	var raw_cells: Variant = null
 
-	var raw_cells = _data.get("cells")
+	for key in ["cells", "wordCells", "positions", "coordinates", "word_cells"]:
+		if _data.has(key):
+			raw_cells = _data.get(key)
+			break
+
+	if raw_cells is Dictionary:
+		var d: Dictionary = raw_cells
+		if d.has("position") and d.get("position") is Dictionary:
+			var p: Dictionary = d.get("position")
+			var rx = p.get("x")
+			var ry = p.get("y")
+			if (rx is int or rx is float) and (ry is int or ry is float):
+				parsed_cells.append(Vector2i(int(rx), int(ry)))
+				return parsed_cells
+		var rx2 = d.get("x")
+		var ry2 = d.get("y")
+		if (rx2 is int or rx2 is float) and (ry2 is int or ry2 is float):
+			parsed_cells.append(Vector2i(int(rx2), int(ry2)))
+			return parsed_cells
 
 	if not raw_cells is Array:
+		var fx := get_cell_x()
+		var fy := get_cell_y()
+		if fx >= 0 and fy >= 0:
+			parsed_cells.append(Vector2i(fx, fy))
 		return parsed_cells
 
 	for raw_cell in raw_cells:
@@ -40,17 +63,23 @@ func get_founded_cells() -> Array[Vector2i]:
 			continue
 
 		var cell: Dictionary = raw_cell
+		var pos_dict: Variant = cell.get("position") if cell.has("position") else null
+		var rx: Variant
+		var ry: Variant
+		if pos_dict is Dictionary:
+			rx = (pos_dict as Dictionary).get("x")
+			ry = (pos_dict as Dictionary).get("y")
+		else:
+			rx = cell.get("x")
+			ry = cell.get("y")
 
-		var raw_x = cell.get("x")
-		var raw_y = cell.get("y")
-
-		if not raw_x is int and not raw_x is float:
+		if not rx is int and not rx is float:
 			continue
 
-		if not raw_y is int and not raw_y is float:
+		if not ry is int and not ry is float:
 			continue
 
-		parsed_cells.append(Vector2i(int(raw_x), int(raw_y)))
+		parsed_cells.append(Vector2i(int(rx), int(ry)))
 
 	return parsed_cells
 
@@ -64,28 +93,48 @@ func get_revealed_by_player_id() -> String:
 
 
 func contains_player_id(player_id: String) -> bool:
-	for value in _data.values():
-		if str(value) == player_id:
-			return true
+	return _deep_contains(_data, player_id)
 
-	return false
+
+func _deep_contains(node: Variant, player_id: String) -> bool:
+	if node is Dictionary:
+		for value in (node as Dictionary).values():
+			if _deep_contains(value, player_id):
+				return true
+		return false
+
+	if node is Array:
+		for value in (node as Array):
+			if _deep_contains(value, player_id):
+				return true
+		return false
+
+	if node == null:
+		return false
+
+	return str(node) == player_id
 
 
 func _get_cell_coordinate(axis: String) -> int:
-	if not _data.has("cell"):
-		return -1
+	for key in ["cell", "position"]:
+		if not _data.has(key):
+			continue
 
-	var cell = _data.get("cell")
+		var cell = _data.get(key)
 
-	if not cell is Dictionary:
-		return -1
+		if not cell is Dictionary:
+			continue
 
-	var raw_value = cell.get(axis)
+		var raw_value = (cell as Dictionary).get(axis)
 
-	if raw_value is int or raw_value is float:
-		return int(raw_value)
+		if raw_value is int or raw_value is float:
+			return int(raw_value)
 
 	return -1
+
+
+func get_effect_position() -> Vector2i:
+	return Vector2i(get_cell_x(), get_cell_y())
 
 
 func _get_string_field(key: String) -> String:

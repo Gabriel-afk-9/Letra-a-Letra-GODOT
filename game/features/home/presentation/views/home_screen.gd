@@ -5,7 +5,6 @@ extends Control
 @onready var setting_btn: Button = $MarginContainer/MainLayout/Header/SettingBtn
 @onready var play_btn: Button = $MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn
 @onready var room_btn: Button = $MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/RoomBtn
-@onready var exit_btn: Button = $MarginContainer/MainLayout/ExitButton
 
 var _view_model: HomeViewModel
 
@@ -24,7 +23,6 @@ func _on_user_loaded(user: User) -> void:
 	player_card.show_local(user.nickname)
 
 func _on_loading_changed(is_loading: bool) -> void:
-	exit_btn.disabled = is_loading
 	play_btn.disabled = is_loading
 	room_btn.disabled = is_loading
 	
@@ -46,7 +44,3 @@ func _on_avatar_pressed() -> void:
 
 func _on_settings_pressed() -> void:
 	pass
-
-
-func _on_exit_button_pressed() -> void:
-	_view_model.exit_game()

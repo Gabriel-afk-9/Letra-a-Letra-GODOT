@@ -34,7 +34,6 @@ static func from_dictionary(body: Dictionary) -> WebSocketMessage:
 
 
 
-# Public API — acesso tipado a campos de nível raiz
 
 func get_string(key: String, default_value := "") -> String:
 	return str(raw.get(key, default_value))
@@ -53,7 +52,6 @@ func has(key: String) -> bool:
 
 
 
-# Internal
 
 static func _extract_dictionary(source: Dictionary, key: String) -> Dictionary:
 	var value = source.get(key)

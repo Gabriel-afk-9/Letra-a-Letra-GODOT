@@ -11,10 +11,17 @@ const CELL_STATE_REVEALED_ME := "REVEALED_ME"
 const CELL_STATE_REVEALED_OPPONENT := "REVEALED_OPPONENT"
 const CELL_STATE_CLAIMED_ME := "CLAIMED_ME"
 const CELL_STATE_CLAIMED_OPPONENT := "CLAIMED_OPPONENT"
+const CELL_STATE_SPY_ME := "SPY_ME"
+const CELL_STATE_BLINDED := "BLINDED"
+const CELL_STATE_TRAP_ME := "TRAP_ME"
+const CELL_STATE_TRAP_OPPONENT := "TRAP_OPPONENT"
+const CELL_STATE_BLOCK_ME := "BLOCK_ME"
+const CELL_STATE_BLOCK_OPPONENT := "BLOCK_OPPONENT"
 
 const FREEZE_TURNS_DEFAULT := 3
 const IMMUNITY_TURNS_DEFAULT := 5
-const ACTION_LOCK_TIMEOUT_SECONDS := 3.0
+const BLIND_TURNS_DEFAULT := 6
+const ACTION_LOCK_TIMEOUT_SECONDS := 1.2
 const TURN_TIMER_TICK_SECONDS := 0.5
 
 
@@ -22,6 +29,7 @@ signal board_changed(board: GameBoard)
 signal words_changed(words: Array)
 signal my_inventory_changed(inventory: Array)
 signal opponent_inventory_changed(inventory: Array)
+signal power_granted(power: GamePower)
 signal turn_state_changed(is_my_turn: bool)
 signal turn_timer_updated(seconds_remaining: float)
 signal action_lock_changed(is_locked: bool)
@@ -31,6 +39,7 @@ signal trap_event_feedback(event_name: String, x: int, y: int)
 signal trap_animation_requested(x: int, y: int)
 signal notification_requested(message: String)
 signal selected_power_changed(power_id: String)
+signal armed_power_changed(power_id: String, power_type: String, scope: String)
 signal game_ended(is_winner: bool, title: String, subtitle: String)
 
 var _usecase: GameUseCase
@@ -52,6 +61,7 @@ var _freeze_turns_left: int = 0
 var _is_immune: bool = false
 var _immunity_turns_left: int = 0
 var _is_blinded: bool = false
+var _blind_turns_left: int = 0
 var _is_detecting_traps: bool = false
 var _is_spied: bool = false
 
@@ -60,6 +70,8 @@ var _armed_power_type: String = ""
 
 var _cells_claimed_by_me: Array[Vector2i] = []
 var _cells_claimed_by_opponent: Array[Vector2i] = []
+var _spied_cell := Vector2i(-1, -1)
+var _has_spied := false
 
 
 func _init(usecase: GameUseCase, navigation: NavigationService) -> void:
@@ -70,17 +82,18 @@ func _init(usecase: GameUseCase, navigation: NavigationService) -> void:
 	_usecase.words_updated.connect(_on_words_updated)
 	_usecase.my_inventory_updated.connect(_on_my_inventory_updated)
 	_usecase.opponent_inventory_updated.connect(_on_opponent_inventory_updated)
+	_usecase.power_granted.connect(_on_power_granted)
 	_usecase.turn_changed.connect(_on_turn_changed)
 	_usecase.my_cell_revealed.connect(_on_my_cell_revealed)
 	_usecase.word_found.connect(_on_word_found)
 	_usecase.trap_event.connect(_on_trap_event)
 	_usecase.my_effect_event.connect(_on_my_effect_event)
+	_usecase.spy_position_changed.connect(_on_spy_position_changed)
 	_usecase.game_over.connect(_on_game_over)
 	_usecase.connection_lost.connect(_on_connection_lost)
 	_usecase.action_rejected.connect(_on_action_rejected)
 
 
-# Public API
 
 func start(game_id: String, opponent_id: String) -> void:
 	_set_loading(true)
@@ -92,11 +105,18 @@ func on_cell_clicked(x: int, y: int) -> void:
 	if _is_action_locked:
 		return
 
+	if not _is_my_turn:
+		return
+
+	if _is_frozen:
+		return
+
 	if not _armed_power_id.is_empty() and GamePowerCatalog.get_scope(_armed_power_type) == GamePowerCatalog.SCOPE_CELL:
-		_usecase.use_cell_power(_armed_power_id, _armed_power_type, x, y)
+		_usecase.use_power_on_cell(_armed_power_id, _armed_power_type, x, y)
 		_armed_power_id = ""
 		_armed_power_type = ""
 		selected_power_changed.emit("")
+		armed_power_changed.emit("", "", "")
 	else:
 		_usecase.reveal_cell(x, y)
 
@@ -104,7 +124,13 @@ func on_cell_clicked(x: int, y: int) -> void:
 
 
 func select_power(power_id: String, power_type: String) -> void:
-	if _is_action_locked:
+	if not _is_my_turn:
+		return
+
+	if _is_frozen and not GamePowerCatalog.can_use_while_frozen(power_type):
+		return
+
+	if _is_action_locked and not GamePowerCatalog.can_use_while_frozen(power_type):
 		return
 
 	if GamePowerCatalog.get_scope(power_type) == GamePowerCatalog.SCOPE_GLOBAL:
@@ -115,16 +141,90 @@ func select_power(power_id: String, power_type: String) -> void:
 	_armed_power_id = power_id
 	_armed_power_type = power_type
 	selected_power_changed.emit(power_id)
+	armed_power_changed.emit(power_id, power_type, GamePowerCatalog.get_scope(power_type))
+
+
+func on_power_clicked(power_id: String) -> void:
+	var power: GamePower = null
+	for p in _my_inventory:
+		if p is GamePower and p.id == power_id:
+			power = p
+			break
+
+	if power == null:
+		return
+
+	if _is_frozen and not GamePowerCatalog.can_use_while_frozen(power.type):
+		return
+
+	if _is_action_locked and not GamePowerCatalog.can_use_while_frozen(power.type):
+		return
+
+	var scope := GamePowerCatalog.get_scope(power.type)
+
+	if _armed_power_id == power_id:
+		clear_selected_power()
+		return
+
+	_armed_power_id = power_id
+	_armed_power_type = power.type
+	selected_power_changed.emit(power_id)
+	armed_power_changed.emit(power_id, power.type, scope)
+
+
+func confirm_armed_global_power() -> void:
+	if _armed_power_id.is_empty():
+		return
+
+	if GamePowerCatalog.get_scope(_armed_power_type) != GamePowerCatalog.SCOPE_GLOBAL:
+		return
+
+	if not _is_my_turn:
+		return
+
+	if _is_frozen and not GamePowerCatalog.can_use_while_frozen(_armed_power_type):
+		clear_selected_power()
+		return
+
+	if _is_action_locked and not GamePowerCatalog.can_use_while_frozen(_armed_power_type):
+		return
+
+	_usecase.use_global_power(_armed_power_id, _armed_power_type)
+	_lock_action()
+	clear_selected_power()
 
 
 func clear_selected_power() -> void:
 	_armed_power_id = ""
 	_armed_power_type = ""
 	selected_power_changed.emit("")
+	armed_power_changed.emit("", "", "")
 
 
 func discard_power(power_id: String) -> void:
 	_usecase.discard_power(power_id)
+
+
+func is_inventory_full() -> bool:
+	return _count_my_powers() >= GamePlayerState.INVENTORY_SIZE
+
+
+func discard_armed_power() -> void:
+	if _armed_power_id.is_empty():
+		return
+
+	_usecase.discard_power(_armed_power_id)
+	clear_selected_power()
+
+
+func _count_my_powers() -> int:
+	var total := 0
+
+	for p in _my_inventory:
+		if p is GamePower:
+			total += 1
+
+	return total
 
 
 func leave_game() -> void:
@@ -172,9 +272,6 @@ func selected_power_id() -> String:
 	return _armed_power_id
 
 
-# Estado visual de cada célula — toda a decisão de cor vive aqui, a View só
-# aplica estilo. A ordem importa: células reivindicadas (palavra completa)
-# têm precedência sobre células apenas reveladas.
 
 func get_cell_visual_state(x: int, y: int) -> String:
 	var cell_position := Vector2i(x, y)
@@ -185,12 +282,37 @@ func get_cell_visual_state(x: int, y: int) -> String:
 	if _cells_claimed_by_opponent.has(cell_position):
 		return CELL_STATE_CLAIMED_OPPONENT
 
+	if _is_blinded:
+		return CELL_STATE_BLINDED
+
 	if _board == null:
+		if _has_spied and cell_position == _spied_cell:
+			return CELL_STATE_SPY_ME
+
 		return CELL_STATE_HIDDEN
 
 	var cell := _board.get_cell(x, y)
 
 	if cell == null or not cell.revealed:
+		var effect_type := cell.effect_type.to_upper() if cell != null else ""
+		var effect_owner := _usecase.classify_player(cell.effect_owner_id) if cell != null else ""
+
+		if effect_type.contains("BLOCK"):
+			if effect_owner == "me":
+				return CELL_STATE_BLOCK_ME
+
+			return CELL_STATE_BLOCK_OPPONENT
+
+		if effect_type.contains("TRAP"):
+			if effect_owner == "me":
+				return CELL_STATE_TRAP_ME
+
+			if effect_owner == "opponent" and _is_detecting_traps:
+				return CELL_STATE_TRAP_OPPONENT
+
+		if _has_spied and cell_position == _spied_cell:
+			return CELL_STATE_SPY_ME
+
 		return CELL_STATE_HIDDEN
 
 	match _usecase.classify_player(cell.revealed_by_player_id):
@@ -208,10 +330,42 @@ func get_cell_letter(x: int, y: int) -> String:
 
 	var cell := _board.get_cell(x, y)
 
-	if cell == null or not cell.revealed:
+	if cell == null:
+		return ""
+
+	if get_cell_visual_state(x, y) == CELL_STATE_SPY_ME:
+		return cell.letter.to_upper() if not cell.letter.is_empty() else ""
+
+	if _is_blinded:
+		return ""
+
+	if not cell.revealed:
 		return ""
 
 	return cell.letter.to_upper()
+
+
+func get_cell_block_filled(x: int, y: int) -> int:
+	if _board == null:
+		return 0
+
+	var cell := _board.get_cell(x, y)
+
+	if cell == null or not cell.effect_type.to_upper().contains("BLOCK"):
+		return 0
+
+	if cell.remaining_clicks <= 0:
+		return 0
+
+	return clampi(3 - cell.remaining_clicks, 0, 3)
+
+
+func get_spied_cell() -> Vector2i:
+	return _spied_cell
+
+
+func has_spied_cell() -> bool:
+	return _has_spied
 
 
 func classify_word_owner(word: GameWord) -> String:
@@ -221,14 +375,6 @@ func classify_word_owner(word: GameWord) -> String:
 	return _usecase.classify_player(word.found_by_player_id)
 
 
-# Internal — trava otimista de ação
-#
-# Decisão de design deliberada: o MVP travava cliques por 1s de forma reativa
-# à troca de turno. Aqui a trava é OTIMISTA — prende no instante em que o
-# jogador local dispara uma ação e solta quando o turno passa, quando a ação
-# é rejeitada, ou após um timeout de segurança de 3s (rede lenta). Cobre o
-# mesmo objetivo (impedir clique duplo no round-trip do servidor) sem depender
-# do nome cru de eventos WS, que não chega até esta camada.
 
 func _lock_action() -> void:
 	if _is_action_locked:
@@ -260,7 +406,6 @@ func _unlock_action() -> void:
 	action_lock_changed.emit(false)
 
 
-# Internal — sinais do usecase
 
 func _on_board_updated(board: GameBoard) -> void:
 	_board = board
@@ -282,15 +427,16 @@ func _on_opponent_inventory_updated(inventory: Array) -> void:
 	opponent_inventory_changed.emit(inventory)
 
 
-# Sem estado a atualizar nesta fase: a View pode reagir depois, se precisar.
+func _on_power_granted(power: GamePower) -> void:
+	power_granted.emit(power)
+
+
 
 func _on_my_cell_revealed() -> void:
 	pass
 
 
 func _on_word_found(cells: Array, found_by_player_id: String, is_me: bool) -> void:
-	word_found_feedback.emit(cells, is_me)
-
 	var claimed_cells := _cells_claimed_by_me if is_me else _cells_claimed_by_opponent
 
 	for cell_variant in cells:
@@ -301,6 +447,11 @@ func _on_word_found(cells: Array, found_by_player_id: String, is_me: bool) -> vo
 
 		if not claimed_cells.has(cell_position):
 			claimed_cells.append(cell_position)
+
+	word_found_feedback.emit(cells, is_me)
+
+	if _board != null:
+		board_changed.emit(_board)
 
 
 func _on_trap_event(event_name: String, x: int, y: int) -> void:
@@ -317,12 +468,19 @@ func _on_turn_changed(current_turn_player_id: String, turn_ends_at: String, is_m
 
 	_last_turn_player_id = current_turn_player_id
 	_is_my_turn = is_my_turn
+	_turn_ends_at = turn_ends_at
+
+	if not turn_ends_at.is_empty():
+		var warm_deadline := _parse_turn_deadline(turn_ends_at)
+
+		if warm_deadline > 0.0:
+			turn_timer_updated.emit(maxf(0.0, warm_deadline - Time.get_unix_time_from_system()))
+
 	turn_state_changed.emit(is_my_turn)
 
 	if not is_my_turn:
 		_unlock_action()
 
-	_turn_ends_at = turn_ends_at
 	_start_turn_timer_loop()
 
 
@@ -344,22 +502,35 @@ func _on_my_effect_event(event_name: String) -> void:
 			_is_detecting_traps = true
 		"DETECT_TRAPS_REMOVED":
 			_is_detecting_traps = false
-		"SPY_APPLIED":
+		"SPY_APPLIED", "PLAYER_SPIED":
 			_is_spied = true
 		"SPY_REMOVED":
 			_is_spied = false
-		# Pareamento BLIND/LANTERN inferido por tema (LANTERN compartilha escopo
-		# GLOBAL não ofensivo com BLIND) — não confirmado no MVP.
-		# TODO: confirmar pareamento BLIND/LANTERN contra backend real
 		"PLAYER_BLINDED":
 			_is_blinded = true
+			_blind_turns_left = BLIND_TURNS_DEFAULT
 		"PLAYER_USE_LANTERN":
 			_is_blinded = false
+			_blind_turns_left = 0
 		_:
 			AppLogger.debug("GameViewModel: efeito não mapeado: %s" % event_name)
 			return
 
 	effect_state_changed.emit()
+
+
+func _on_spy_position_changed(pos: Vector2i, active: bool) -> void:
+	if active:
+		_spied_cell = pos
+		_has_spied = true
+	else:
+		_spied_cell = Vector2i(-1, -1)
+		_has_spied = false
+
+	effect_state_changed.emit()
+
+	if _board != null:
+		board_changed.emit(_board)
 
 
 func _apply_turn_effect_decrement() -> void:
@@ -383,12 +554,32 @@ func _apply_turn_effect_decrement() -> void:
 
 		changed = true
 
+	if _is_blinded:
+		_blind_turns_left -= 1
+
+		if _blind_turns_left <= 0:
+			_blind_turns_left = 0
+			_is_blinded = false
+
+		changed = true
+
 	if changed:
 		effect_state_changed.emit()
 
 
 func _on_game_over(is_winner: bool, reason: String) -> void:
+	if is_winner and reason == REASON_WORDS and not _has_any_word_found():
+		reason = REASON_OPPONENT_LEFT
+
 	_show_game_over(is_winner, reason)
+
+
+func _has_any_word_found() -> bool:
+	for word_variant in _words:
+		if word_variant is GameWord and (word_variant as GameWord).found:
+			return true
+
+	return false
 
 
 func _show_game_over(is_winner: bool, reason: String) -> void:
@@ -418,45 +609,55 @@ func _show_game_over(is_winner: bool, reason: String) -> void:
 func _on_action_rejected(error_code: String, cell_x: int, cell_y: int) -> void:
 	_unlock_action()
 
-	if error_code == "stepped_on_trap":
+	var code := error_code.strip_edges().to_lower()
+
+	if code == "stepped_on_trap" or code.contains("trap"):
 		trap_animation_requested.emit(cell_x, cell_y)
-	elif error_code == "player_are_immune" or error_code.contains("imune"):
+	elif code == "player_are_immune" or code.contains("imune") or code.contains("immune"):
 		notification_requested.emit("Ataque bloqueado! O oponente está imune 🛡️")
-	elif error_code == "player_not_in_game":
+	elif code == "player_not_in_game" or code.contains("not currently in a game"):
 		_show_game_over(true, REASON_OPPONENT_LEFT)
+	elif code == "the selected cell has already been revealed" or code.contains("already been revealed") or code.contains("already_revealed"):
+		pass
+	elif code.contains("frozen") or code.contains("frozen_cannot_act"):
+		notification_requested.emit("Congelado! Use DESCONGELAR ❄️")
+	elif code.contains("not_your_turn") or code.contains("not your turn"):
+		notification_requested.emit("Aguarde sua vez ⏳")
+	elif code.contains("invalid_player_action") or code.contains("requested player action is invalid"):
+		notification_requested.emit("Ação inválida.")
 	else:
 		notification_requested.emit("Ação inválida.")
 		AppLogger.debug("GameViewModel: código de erro desconhecido: %s" % error_code)
 
 
-# Internal — countdown do turno
-#
-# Um token de geração aborta o loop anterior quando um novo turn_changed chega,
-# evitando múltiplas coroutines de timer empilhadas ao mesmo tempo.
 
 func _start_turn_timer_loop() -> void:
-	_turn_timer_generation += 1
-
 	if _turn_ends_at.is_empty():
 		return
 
-	var generation := _turn_timer_generation
 	var deadline := _parse_turn_deadline(_turn_ends_at)
 
 	if deadline < 0:
 		return
 
-	_run_turn_timer_loop(generation, deadline)
+	_turn_timer_generation += 1
+	_run_turn_timer_loop(_turn_timer_generation, deadline)
+
+
+func parse_turn_deadline(datetime_string: String) -> float:
+	return _parse_turn_deadline(datetime_string)
 
 
 func _parse_turn_deadline(datetime_string: String) -> float:
-	# Time.get_unix_time_from_datetime_string não trata sufixos de timezone
-	# ("Z") nem faz conversão de fuso — o "Z" precisa ser removido à mão. A
-	# fração decimal (".000") é ignorada silenciosamente pela engine. Como o
-	# backend envia UTC com "Z" e Time.get_unix_time_from_system() também é
-	# UTC, a comparação direta dos timestamps é válida. Falha de parse retorna
-	# 0 — tratado como deadline inválido (sentinela -1).
+	if datetime_string == "null" or datetime_string == "<null>" or datetime_string == "None":
+		return -1.0
+
 	var normalized := datetime_string.trim_suffix("Z")
+	var dot := normalized.find(".")
+
+	if dot != -1:
+		normalized = normalized.substr(0, dot)
+
 	var unix_time := Time.get_unix_time_from_datetime_string(normalized)
 
 	if unix_time <= 0:
