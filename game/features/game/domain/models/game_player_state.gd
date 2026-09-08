@@ -7,8 +7,6 @@ const INVENTORY_SIZE := 5
 
 var player_id: String
 var inventory: Array[GamePower]
-# Efeitos ativos vindos do backend (data.players[].effects [{duration}]).
-# Sem tipo no payload atual — presença indica efeito ativo (ex: freeze duration 5).
 var effects: Array = []
 
 

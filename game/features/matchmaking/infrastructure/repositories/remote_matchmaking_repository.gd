@@ -20,7 +20,6 @@ func _init(websocket: WebSocketClient, current_user_provider: CurrentUserProvide
 	_websocket.disconnected.connect(_on_disconnected)
 
 
-# Public API
 
 func start_search() -> void:
 	if _websocket.is_socket_connected():
@@ -36,7 +35,6 @@ func cancel_search() -> void:
 
 
 
-# Internal — ciclo de vida do socket
 
 func _on_connected() -> void:
 	AppLogger.info("Connected to matchmaking server.")
@@ -56,7 +54,6 @@ func _on_connection_error(message: String) -> void:
 
 
 
-# Internal — mensagens recebidas
 
 func _on_message_received(message: WebSocketMessage) -> void:
 	match message.event:

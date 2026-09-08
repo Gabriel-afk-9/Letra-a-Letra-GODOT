@@ -2,8 +2,6 @@ extends RefCounted
 
 class_name BaseViewModel
 
-#signal initialized
-#signal disposed
 signal loading_changed(is_loading: bool)
 signal error_changed(message: String)
 

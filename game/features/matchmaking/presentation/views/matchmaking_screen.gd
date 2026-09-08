@@ -25,7 +25,6 @@ func setup(view_model: MatchmakingViewModel) -> void:
 	_view_model.start_search()
 
 
-# Internal — wiring
 
 func _connect_view_model() -> void:
 	if not _view_model.state_changed.is_connected(_on_state_changed):
@@ -41,7 +40,6 @@ func _connect_view_model() -> void:
 		cancel_button.pressed.connect(_on_cancel_button_pressed)
 
 
-# Internal — reações a sinais
 
 func _on_state_changed(state: MatchmakingViewModel.MatchmakingState) -> void:
 	_update_ui_for_state(state)
@@ -60,7 +58,6 @@ func _on_error_changed(message: String) -> void:
 		cancel_button.text = "SAIR DA PARTIDA ANTERIOR"
 		cancel_button.show()
 		cancel_button.disabled = false
-		# Desvia o botão de CANCELAR para o force_leave
 		if not cancel_button.pressed.is_connected(_on_force_leave_pressed):
 			cancel_button.pressed.disconnect(_on_cancel_button_pressed)
 			cancel_button.pressed.connect(_on_force_leave_pressed)
@@ -69,7 +66,6 @@ func _on_error_changed(message: String) -> void:
 	status_label.text = message
 
 
-# Internal — UI
 
 func _update_ui_for_state(state: MatchmakingViewModel.MatchmakingState) -> void:
 	match state:

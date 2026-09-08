@@ -28,8 +28,6 @@ func get_cell_y() -> int:
 
 
 func get_founded_cells() -> Array[Vector2i]:
-	# Tolerante a variantes do servidor: cells/wordCells/positions como Array
-	# ou posição única {x,y}/{position:{x,y}} — sem varrer tabuleiro.
 	var parsed_cells: Array[Vector2i] = []
 	var raw_cells: Variant = null
 
@@ -65,7 +63,6 @@ func get_founded_cells() -> Array[Vector2i]:
 			continue
 
 		var cell: Dictionary = raw_cell
-		# Suporta {x,y} ou {position:{x,y}}
 		var pos_dict: Variant = cell.get("position") if cell.has("position") else null
 		var rx: Variant
 		var ry: Variant

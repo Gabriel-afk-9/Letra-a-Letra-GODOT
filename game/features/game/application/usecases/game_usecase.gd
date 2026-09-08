@@ -21,17 +21,10 @@ var _repository: GameRepository
 var _current_user_provider: CurrentUserProvider
 var _opponent_id: String = ""
 
-# Baseline do inventário local para detecção de poder novo (diff por id,
-# mesma estratégia do MVP legado que comparava serverPowers contra
-# orderedInventory). O primeiro sync apenas popula o baseline.
 var _previous_my_inventory_ids: Dictionary = {}
 var _my_inventory_synced: bool = false
-# Baseline de effects[] para limpar frozen/immune quando o servidor esvazia
-# (ex: PLAYER_UNFREEZE perdido). Primeiro sync só popula baseline.
 var _my_had_effects: bool = false
 var _my_effects_synced: bool = false
-# Fix 1: posição espiada vem em players[].effects[] ({position:{x,y},duration}),
-# não no evento PLAYER_SPIED (data {spiedBy}). Rastrea para emitir o sinal.
 var _my_spy_pos := Vector2i(-1, -1)
 var _my_spy_active: bool = false
 
@@ -52,7 +45,6 @@ func _init(repository: GameRepository, current_user_provider: CurrentUserProvide
 	_repository.error.connect(_on_error)
 
 
-# Public API — repasse direto, sem gate
 
 func start(game_id: String, opponent_id: String) -> void:
 	_opponent_id = opponent_id
@@ -64,7 +56,6 @@ func reveal_cell(x: int, y: int) -> void:
 
 
 func use_cell_power(power_id: String, power_type: String, x: int, y: int) -> void:
-	# Sprint 4: caminho único CELL — delega para use_power_on_cell
 	_repository.use_power_on_cell(power_id, power_type, x, y)
 
 
@@ -73,9 +64,6 @@ func use_power_on_cell(power_id: String, power_type: String, x: int, y: int) -> 
 
 
 func use_global_power(power_id: String, power_type: String) -> void:
-	# Roteamento por categoria do backend (docs/poderes-e-uso.md:57):
-	# ofensivo FREEZE/BLIND -> actionId + targetId oponente
-	# SELF UNFREEZE/LANTERN/IMMUNITY/DETECT_TRAPS -> só actionId
 	if GamePowerCatalog.is_offensive(power_type):
 		_repository.use_global_power(power_id, power_type, _opponent_id)
 	else:
@@ -102,7 +90,6 @@ func classify_player(player_id: String) -> String:
 	return ""
 
 
-# Internal — sinais do repository
 
 func _on_board_updated(board: GameBoard) -> void:
 	board_updated.emit(board)
@@ -132,11 +119,6 @@ func _on_players_updated(players: Array) -> void:
 			opponent_inventory_updated.emit(player.inventory)
 
 
-# Compara o inventário recém-sincronizado contra o snapshot anterior (por id
-# do GamePower) e emite power_granted para cada id que não existia antes.
-# my_inventory_updated é emitido ANTES deste sinal: quando a View tratar
-# power_granted, _cached_my_inventory já contém o poder novo e o slot é
-# encontrável.
 func _emit_power_granted(inventory: Array) -> void:
 	var current_ids := {}
 	var new_powers: Array = []
@@ -157,12 +139,6 @@ func _emit_power_granted(inventory: Array) -> void:
 		power_granted.emit(power)
 
 
-# Sprint 3: effects[] do backend ([{duration}] ou []) como baseline de limpeza.
-# Payload atual não traz tipo, só duração — então só usamos transição
-# tem-efeito -> vazio para limpar frozen/immune locais (idempotente no VM).
-# Nunca marcamos frozen só por effects não-vazio (evita falso-positivo blind).
-# Fix 1: entrada com {position:{x,y}} é o SPY ativo — rastreia a posição para
-# o sinal próprio (expiração silenciosa por duration limpa sozinha).
 func _sync_my_effects(effects: Array) -> void:
 	var has_effects := not effects.is_empty()
 	var spy_pos := Vector2i(-1, -1)
@@ -280,10 +256,6 @@ func _handle_effect_event(event: GameInternalEvent) -> void:
 	if event.contains_player_id(user.id):
 		my_effect_event.emit(event.event_name)
 
-		# S2 SPY: posição vai em sinal próprio (my_effect_event só carrega nome,
-		# mantido por compat com testes/VM). SPY_REMOVED pode vir sem posição.
-		# Fix 1: backend real manda PLAYER_SPIED com data {spiedBy} sem posição —
-		# a posição chega em players[].effects[] e é rastreada em _sync_my_effects.
 		if event.event_name == "SPY_APPLIED":
 			var pos := event.get_effect_position()
 

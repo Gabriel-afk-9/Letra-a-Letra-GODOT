@@ -4,9 +4,6 @@ class_name GamePower
 
 var id: String
 var type: String
-# Raridade é opcional: o payload atual do backend (InventoryResponse) só manda
-# {"id", "name"} — se um dia vier "rarity", ela é preservada; caso contrário,
-# cai no fallback da GamePowerCatalog (metadado fixo por tipo, PowerType.java).
 var rarity: String = ""
 
 

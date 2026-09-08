@@ -27,19 +27,15 @@ const POWER_GRANT_FLASH_COLOR := Color(1, 0.85, 0.3, 1)
 const POWER_GRANT_PULSE_DURATION := 0.16
 const POWER_GRANT_SETTLE_DURATION := 0.24
 
-# Sprint 1 — base de efeitos full-screen (S2-S4 refinam por poder)
 const EFFECT_FREEZE_COLOR := Color(0.2, 0.5, 1.0, 0.25)
 const EFFECT_IMMUNITY_COLOR := Color(1.0, 0.55, 0.1, 0.2)
 const EFFECT_BLIND_COLOR := Color(0.0, 0.0, 0.0, 0.5)
 const EFFECT_OVERLAY_FADE := 0.3
-# S3 BLIND: células pretas + vinheta escura; LANTERN: flash branco clarear
 const COLOR_BLIND_BG := Color(0.05, 0.05, 0.05, 1)
 const COLOR_BLIND_BORDER := Color(0.3, 0.3, 0.3, 1)
 const EFFECT_LANTERN_FLASH := Color(1, 1, 1, 0.6)
-# S4 FREEZE azul contínuo + UNFREEZE quente one-shot + IMMUNITY laranja contínuo
 const EFFECT_UNFREEZE_HOT := Color(1.0, 0.45, 0.15, 0.4)
 const UNFREEZE_HOT_HOLD := 2.0
-# S5 TRAP ícone + BLOCK barra 3 fases (só em célula não revelada)
 const TRAP_CELL_ICON_PATH := "res://assets/images/powers/trap-cell.png"
 const TRAP_ICON_SIZE := Vector2(20, 20)
 const BLOCK_BAR_SEGMENTS := 3
@@ -96,8 +92,6 @@ var _my_nickname := ""
 var _opponent_nickname := ""
 
 var _cached_my_inventory: Array = []
-# S6: ordem de coleta (id -> sequência de primeira aparição). Garante
-# 1|2|3|4 da esquerda para a direita independente da ordem do backend.
 var _power_seen_seq: Dictionary = {}
 var _power_seq_counter: int = 0
 var _cached_opponent_inventory: Array = []
@@ -121,15 +115,12 @@ func _ready() -> void:
 	_my_dots = my_power_dots.get_children()
 	_opponent_dots = opponent_power_dots.get_children()
 	
-	# WordsContainer centralizado
 	words_container.alignment = FlowContainer.ALIGNMENT_CENTER
 	words_container.add_theme_constant_override("h_separation", 12)
 	words_container.add_theme_constant_override("v_separation", 10)
 	
-	# 1. Envelopar WordsContainer em painel preto
 	_wrap_words_container()
 	
-	# 2. Envelopar BoardGrid em painel branco com borda preta
 	_wrap_board_grid()
 	
 	for i in _inventory_slots.size():
@@ -144,7 +135,6 @@ func _ready() -> void:
 
 
 func _shrink_game_cards() -> void:
-	# Sprint 3 — só na partida: 220×70 sem afetar matchmaking/home (que usam o mesmo PlayerCard.tscn)
 	for card in [my_player_card, opponent_player_card]:
 		if card is PlayerCard:
 			(card as PlayerCard).custom_minimum_size = Vector2(220, 70)
@@ -169,7 +159,6 @@ func _shrink_game_cards() -> void:
 				nick.add_theme_constant_override("outline_size", 2)
 
 
-# 1. WordsContainer — wrapper em PanelContainer preto
 func _wrap_words_container() -> void:
 	var parent := words_container.get_parent()
 	if not parent:
@@ -198,7 +187,6 @@ func _wrap_words_container() -> void:
 	style.border_color = Color(0.45, 0.45, 0.45, 1)
 	wrapper.add_theme_stylebox_override("panel", style)
 	
-	# 72 fixo sem coluna: Panel 72 com HFlow SHRINK_CENTER vertical (Panel centra) + EXPAND horizontal
 	var idx: int = parent.get_children().find(words_container)
 	parent.remove_child(words_container)
 	parent.add_child(wrapper)
@@ -208,7 +196,6 @@ func _wrap_words_container() -> void:
 	wrapper.add_child(words_container)
 
 
-# 2. BoardGrid — wrapper em PanelContainer branco com borda preta
 func _wrap_board_grid() -> void:
 	var parent := board_grid.get_parent()
 	if not parent:
@@ -253,7 +240,6 @@ func setup(view_model: GameViewModel, game_id: String, opponent_id: String, me_n
 	_view_model.start(game_id, opponent_id)
 
 
-# Internal — wiring
 
 func _connect_view_model() -> void:
 	_view_model.board_changed.connect(_on_board_changed)
@@ -268,8 +254,6 @@ func _connect_view_model() -> void:
 	_view_model.effect_state_changed.connect(_on_effect_state_changed)
 	_view_model.game_ended.connect(_on_game_ended)
 	_view_model.armed_power_changed.connect(_on_armed_power_changed)
-	# Sprint 1 — sinais antes mortos na View, agora com feedback mínimo
-	# (S2-S5 refinam cada visual sem rewire)
 	_view_model.notification_requested.connect(_on_notification_requested)
 	_view_model.word_found_feedback.connect(_on_word_found_feedback)
 	_view_model.trap_event_feedback.connect(_on_trap_event_feedback)
@@ -277,7 +261,6 @@ func _connect_view_model() -> void:
 	_view_model.selected_power_changed.connect(_on_selected_power_changed)
 
 
-# Internal — tabuleiro
 
 func _build_board_buttons() -> void:
 	board_grid.columns = BOARD_SIZE
@@ -302,12 +285,6 @@ func _build_board_buttons() -> void:
 var _shake_tween: Tween
 
 func _on_cell_pressed(x: int, y: int) -> void:
-	# Sprint 2 (1-A só tremida, 3-A só tremida, sem dim): fora da vez ou
-	# congelado nunca envia WS — só tremida scale. Revelada ignora silencioso.
-	# S2 SPY_ME continua clicável (espiada não é reveal, ainda pode revelar).
-	# S3 BLINDED continua clicável (blind é só visual, não trava turno).
-	# S5 TRAP/BLOCK continua clicável (block precisa de 3 REVEALs; trap do
-	# dono pode revelar e continuar).
 	var pos := Vector2i(x, y)
 	var state := _view_model.get_cell_visual_state(x, y)
 	var is_hidden := state == GameViewModel.CELL_STATE_HIDDEN or state == GameViewModel.CELL_STATE_SPY_ME or state == GameViewModel.CELL_STATE_BLINDED or state == GameViewModel.CELL_STATE_TRAP_ME or state == GameViewModel.CELL_STATE_TRAP_OPPONENT or state == GameViewModel.CELL_STATE_BLOCK_ME or state == GameViewModel.CELL_STATE_BLOCK_OPPONENT
@@ -329,8 +306,6 @@ func _shake_cell(cell_position: Vector2i) -> void:
 	var button: Button = bv
 	if is_instance_valid(_shake_tween) and _shake_tween.is_valid():
 		_shake_tween.kill()
-	# Sem position: GridContainer relayout quebra se mexer position.
-	# Tremida via scale + modulate + rotação leve no eixo do botão.
 	button.pivot_offset = CELL_SIZE / 2.0
 	button.modulate = Color(1, 0.35, 0.35, 1)
 	button.scale = Vector2.ONE
@@ -350,8 +325,6 @@ func _on_board_changed(_board: GameBoard) -> void:
 			var new_state := _view_model.get_cell_visual_state(x, y)
 			var prev_state: Variant = _last_cell_state.get(pos)
 			if str(prev_state) != str(new_state):
-				# Só anima flip em reveal real (REVEALED/CLAIMED saindo de HIDDEN).
-				# S2 SPY_ME e S3 BLINDED trocam instantâneo sem tween.
 				var was_hidden: bool = prev_state == null or str(prev_state) == GameViewModel.CELL_STATE_HIDDEN
 				var is_revealed: bool = new_state == GameViewModel.CELL_STATE_REVEALED_ME or new_state == GameViewModel.CELL_STATE_REVEALED_OPPONENT or new_state == GameViewModel.CELL_STATE_CLAIMED_ME or new_state == GameViewModel.CELL_STATE_CLAIMED_OPPONENT
 				if was_hidden and is_revealed:
@@ -360,8 +333,6 @@ func _on_board_changed(_board: GameBoard) -> void:
 					_apply_cell_style(pos)
 				_last_cell_state[pos] = new_state
 
-	# Células podem ter mudado de estado (ex: reveladas) — reavalia
-	# o input individual delas junto com o gate global.
 	_update_board_interactivity()
 
 
@@ -412,7 +383,6 @@ func _animate_cell_reveal(cell_position: Vector2i) -> void:
 		return
 	var button: Button = bv
 	button.pivot_offset = CELL_SIZE / 2.0
-	# Flip Y fake 3D via scale.x: 1 → 0 (esconde) → aplica estilo → 0 → 1 (mostra)
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(button, "scale", Vector2(0.0, 1.0), 0.10)
@@ -445,12 +415,10 @@ func _style_cell(button: Button, background: Color, state_shadow_color: Color, f
 	button.add_theme_color_override("font_focus_color", font)
 
 
-# Internal — palavras
 
 var _last_words_signature: String = ""
 
 func _on_words_changed(words: Array) -> void:
-	# Diff por conteúdo evita piscada: só reconstrói se assinatura mudou
 	var sig := _words_signature(words)
 	if sig == _last_words_signature:
 		return
@@ -503,12 +471,8 @@ func _rebuild_words(words: Array) -> void:
 		words_container.add_child(pill)
 
 
-# Internal — inventário
 
 func _on_my_inventory_changed(inventory: Array) -> void:
-	# S6: compacta nulls e ordena por ordem de coleta (primeira aparição),
-	# empurrando para a esquerda 1|2|3|4. Ids que sumiram têm a sequência
-	# limpa para não vazar entre partidas.
 	var present: Array = []
 
 	for item in inventory:
@@ -543,12 +507,6 @@ func _on_opponent_inventory_changed(inventory: Array) -> void:
 	_update_opponent_power_dots()
 
 
-# A barra detalhada de inventário (5 slots grandes) SEMPRE mostra os poderes do
-# jogador local, independentemente de quem está na vez. Já a contagem do
-# oponente (quantidade, não quais) aparece nas bolinhas sobre o card dele.
-# Os 5 slots são nós fixos na cena (quantidade fixa e pequena), enquanto
-# tabuleiro (100 células) e palavras (quantidade variável por partida) continuam
-# gerados por código — muitos/variáveis demais para autoria manual.
 
 const DASHED_SLOT_FRAME_SCRIPT := preload("res://features/game/presentation/views/dashed_slot_frame.gd")
 
@@ -569,7 +527,6 @@ func _update_inventory_panel() -> void:
 
 		if power is GamePower:
 			slot.texture_normal = _power_icon(power.type)
-			# Sprint1 transparente: slot com poder também transparente (sem laranja/raridade), só ícone redondo — seleção adiciona borda branca + glow verde.
 			var solid_style := StyleBoxFlat.new()
 			solid_style.bg_color = Color(0, 0, 0, 0)
 			solid_style.corner_radius_top_left = 8
@@ -586,11 +543,9 @@ func _update_inventory_panel() -> void:
 			solid_style.content_margin_bottom = 0
 			frame.add_theme_stylebox_override("panel", solid_style)
 			frame.clip_contents = false
-			# Remove dashed border script if present
 			if frame.get_script():
 				frame.set_script(null)
 
-			# Imagem redonda do tamanho do slot: máscara via shader no próprio TextureButton
 			slot.texture_normal = _power_icon(power.type)
 			slot.material = _rounded_icon_material()
 
@@ -609,10 +564,8 @@ func _update_inventory_panel() -> void:
 			slot.texture_normal = null
 			slot.material = null
 			frame.clip_contents = false
-			# Slot vazio: borda tracejada no frame (PanelContainer) via script preload
 			if frame.get_script() != DASHED_SLOT_FRAME_SCRIPT:
 				frame.set_script(DASHED_SLOT_FRAME_SCRIPT)
-			# Ensure no solid StyleBoxFlat overrides the custom drawing
 			var empty_style := StyleBoxFlat.new()
 			empty_style.bg_color = Color(0, 0, 0, 0)
 			frame.add_theme_stylebox_override("panel", empty_style)
@@ -623,7 +576,6 @@ func _update_inventory_panel() -> void:
 			slot.add_theme_stylebox_override("hover", empty_icon_style)
 			slot.add_theme_stylebox_override("pressed", empty_icon_style)
 
-	# Atualizar destaque do poder armado (se houver)
 	_update_armed_power_highlight()
 
 	_update_power_dots(_my_dots, _cached_my_inventory)
@@ -692,7 +644,6 @@ func _animate_slot_lift(slot: TextureButton, frame: PanelContainer, lifted: bool
 		var old = slot.get_meta(meta_key)
 		if old is Tween and old.is_valid():
 			old.kill()
-	# Transparente: borda branca + glow verde quando selecionado, como MVP .slot.selected
 	if is_instance_valid(frame):
 		frame.clip_contents = false
 		var fstyle := frame.get_theme_stylebox("panel") as StyleBoxFlat
@@ -751,9 +702,6 @@ func _on_power_slot_pressed(slot_index: int) -> void:
 	_view_model.on_power_clicked(power.id)
 
 
-# Feedback visual de poder novo no inventário (adaptado do "anim-enter" do MVP):
-# pulso de scale + flash quente no slot correspondente ao id recebido. Chega
-# DEPOIS de my_inventory_changed, então _cached_my_inventory já contém o poder.
 func _on_power_granted(power: GamePower) -> void:
 	var slot := _find_inventory_slot_by_power_id(power.id)
 
@@ -782,12 +730,6 @@ func _find_inventory_slot_by_power_id(power_id: String) -> TextureButton:
 	return null
 
 
-# Gesto no ícone de inventário de um poder ARMADO (clique simples arma/desarma):
-# deslizar pra cima confirma o disparo de poder GLOBAL; deslizar pra baixo
-# exclui direto do inventário (DISCARD com shake vermelho). Poderes CELL confirmam
-# com o clique na célula, mas também podem ser descartados com swipe-baixo.
-# Visual: Icon segue o dedo (clamp ±60) + lerp azulado/avermelhado; solta curto
-# faz snap-back elástico; ↑ GLOBAL e ↓ fazem anim de saída antes do WS.
 func _on_inventory_icon_gui_input(event: InputEvent, slot_index: int) -> void:
 	if slot_index >= _cached_my_inventory.size():
 		return
@@ -807,7 +749,6 @@ func _on_inventory_icon_gui_input(event: InputEvent, slot_index: int) -> void:
 		if event.pressed:
 			_drag_start_y = event.position.y
 			_dragging_slot_index = slot_index
-			# Mata lift tween para arrasto livre
 			if slot.has_meta("lift_tween"):
 				var lt = slot.get_meta("lift_tween")
 				if lt is Tween and lt.is_valid():
@@ -824,17 +765,14 @@ func _on_inventory_icon_gui_input(event: InputEvent, slot_index: int) -> void:
 		if _dragging_slot_index != slot_index:
 			return
 		var delta: float = event.position.y - _drag_start_y
-		# MVP: preview >20, commit >40; seguir dedo clamp ±60
 		var clamped: float = clamp(delta, -60.0, 60.0)
 		slot.position.y = ARMED_LIFT_Y + clamped
 		var frame := slot.get_parent() as PanelContainer
-		# Preview visual transparente (border+shadow+scale) — replica is-using/is-discarding
 		if delta < -20.0:
 			if _armed_scope == GamePowerCatalog.SCOPE_GLOBAL:
 				_apply_drag_preview(slot, frame, true, false)
 			else:
 				_apply_drag_preview(slot, frame, false, false)
-				# CELL ↑ não lança — mantém preview neutro e volta no soltar
 		elif delta > 20.0:
 			_apply_drag_preview(slot, frame, false, true)
 		else:
@@ -890,7 +828,6 @@ func _apply_drag_preview(slot: TextureButton, frame: PanelContainer, is_using: b
 				fs.shadow_color = Color(1, 0.28, 0.34, 0.8)
 				fs.shadow_size = 20
 	else:
-		# Volta ao selected -8 1.15
 		slot.scale = ARMED_LIFT_SCALE
 		slot.modulate = Color.WHITE
 		if is_instance_valid(frame):
@@ -941,11 +878,9 @@ func _animate_launch_slot(slot: TextureButton) -> void:
 		if lt is Tween and lt.is_valid():
 			lt.kill()
 			slot.remove_meta("lift_tween")
-	# MVP powerUse 0.5s cubic 0.22,1,0.36,1: 1.18 a 30% bright2, 1.5 -120 rot8 blur6
 	var tween := create_tween()
 	slot.set_meta("exit_tween", tween)
 	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	# 30% keyframe
 	tween.tween_property(slot, "scale", Vector2(1.18, 1.18), 0.15)
 	tween.parallel().tween_property(slot, "modulate", Color(2, 2, 2, 1), 0.15)
 	tween.tween_property(slot, "scale", Vector2(1.5, 1.5), 0.35)
@@ -973,7 +908,6 @@ func _animate_discard_slot(slot: TextureButton) -> void:
 		if lt is Tween and lt.is_valid():
 			lt.kill()
 			slot.remove_meta("lift_tween")
-	# MVP powerDiscard 0.42s: 1.08 -6° a 40% → 0.3 +80 rot20 blur5
 	var tween := create_tween()
 	slot.set_meta("exit_tween", tween)
 	slot.z_index = 30
@@ -1000,12 +934,10 @@ func _on_armed_power_changed(_power_id: String, _power_type: String, scope: Stri
 	_update_armed_power_highlight()
 
 	if scope == GamePowerCatalog.SCOPE_CELL:
-		# Poder CELL armado: pulso na borda do tabuleiro (aguardando clique)
 		_global_power_armed = false
 		_update_board_interactivity()
 		_start_board_pulse()
 	elif scope == GamePowerCatalog.SCOPE_GLOBAL:
-		# Poder GLOBAL armado: tabuleiro desabilitado (aguardando gesto de swipe)
 		_global_power_armed = true
 		_stop_board_pulse()
 		_update_board_interactivity()
@@ -1027,7 +959,6 @@ func _start_board_pulse() -> void:
 	if is_instance_valid(_pulse_tween) and _pulse_tween.is_valid():
 		_pulse_tween.kill()
 
-	# S7: poder CELL armado pulsa verde neon na borda do tabuleiro
 	style.shadow_color = COLOR_NEON_GREEN
 	style.shadow_size = 0
 
@@ -1082,11 +1013,9 @@ func _update_power_dots(dots: Array, inventory: Array) -> void:
 		dot.set_meta("occupied", is_occupied)
 
 		if is_occupied and not was_occupied:
-			# Começa branco e pulsa
 			_ensure_dot_style(dot, DOT_FILLED_BG)
 			_pulse_dot(dot)
 		elif not is_occupied and was_occupied:
-			# Começa branco e lerp para cinza sem apagar borda
 			_ensure_dot_style(dot, DOT_FILLED_BG)
 			_fade_dot(dot)
 		else:
@@ -1210,7 +1139,6 @@ void fragment() {
 	return mat
 
 
-# Internal — turno
 
 func _on_turn_state_changed(is_my_turn: bool) -> void:
 	_cached_is_my_turn = is_my_turn
@@ -1233,8 +1161,6 @@ func _update_player_cards() -> void:
 		my_player_card.clear()
 		my_power_dots.hide()
 
-	# Fade de entrada no card que acabou de aparecer (animado por fora,
-	# sem tocar em PlayerCard.tscn/player_card.gd que são compartilhados).
 	if is_instance_valid(_cards_fade_tween) and _cards_fade_tween.is_valid():
 		_cards_fade_tween.kill()
 	appearing_wrapper.modulate.a = 0.0
@@ -1256,12 +1182,6 @@ func _update_turn_label() -> void:
 		turn_label.text = "Vez do oponente — %ds" % seconds
 
 
-# Internal — efeitos (congelado etc)
-#
-# Sprint 1 — base full-screen reutilizável. S2-S4 só trocam cor/duração por
-# poder, sem rewire: FREEZE azul contínuo, IMMUNITY laranja contínuo, BLIND
-# escuro contínuo (S3 vira vinheta + células pretas). UNFREEZE/LANTERN são
-# one-shot via _flash_effect_overlay (S3/S4 chamam).
 
 func _on_effect_state_changed() -> void:
 	_update_board_interactivity()
@@ -1286,10 +1206,8 @@ func _on_effect_state_changed() -> void:
 	else:
 		_hide_effect_overlay()
 		_hide_blind_vignette()
-		# S3 LANTERN clarear: flash branco ao sair do blind sem outro efeito
 		if _was_blinded:
 			_flash_effect_overlay(EFFECT_LANTERN_FLASH, 0.5)
-		# S4 UNFREEZE quente: tela quente 2s ao descongelar sem outro efeito
 		elif _was_frozen:
 			_flash_effect_overlay(EFFECT_UNFREEZE_HOT, UNFREEZE_HOT_HOLD)
 
@@ -1378,9 +1296,6 @@ func _flash_effect_overlay(color: Color, hold_seconds: float) -> void:
 	_flash_tween.tween_callback(_effect_overlay.hide)
 
 
-# S3 BLIND vinheta com fade radial nas bordas (sem cantos quadrados):
-# 1 TextureRect full-screen com GradientTexture2D radial — centro quase
-# limpo escurecendo suave até as bordas, sem shader (custo mobile).
 func _ensure_blind_vignette() -> void:
 	if is_instance_valid(_blind_vignette):
 		return
@@ -1443,8 +1358,6 @@ func _hide_blind_vignette() -> void:
 	_blind_tween.tween_callback(_blind_vignette.hide)
 
 
-# S5 TRAP/BLOCK: ícone trap-cell 20x20 centralizado sem estourar a célula
-# 30x30; barra de block com 3 divisões na base (| | |), cada clique preenche 1.
 func _trap_cell_texture() -> Texture2D:
 	if _icon_cache.has("TRAP_CELL"):
 		return _icon_cache["TRAP_CELL"]
@@ -1553,8 +1466,6 @@ func _restyle_cell(cell_position: Vector2i) -> void:
 	_last_cell_state[cell_position] = _view_model.get_cell_visual_state(cell_position.x, cell_position.y)
 
 
-# Camada extra dentro da célula (ícone trap / barra block S5) sem quebrar o
-# GridContainer: filhos do Button não participam do layout da grade.
 func _get_cell_extra(button: Button, layer_name: String) -> Control:
 	var existing := button.get_node_or_null(layer_name)
 
@@ -1579,10 +1490,6 @@ func _on_notification_requested(message: String) -> void:
 
 
 func _on_word_found_feedback(cells: Array, _is_me: bool) -> void:
-	# Sprint 2 — repintura garantida mesmo sem board novo: o VM agora emite
-	# board_changed após append do claimed (mesmo envelope), mas o cache
-	# _last_cell_state ainda pode estar como REVEALED do primeiro board_changed
-	# do envelope. Invalida o cache das células da palavra antes de reaplicar.
 	for cell_variant in cells:
 		if not cell_variant is Vector2i:
 			continue
@@ -1596,21 +1503,15 @@ func _on_word_found_feedback(cells: Array, _is_me: bool) -> void:
 		_apply_cell_style(pos)
 		_last_cell_state[pos] = _view_model.get_cell_visual_state(pos.x, pos.y)
 
-	# Força refresh completo caso WORD_FOUNDED traga array truncado (só E) —
-	# o board reemitido pelo VM já corrige via _on_board_changed, mas este
-	# refresh garante que _last_cell_state desatualizado não bloqueie o diff.
 	if _view_model != null and _view_model.board() != null:
 		_refresh_all_cell_styles()
 
-	# Pílula otimista: invalida diff para reconstruir com cor do dono no mesmo frame
 	if _view_model != null:
 		_last_words_signature = ""
 		_on_words_changed(_view_model.words())
 
 
 func _on_trap_event_feedback(event_name: String, x: int, y: int) -> void:
-	# S5: TRAP aparece com pop ao clicar e some; BLOCK atualiza a barra via
-	# board sync; UNBLOCK quebra a barra com pop antes do restyle.
 	match event_name:
 		"TRAP_TRIGGERED":
 			_pop_trap_cell(Vector2i(x, y))
@@ -1631,24 +1532,14 @@ func _on_selected_power_changed(_power_id: String) -> void:
 	_update_armed_power_highlight()
 
 
-# Internal — trava de ação e erro
 
 func _on_action_lock_changed(is_locked: bool) -> void:
 	_action_locked = is_locked
 	_update_board_interactivity()
 
 
-# Combina trava de ação e poder GLOBAL armado num único estado visual —
-# nenhum dos dois sobrescreve o outro. O mouse_filter no board_grid sozinho
-# não basta: os botões-filhos têm hit test próprio, então cada célula
-# também recebe MOUSE_FILTER_IGNORE enquanto desabilitada. Além disso,
-# células já reveladas ficam desabilitadas INDIVIDUALMENTE (o backend
-# rejeita REVEAL nelas com "already been revealed") — o estado revelado
-# é lido do viewmodel via get_cell_visual_state (todo estado != HIDDEN
-# implica célula revelada), composto com o gate global sem duplicá-lo.
 func _update_board_interactivity() -> void:
 	var board_disabled := _global_power_armed or _action_locked
-	# Congelado com poder que pode usar congelado (UNFREEZE/IMMUNITY) não desabilita
 	if _view_model != null and _view_model.is_frozen() and _armed_scope == GamePowerCatalog.SCOPE_GLOBAL:
 		var selected_id := _view_model.selected_power_id()
 		for p in _cached_my_inventory:
@@ -1682,13 +1573,11 @@ func _on_error_changed(message: String) -> void:
 		status_label.show()
 
 
-# Internal — sair + fechamento garantido (X / Alt+F4 / _exit_tree)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		if is_instance_valid(_view_model):
 			_view_model.leave_game()
-		# Deixa o OS fechar após enviar LEFT_GAME
 		get_tree().quit()
 
 func _exit_tree() -> void:
@@ -1713,7 +1602,6 @@ func _show_game_over_overlay(is_winner: bool, title: String, subtitle: String) -
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index = 100
 
-	# CenterContainer ocupa toda a tela e centraliza o conteúdo
 	var center := CenterContainer.new()
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 

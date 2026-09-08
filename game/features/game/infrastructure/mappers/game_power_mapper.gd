@@ -20,7 +20,6 @@ static func to_domain(data: Dictionary) -> GamePower:
 	if raw_rarity != null:
 		parsed_rarity = str(raw_rarity)
 
-	# Payload sem raridade (estado atual do backend) — resolve pelo tipo.
 	if parsed_rarity.is_empty():
 		parsed_rarity = GamePowerCatalog.get_rarity(parsed_type)
 

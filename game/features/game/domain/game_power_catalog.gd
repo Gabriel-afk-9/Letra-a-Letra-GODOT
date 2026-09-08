@@ -17,8 +17,6 @@ const SCOPE_GLOBAL := "GLOBAL"
 const SCOPE_CELL := "CELL"
 
 
-# Raridades espelham o enum PowerRarity do backend. O valor por tipo vem de
-# PowerType.java (metadado fixo do tipo, não da instância).
 const RARITY_COMMON := "COMMON"
 const RARITY_RARE := "RARE"
 const RARITY_EPIC := "EPIC"

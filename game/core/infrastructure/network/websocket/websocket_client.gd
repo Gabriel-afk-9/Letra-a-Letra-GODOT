@@ -2,9 +2,6 @@ extends Node
 class_name WebSocketClient
 
 
-# Log bruto de toda mensagem WS recebida (aditivo, abaixo dos logs
-# seletivos). Desligado após fix do timer: reative só para investigar
-# novo bug (liga DEBUG_RAW_WS e o WS IN abaixo).
 const DEBUG_RAW_WS := false
 
 signal connected
@@ -34,7 +31,6 @@ func _process(_delta: float) -> void:
 
 
 
-# Public API
 
 func connect_socket() -> void:
 	disconnect_socket()
@@ -91,7 +87,6 @@ func send(payload: Dictionary) -> void:
 
 
 
-# Internal — estado da conexão
 
 func _handle_open_state() -> void:
 	if _is_connecting:
@@ -118,7 +113,6 @@ func _handle_closed_state() -> void:
 
 
 
-# Internal — pacotes recebidos
 
 func _process_packet() -> void:
 	var text := _socket.get_packet().get_string_from_utf8()
@@ -142,7 +136,5 @@ func _process_packet() -> void:
 
 	var message := WebSocketMessage.from_dictionary(body)
 
-	# Removido WS EVENT duplicado: RemoteGameRepository já loga
-	# "[GAME] received event=" compacto por mensagem.
 
 	message_received.emit(message)

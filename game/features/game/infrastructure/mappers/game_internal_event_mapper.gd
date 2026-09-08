@@ -3,8 +3,6 @@ extends RefCounted
 class_name GameInternalEventMapper
 
 
-# Extrai event/data de um item bruto do array "events" do envelope WS
-# (lógica antes inline em RemoteGameRepository._handle_internal_events).
 static func to_domain(raw_event: Dictionary) -> GameInternalEvent:
 	var raw_event_name = raw_event.get("event")
 	var raw_event_data = raw_event.get("data")

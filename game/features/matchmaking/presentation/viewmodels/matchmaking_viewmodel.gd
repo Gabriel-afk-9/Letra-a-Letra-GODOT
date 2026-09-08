@@ -29,7 +29,6 @@ func _init(usecase: MatchmakingUseCase, navigation: NavigationService, pending_n
 	_usecase.error.connect(_on_error)
 
 
-# Public API
 
 func state() -> MatchmakingState:
 	return _state
@@ -47,9 +46,6 @@ func cancel_search() -> void:
 	_usecase.cancel_search()
 
 func force_leave_and_retry() -> void:
-	# Erro "already in a game" = Room ainda em RUNNING no servidor (fechou
-	# janela sem LEFT_GAME). Manda LEFT_GAME com o gameId pendente via
-	# ServiceRegistry e re-tenta fila após limpar.
 	var game_repo: GameRepository = ServiceRegistry.game_repository()
 	game_repo.leave_game()
 	_clear_error()
@@ -64,7 +60,6 @@ func is_already_in_game_error() -> bool:
 	return msg.to_lower().contains("already in a game")
 
 
-# Internal
 
 func _set_state(new_state: MatchmakingState) -> void:
 	if _state == new_state:

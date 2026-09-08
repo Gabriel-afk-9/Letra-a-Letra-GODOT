@@ -28,7 +28,6 @@ func go_to_matchmaking() -> void:
 	_navigation.go_to(AppRoutes.MATCHMAKING)
 
 func go_to_room() -> void:
-	# Salas ainda não implementadas — evita crash Nonexistent function em F5
 	AppLogger.debug("HomeViewModel: go_to_room ainda não implementado")
 	_set_error("Salas em breve!")
 

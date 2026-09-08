@@ -13,8 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://d0iu2kvhddnlj" path="res://assets/components/boot_btn.tscn" id="12_7yyda"]
 [ext_resource type="StyleBox" uid="uid://br8xv828524au" path="res://assets/styles/buttons/green_button_home.tres" id="13_0ql3y"]
 [ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="14_mqpyh"]
-[ext_resource type="PackedScene" uid="uid://l1kbqj1dqb4h" path="res://assets/components/exit_button.tscn" id="15_oy5v3"]
-[ext_resource type="Script" uid="uid://cskmnchpbve6w" path="res://assets/scripts/exit_button.gd" id="16_xtv2u"]
+
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sotyy"]
 bg_color = Color(0, 0.38178387, 0.626266, 0.8352941)
@@ -253,21 +252,8 @@ stretch_mode = 5
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ExitButton" parent="MarginContainer/MainLayout" unique_id=2144671933 instance=ExtResource("15_oy5v3")]
-custom_minimum_size = Vector2(140, 0)
-custom_maximum_size = Vector2(150, -1)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 16
-text = "SAIR"
-script = ExtResource("16_xtv2u")
-
 [connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn" to="." method="_navigate_to_matchmaking"]
 [connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn" to="." method="_on_play_btn_pressed"]
 [connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/RoomBtn" to="." method="_on_room_btn_pressed"]
-[connection signal="pressed" from="MarginContainer/MainLayout/ExitButton" to="." method="_on_logout_button_pressed"]
-[connection signal="pressed" from="MarginContainer/MainLayout/ExitButton" to="." method="_on_exit_button_pressed"]
 
 [editable path="MarginContainer/MainLayout/Header/PlayerCard"]

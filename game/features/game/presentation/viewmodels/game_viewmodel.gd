@@ -70,7 +70,6 @@ var _armed_power_type: String = ""
 
 var _cells_claimed_by_me: Array[Vector2i] = []
 var _cells_claimed_by_opponent: Array[Vector2i] = []
-# S2 SPY: célula espiada visível só para o dono (oponente segue HIDDEN)
 var _spied_cell := Vector2i(-1, -1)
 var _has_spied := false
 
@@ -95,7 +94,6 @@ func _init(usecase: GameUseCase, navigation: NavigationService) -> void:
 	_usecase.action_rejected.connect(_on_action_rejected)
 
 
-# Public API
 
 func start(game_id: String, opponent_id: String) -> void:
 	_set_loading(true)
@@ -107,17 +105,14 @@ func on_cell_clicked(x: int, y: int) -> void:
 	if _is_action_locked:
 		return
 
-	# Sprint 2: backend exige sua vez para tudo (REVEAL e CELL) — fora da vez zero WS OUT
 	if not _is_my_turn:
 		return
 
-	# Sprint 2: congelado bloqueia REVEAL e todo CELL (nenhum CELL tem can_use_while_frozen)
 	if _is_frozen:
 		return
 
 	if not _armed_power_id.is_empty() and GamePowerCatalog.get_scope(_armed_power_type) == GamePowerCatalog.SCOPE_CELL:
 		_usecase.use_power_on_cell(_armed_power_id, _armed_power_type, x, y)
-		# Desarmar após uso
 		_armed_power_id = ""
 		_armed_power_type = ""
 		selected_power_changed.emit("")
@@ -129,8 +124,6 @@ func on_cell_clicked(x: int, y: int) -> void:
 
 
 func select_power(power_id: String, power_type: String) -> void:
-	# Legado (testes + compat): disparo imediato para GLOBAL, armar para CELL.
-	# Gates alinhados com on_power_clicked/confirm (Sprint 2/4) para não furar turno/frozen.
 	if not _is_my_turn:
 		return
 
@@ -152,7 +145,6 @@ func select_power(power_id: String, power_type: String) -> void:
 
 
 func on_power_clicked(power_id: String) -> void:
-	# Buscar o poder no inventário do jogador local
 	var power: GamePower = null
 	for p in _my_inventory:
 		if p is GamePower and p.id == power_id:
@@ -162,19 +154,14 @@ func on_power_clicked(power_id: String) -> void:
 	if power == null:
 		return
 
-	# Bloqueio: se congelado, só permite poderes que podem ser usados congelado
 	if _is_frozen and not GamePowerCatalog.can_use_while_frozen(power.type):
 		return
 
-	# Bypass catalog: UNFREEZE/IMMUNITY podem armar mesmo com action_lock
 	if _is_action_locked and not GamePowerCatalog.can_use_while_frozen(power.type):
 		return
 
 	var scope := GamePowerCatalog.get_scope(power.type)
 
-	# GLOBAL agora também apenas arma — o disparo real acontece em
-	# confirm_armed_global_power() (confirmação da View numa próxima etapa).
-	# CELL mantém o comportamento: executa no clique na célula.
 	if _armed_power_id == power_id:
 		clear_selected_power()
 		return
@@ -192,7 +179,6 @@ func confirm_armed_global_power() -> void:
 	if GamePowerCatalog.get_scope(_armed_power_type) != GamePowerCatalog.SCOPE_GLOBAL:
 		return
 
-	# Sprint 2: fora da vez mantém armado para tentar de novo no seu turno
 	if not _is_my_turn:
 		return
 
@@ -200,7 +186,6 @@ func confirm_armed_global_power() -> void:
 		clear_selected_power()
 		return
 
-	# Sprint 2: trava otimista bloqueia GLOBAL comum, mas UNFREEZE/IMMUNITY furam lock
 	if _is_action_locked and not GamePowerCatalog.can_use_while_frozen(_armed_power_type):
 		return
 
@@ -220,8 +205,6 @@ func discard_power(power_id: String) -> void:
 	_usecase.discard_power(power_id)
 
 
-# Sprint 4: inventário cheio (5/5) trava drop do servidor — expõe helper para
-# a View oferecer descarte sem mexer no fluxo de armar/disparar.
 func is_inventory_full() -> bool:
 	return _count_my_powers() >= GamePlayerState.INVENTORY_SIZE
 
@@ -289,9 +272,6 @@ func selected_power_id() -> String:
 	return _armed_power_id
 
 
-# Estado visual de cada célula — toda a decisão de cor vive aqui, a View só
-# aplica estilo. A ordem importa: células reivindicadas (palavra completa)
-# têm precedência sobre células apenas reveladas.
 
 func get_cell_visual_state(x: int, y: int) -> String:
 	var cell_position := Vector2i(x, y)
@@ -302,7 +282,6 @@ func get_cell_visual_state(x: int, y: int) -> String:
 	if _cells_claimed_by_opponent.has(cell_position):
 		return CELL_STATE_CLAIMED_OPPONENT
 
-	# S3 BLIND: vítima vê tudo preto (CLAIMED já resolvidas continuam visíveis)
 	if _is_blinded:
 		return CELL_STATE_BLINDED
 
@@ -315,9 +294,6 @@ func get_cell_visual_state(x: int, y: int) -> String:
 	var cell := _board.get_cell(x, y)
 
 	if cell == null or not cell.revealed:
-		# S5 TRAP/BLOCK: só em célula não revelada. Dono sempre vê a sua trap
-		# (azul); trap do oponente só aparece com DETECT ativo (laranja);
-		# block mostra a barra para os dois (3 REVEALs desbloqueiam).
 		var effect_type := cell.effect_type.to_upper() if cell != null else ""
 		var effect_owner := _usecase.classify_player(cell.effect_owner_id) if cell != null else ""
 
@@ -357,11 +333,9 @@ func get_cell_letter(x: int, y: int) -> String:
 	if cell == null:
 		return ""
 
-	# S2 SPY: dono vê a letra mesmo sem reveal (se o backend mandar no sync)
 	if get_cell_visual_state(x, y) == CELL_STATE_SPY_ME:
 		return cell.letter.to_upper() if not cell.letter.is_empty() else ""
 
-	# S3 BLIND: esconde todas as letras da vítima
 	if _is_blinded:
 		return ""
 
@@ -372,8 +346,6 @@ func get_cell_letter(x: int, y: int) -> String:
 
 
 func get_cell_block_filled(x: int, y: int) -> int:
-	# S5 BLOCK: segmentos preenchidos 0-3 = 3 - remainingClicks. Sem dado do
-	# backend (0), assume recém-colocada (0 preenchidos).
 	if _board == null:
 		return 0
 
@@ -403,14 +375,6 @@ func classify_word_owner(word: GameWord) -> String:
 	return _usecase.classify_player(word.found_by_player_id)
 
 
-# Internal — trava otimista de ação
-#
-# Decisão de design deliberada: o MVP travava cliques por 1s de forma reativa
-# à troca de turno. Aqui a trava é OTIMISTA — prende no instante em que o
-# jogador local dispara uma ação e solta quando o turno passa, quando a ação
-# é rejeitada, ou após um timeout de segurança de 3s (rede lenta). Cobre o
-# mesmo objetivo (impedir clique duplo no round-trip do servidor) sem depender
-# do nome cru de eventos WS, que não chega até esta camada.
 
 func _lock_action() -> void:
 	if _is_action_locked:
@@ -442,7 +406,6 @@ func _unlock_action() -> void:
 	action_lock_changed.emit(false)
 
 
-# Internal — sinais do usecase
 
 func _on_board_updated(board: GameBoard) -> void:
 	_board = board
@@ -468,7 +431,6 @@ func _on_power_granted(power: GamePower) -> void:
 	power_granted.emit(power)
 
 
-# Sem estado a atualizar nesta fase: a View pode reagir depois, se precisar.
 
 func _on_my_cell_revealed() -> void:
 	pass
@@ -488,10 +450,6 @@ func _on_word_found(cells: Array, found_by_player_id: String, is_me: bool) -> vo
 
 	word_found_feedback.emit(cells, is_me)
 
-	# Garante repintura no mesmo frame após o append: o board já foi emitido
-	# antes do WORD_FOUNDED no mesmo envelope (remote reparte board antes do
-	# evento), então sem este reemit o board_changed seguinte só viria no
-	# próximo PLAYER_ACTION_RESULT do oponente.
 	if _board != null:
 		board_changed.emit(_board)
 
@@ -512,8 +470,6 @@ func _on_turn_changed(current_turn_player_id: String, turn_ends_at: String, is_m
 	_is_my_turn = is_my_turn
 	_turn_ends_at = turn_ends_at
 
-	# Aquece a etiqueta antes da tela redesenhar na troca de dono: emite o
-	# restante já no prazo novo para nunca piscar o 0s do turno anterior.
 	if not turn_ends_at.is_empty():
 		var warm_deadline := _parse_turn_deadline(turn_ends_at)
 
@@ -550,9 +506,6 @@ func _on_my_effect_event(event_name: String) -> void:
 			_is_spied = true
 		"SPY_REMOVED":
 			_is_spied = false
-		# Pareamento BLIND/LANTERN inferido por tema (LANTERN compartilha escopo
-		# GLOBAL não ofensivo com BLIND) — não confirmado no MVP.
-		# TODO: confirmar pareamento BLIND/LANTERN contra backend real
 		"PLAYER_BLINDED":
 			_is_blinded = true
 			_blind_turns_left = BLIND_TURNS_DEFAULT
@@ -615,10 +568,6 @@ func _apply_turn_effect_decrement() -> void:
 
 
 func _on_game_over(is_winner: bool, reason: String) -> void:
-	# GAME_OVER por inatividade manda vencedor via GAME_OVER (REASON_WORDS)
-	# e perdedor via REMOVED_BECAUSE_INACTIVITY. Sem palavra encontrada e
-	# jogo encerrado cedo, "Parabéns! Você encontrou mais palavras" é falso —
-	# trata como W.O. (oponente removido).
 	if is_winner and reason == REASON_WORDS and not _has_any_word_found():
 		reason = REASON_OPPONENT_LEFT
 
@@ -669,8 +618,6 @@ func _on_action_rejected(error_code: String, cell_x: int, cell_y: int) -> void:
 	elif code == "player_not_in_game" or code.contains("not currently in a game"):
 		_show_game_over(true, REASON_OPPONENT_LEFT)
 	elif code == "the selected cell has already been revealed" or code.contains("already been revealed") or code.contains("already_revealed"):
-		# Clique redundante do próprio usuário em célula já revelada —
-		# ignorado sem feedback de erro (a trava já foi liberada acima).
 		pass
 	elif code.contains("frozen") or code.contains("frozen_cannot_act"):
 		notification_requested.emit("Congelado! Use DESCONGELAR ❄️")
@@ -683,15 +630,8 @@ func _on_action_rejected(error_code: String, cell_x: int, cell_y: int) -> void:
 		AppLogger.debug("GameViewModel: código de erro desconhecido: %s" % error_code)
 
 
-# Internal — countdown do turno
-#
-# Um token de geração aborta o loop anterior quando um novo turn_changed chega,
-# evitando múltiplas coroutines de timer empilhadas ao mesmo tempo.
 
 func _start_turn_timer_loop() -> void:
-	# DISCARD_POWER não vira o turno (turnEndsAt null/ignorado): deadline
-	# inválido retorna cedo SEM bumpar a geração, para não matar o loop
-	# do timer atual — descartar só limpa o slot e mantém a vez.
 	if _turn_ends_at.is_empty():
 		return
 
@@ -705,21 +645,10 @@ func _start_turn_timer_loop() -> void:
 
 
 func parse_turn_deadline(datetime_string: String) -> float:
-	# Wrapper público para testes Fase 2 — delega à lógica privada
 	return _parse_turn_deadline(datetime_string)
 
 
 func _parse_turn_deadline(datetime_string: String) -> float:
-	# Time.get_unix_time_from_datetime_string não trata sufixos de timezone
-	# ("Z") nem faz conversão de fuso — o "Z" precisa ser removido à mão. A
-	# fração decimal (".000") é ignorada silenciosamente pela engine. Como o
-	# backend envia UTC com "Z" e Time.get_unix_time_from_system() também é
-	# UTC, a comparação direta dos timestamps é válida. Falha de parse retorna
-	# 0 — tratado como deadline inválido (sentinela -1). Sentinelas de null
-	# serializado ("null"/"<null>"/"None" — ex: turnEndsAt após DISCARD_POWER)
-	# também são deadline inválido, sem tocar no relógio atual. O backend Java
-	# (Instant.toString) manda fração longa (ex: ".832158445") que a engine não
-	# aceita — descarta a fração e converte só até os segundos.
 	if datetime_string == "null" or datetime_string == "<null>" or datetime_string == "None":
 		return -1.0
 
