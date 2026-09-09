@@ -3,7 +3,7 @@
 > **Data:** 2026-09-04 (atualizado 2026-09-06)
 > **Engine:** Godot 4.7, GDScript, `renderer="mobile"` viewport 360x640
 > **Arquitetura:** Clean Architecture + Feature-First (`game/features/<nome>/`)
-> **Estado atual:** 82 testes 219 asserts <0.5s GUT 9.7.1 `game/tests/unit` — ver Fase 8; 0 linter, 0 CI
+> **Estado atual:** 102 testes 258 asserts <0.5s GUT 9.7.1 `game/tests/unit` — ver Fase 8b; 0 linter, 0 CI
 
 ## 1. Objetivo
 
@@ -97,6 +97,16 @@ CI futuro: `windows-latest` + `godot --headless` step
 * 82/82 verdes 219 asserts <0.5s — Fase 1 37 + Fase 2/3 45 novos (`viewmodels` 23 + `infra` 4 + `integration` 14 + `views` 4)
 * Hardening: `home go_to_room` sem crash (`home_viewmodel.gd:30`), `register` `success=false` sem token (`register_usecase.gd:24`), `WebSocketClient` `disconnected` pós-OPEN (`websocket_client.gd:104`), autoload order fix (`project.godot:19`)
 * Fixtures `game/tests/fixtures/ws_*.json` espelham `docs/websocket-events-contract.md:1` 8 eventos
+
+## 8c. Critérios de Aceite Fase 4 (2026-09-09)
+
+* 102/102 verdes 258 asserts <0.5s — Fase 2/3 82 + 20 novos (`views` 8 + `viewmodels` 4 + `infra` 2 + `domain` 2 + `mappers` 4)
+* `test_game_screen_layout` WordsWrapper `72×fixed` + `clip` + `SIZE_EXPAND_FILL/SHRINK_CENTER`, `CardsCenter` 220×70 dots offsets, `InventoryPanel` transparent `Color(0,0,0,0)`
+* `test_matchmaking_cancel_style` `found` desativado não escondido, `connecting` desativado, `cancel` usa `disabled_style`
+* `test_power_drag_preview` `GLOBAL_SWIPE_THRESHOLD 40` `ARMED_LIFT_Y -10` `1.12` delta ±20, `powerUse/powerDiscard` + 0.3s scale
+* `test_home_sair_removed` sem `ExitButton` `exit_btn/_on_exit_button_pressed/exit_game`
+* `test_no_comment_regression` sem `#` em `*.gd`/`*.tscn` fora `addons/` + `docs/` + `tests/`
+* `test_freeze_lock_1_2` `ACTION_LOCK_TIMEOUT 1.2s` geração incrementa, `test_word_paint_same_click` cel revelada não repinta
 
 ## 9. Hardening Futuro
 

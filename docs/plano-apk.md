@@ -5,7 +5,7 @@
 > **Godot root:** `game/` `AGENTS.md:6` — abrir `game/project.godot`, não repo root
 > **Backend:** Spring Boot `Letra-a-Letra-API` `http://127.0.0.1:8080` + `ws://127.0.0.1:8080/ws/game` hardcoded `game/core/infrastructure/environment/global_environment.gd:3` `GlobalEnvironment.is_debug_ws_enabled()` `global_environment.gd:5`
 > **Autoload order:** `GlobalEnvironment → SessionStore → ServiceRegistry` `game/project.godot:19` (Fase 3 fix)
-> **Testes:** `82/82` `219 asserts` GUT 9.7.1 `game/tests/unit` `docs/testing-plan.md:3`
+> **Testes:** `102/102` `258 asserts` GUT 9.7.1 `game/tests/unit` `docs/testing-plan.md:6`
 
 ## 1. Como funciona hoje (local)
 
@@ -77,5 +77,5 @@ const WS_BASE_URL = "wss://api.letraaletra.seudominio.com/ws/game" # wss para ht
 ```powershell
 & "C:\Program Files (x86)\Steam\steamapps\common\Godot Engine\godot.windows.opt.tools.64.exe" --headless --path game --import
 & "C:\Program Files (x86)\Steam\steamapps\common\Godot Engine\godot.windows.opt.tools.64.exe" --headless --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests/unit -ginclude_subdirs -gprefix=test_ -gexit
-# 82/82 All tests passed! + F5 manual Login → Home → Sala (Salas em breve!)
+# 102/102 All tests passed! + F5 manual Login → Home → Sala (Salas em breve!)
 ```
