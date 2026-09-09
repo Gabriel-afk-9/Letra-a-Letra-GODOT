@@ -4,7 +4,7 @@
 
 - Godot 4.7 client (GDScript) for "Letra a Letra", a multiplayer word-hunt game. Backend: external Spring Boot API ([Letra-a-Letra-API](https://github.com/Zidan-09/Letra-a-Letra-API)).
 - **The Godot project root is `game/`** — open `game/project.godot` in the editor, not the repo root.
-- Tests: GUT 9.7.1 `game/addons/gut` — 82 tests 219 asserts <0.5s `godot --headless --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests/unit -ginclude_subdirs -gprefix=test_ -gexit` (ou `Project > Tools > GUT > Run All`; Steam sem PATH use caminho completo `C:\Program Files (x86)\Steam\steamapps\common\Godot Engine\godot.windows.opt.tools.64.exe`). GDScript errors also surface via `F5` at runtime.
+- Tests: GUT 9.7.1 `game/addons/gut` — 102 tests 258 asserts <0.5s `godot --headless --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests/unit -ginclude_subdirs -gprefix=test_ -gexit` (ou `Project > Tools > GUT > Run All`; Steam sem PATH use caminho completo `C:\Program Files (x86)\Steam\steamapps\common\Godot Engine\godot.windows.opt.tools.64.exe`). GDScript errors also surface via `F5` at runtime.
 - No linters, no CI, no package manager.
 - The backend must be running locally. URLs are hardcoded in `game/core/infrastructure/environment/global_environment.gd`: `API_BASE_URL = "http://127.0.0.1:8080"`, `WS_BASE_URL = "ws://127.0.0.1:8080/ws/game"`. Without it, login/matchmaking fail.
 - Code comments and user-facing strings are PT-BR; identifiers are English. Keep this convention.
@@ -23,7 +23,7 @@ presentation/views/      # <name>_screen.tscn + <name>_screen.gd
 presentation/viewmodels/ # extends BaseViewModel
 ```
 
-- Mapper caveat: neither `game/` nor `matchmaking/` has an `infrastructure/mappers/` folder today. JSON → domain parsing is done inline in the domain models (`from_dictionary`/`from_array`) and inside the remote repositories. Prefer adding a real mapper layer for new features, but follow the existing inline style when touching these two.
+- Mapper caveat: `game/` já possui `infrastructure/mappers/` desde Fase 1 (6 mappers); `matchmaking/` também possui desde Fase 2 (`matchmaking_player_mapper`, `matchmaking_found_event_mapper`). Novas features devem ter `infrastructure/mappers/`; legado já migrado.
 
 - Dependency rule: view → viewmodel → usecase → repository. Repository interfaces (contracts) live in `core/application/contracts/` (e.g. `login_repository.gd`) and are `extends`-ed by the remote implementations.
 - **Shared services come only from the `ServiceRegistry` autoload** (`HttpClient`, `WebSocketClient`, `NavigationService`, `UserRepository`, `MatchmakingRepository`). Never instantiate those yourself — features that do are assembled via their factory, e.g. `LoginFactory.create()` in the view's `_ready()`.
@@ -42,7 +42,7 @@ presentation/viewmodels/ # extends BaseViewModel
 ## Game feature (implemented)
 
 `features/game/` exists and follows the same layered pattern as `matchmaking/`
-(no mappers layer — parsing is inline — `game/` já possui `infrastructure/mappers/` desde Fase 1):
+(`game/` já possui `infrastructure/mappers/` desde Fase 1 — 6 mappers):
 
 ```
 application/usecases/game_usecase.gd

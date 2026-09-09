@@ -24,7 +24,7 @@ O projeto segue **Clean Architecture** com separação por features (`game/featu
 View → ViewModel → UseCase → Repository Contract → RemoteRepository → WebSocketClient (autoload)
 ```
 
-Não há testes, linters, CI ou package manager. Validação apenas rodando o jogo (F5 no editor Godot).
+Não há linters, CI ou package manager. **102 testes 258 asserts GUT 9.7.1 `game/tests/unit`** — ver `docs/testing-plan.md:6`; validação também via `F5` no editor Godot.
 
 ---
 
