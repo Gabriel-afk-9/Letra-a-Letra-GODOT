@@ -10,6 +10,7 @@ const COLOR_ORANGE := Color(0.9529412, 0.52156866, 0.09411765, 1)
 
 const CELL_BORDER_WIDTH := 2
 const CELL_CORNER_RADIUS := 5
+const CELL_INNER_CORNER_RADIUS := 4
 
 const COLOR_WHITE := Color(1, 1, 1, 1)
 const COLOR_NEON_GREEN := Color(0.2, 1.0, 0.4, 1)
@@ -28,7 +29,7 @@ const POWER_GRANT_PULSE_DURATION := 0.16
 const POWER_GRANT_SETTLE_DURATION := 0.24
 
 const EFFECT_FREEZE_COLOR := Color(0.2, 0.5, 1.0, 0.25)
-const EFFECT_IMMUNITY_COLOR := Color(1.0, 0.55, 0.1, 0.2)
+const EFFECT_IMMUNITY_COLOR := Color(1.0, 0.55, 0.1, 0.35)
 const EFFECT_BLIND_COLOR := Color(0.0, 0.0, 0.0, 0.5)
 const EFFECT_OVERLAY_FADE := 0.3
 const COLOR_BLIND_BG := Color(0.05, 0.05, 0.05, 1)
@@ -350,31 +351,42 @@ func _apply_cell_style(cell_position: Vector2i) -> void:
 
 	match state:
 		GameViewModel.CELL_STATE_REVEALED_ME:
-			_style_cell(button, COLOR_WHITE, COLOR_BLUE, COLOR_TEXT_DARK)
+			_style_cell(button, COLOR_WHITE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, Color.BLACK)
+			_update_cell_inner_border(button, COLOR_BLUE)
 		GameViewModel.CELL_STATE_REVEALED_OPPONENT:
-			_style_cell(button, COLOR_WHITE, COLOR_ORANGE, COLOR_TEXT_DARK)
+			_style_cell(button, COLOR_WHITE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, Color.BLACK)
+			_update_cell_inner_border(button, COLOR_ORANGE)
 		GameViewModel.CELL_STATE_CLAIMED_ME:
-			_style_cell(button, COLOR_BLUE, COLOR_BLUE, COLOR_WHITE)
+			_style_cell(button, COLOR_BLUE, Color(0, 0, 0, 0), COLOR_WHITE, Color.BLACK)
+			_update_cell_inner_border(button, Color(0, 0, 0, 0))
 		GameViewModel.CELL_STATE_CLAIMED_OPPONENT:
-			_style_cell(button, COLOR_ORANGE, COLOR_ORANGE, COLOR_WHITE)
+			_style_cell(button, COLOR_ORANGE, Color(0, 0, 0, 0), COLOR_WHITE, Color.BLACK)
+			_update_cell_inner_border(button, Color(0, 0, 0, 0))
 		GameViewModel.CELL_STATE_SPY_ME:
 			_style_cell(button, COLOR_WHITE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, COLOR_SPY_BORDER)
+			_update_cell_inner_border(button, Color(0, 0, 0, 0))
 		GameViewModel.CELL_STATE_BLINDED:
-			_style_cell(button, COLOR_BLIND_BG, Color(0, 0, 0, 0), COLOR_BLIND_BG, COLOR_BLIND_BORDER)
+			_style_cell(button, COLOR_BLIND_BG, Color(0, 0, 0, 0), COLOR_BLIND_BG, Color.BLACK)
+			_update_cell_inner_border(button, Color(0, 0, 0, 0))
 		GameViewModel.CELL_STATE_TRAP_ME:
-			_style_cell(button, COLOR_WHITE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, COLOR_BLUE)
+			_style_cell(button, COLOR_BLUE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, Color.BLACK)
+			_update_cell_inner_border(button, Color(0, 0, 0, 0))
 			_update_cell_trap_icon(button, true)
 		GameViewModel.CELL_STATE_TRAP_OPPONENT:
-			_style_cell(button, COLOR_WHITE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, COLOR_ORANGE)
+			_style_cell(button, COLOR_ORANGE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, Color.BLACK)
+			_update_cell_inner_border(button, Color(0, 0, 0, 0))
 			_update_cell_trap_icon(button, true)
 		GameViewModel.CELL_STATE_BLOCK_ME:
-			_style_cell(button, COLOR_WHITE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, COLOR_BLUE)
+			_style_cell(button, COLOR_BLUE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, Color.BLACK)
+			_update_cell_inner_border(button, Color(0, 0, 0, 0))
 			_update_cell_block_bar(button, cell_position, COLOR_BLUE)
 		GameViewModel.CELL_STATE_BLOCK_OPPONENT:
-			_style_cell(button, COLOR_WHITE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, COLOR_ORANGE)
+			_style_cell(button, COLOR_ORANGE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, Color.BLACK)
+			_update_cell_inner_border(button, Color(0, 0, 0, 0))
 			_update_cell_block_bar(button, cell_position, COLOR_ORANGE)
 		_:
-			_style_cell(button, COLOR_WHITE, Color(0, 0, 0, 0), COLOR_TEXT_DARK)
+			_style_cell(button, COLOR_WHITE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, Color.BLACK)
+			_update_cell_inner_border(button, Color(0, 0, 0, 0))
 
 
 func _animate_cell_reveal(cell_position: Vector2i) -> void:
@@ -1381,10 +1393,8 @@ func _update_cell_trap_icon(button: Button, show: bool) -> void:
 
 	var icon := TextureRect.new()
 	icon.texture = _trap_cell_texture()
-	icon.custom_minimum_size = TRAP_ICON_SIZE
-	icon.size = TRAP_ICON_SIZE
-	icon.position = (CELL_SIZE - TRAP_ICON_SIZE) / 2.0
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.set_anchors_preset(Control.PRESET_FULL_RECT)
+	icon.stretch_mode = TextureRect.STRETCH_SCALE
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(icon)
@@ -1436,12 +1446,31 @@ func _pop_trap_cell(cell_position: Vector2i) -> void:
 		return
 
 	var button: Button = button_variant
-	_update_cell_trap_icon(button, true)
-	button.pivot_offset = CELL_SIZE / 2.0
+	_update_cell_trap_icon(button, false)
+	var temp := Control.new()
+	temp.name = "TempTrapReveal"
+	temp.set_anchors_preset(Control.PRESET_FULL_RECT)
+	temp.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	temp.modulate.a = 0.0
+	temp.scale = Vector2(0.5, 0.5)
+	temp.pivot_offset = CELL_SIZE / 2.0
+	button.add_child(temp)
+	var icon := TextureRect.new()
+	icon.texture = _trap_cell_texture()
+	icon.set_anchors_preset(Control.PRESET_FULL_RECT)
+	icon.stretch_mode = TextureRect.STRETCH_SCALE
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	temp.add_child(icon)
 	var tween := create_tween()
-	tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_property(button, "scale", TRAP_POP_SCALE, 0.1)
-	tween.tween_property(button, "scale", Vector2.ONE, 0.1)
+	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(temp, "modulate:a", 1.0, 0.2)
+	tween.parallel().tween_property(temp, "scale", Vector2(1.2, 1.2), 0.2)
+	tween.tween_property(temp, "scale", Vector2.ONE, 0.3)
+	tween.tween_interval(1.1)
+	tween.tween_property(temp, "modulate:a", 0.0, 0.4)
+	tween.parallel().tween_property(temp, "scale", Vector2(0.8, 0.8), 0.4)
+	tween.tween_callback(temp.queue_free)
 
 
 func _break_block_cell(cell_position: Vector2i) -> void:
@@ -1464,6 +1493,36 @@ func _restyle_cell(cell_position: Vector2i) -> void:
 
 	_apply_cell_style(cell_position)
 	_last_cell_state[cell_position] = _view_model.get_cell_visual_state(cell_position.x, cell_position.y)
+
+
+func _update_cell_inner_border(button: Button, inner_color: Color) -> void:
+	var layer := _get_cell_extra(button, "InnerBorder")
+
+	for child in layer.get_children():
+		child.queue_free()
+
+	if inner_color.a == 0:
+		layer.visible = false
+		return
+
+	layer.visible = true
+	var panel := Panel.new()
+	panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	panel.offset_left = 2
+	panel.offset_top = 2
+	panel.offset_right = -2
+	panel.offset_bottom = -2
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0, 0, 0, 0)
+	style.border_color = inner_color
+	style.border_width_left = CELL_BORDER_WIDTH
+	style.border_width_top = CELL_BORDER_WIDTH
+	style.border_width_right = CELL_BORDER_WIDTH
+	style.border_width_bottom = CELL_BORDER_WIDTH
+	style.set_corner_radius_all(CELL_INNER_CORNER_RADIUS)
+	panel.add_theme_stylebox_override("panel", style)
+	layer.add_child(panel)
 
 
 func _get_cell_extra(button: Button, layer_name: String) -> Control:
@@ -1526,6 +1585,7 @@ func _on_trap_event_feedback(event_name: String, x: int, y: int) -> void:
 
 func _on_trap_animation_requested(x: int, y: int) -> void:
 	_shake_cell(Vector2i(x, y))
+	_pop_trap_cell(Vector2i(x, y))
 
 
 func _on_selected_power_changed(_power_id: String) -> void:

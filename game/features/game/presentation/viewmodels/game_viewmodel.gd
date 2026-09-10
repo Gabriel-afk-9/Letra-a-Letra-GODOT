@@ -18,8 +18,8 @@ const CELL_STATE_TRAP_OPPONENT := "TRAP_OPPONENT"
 const CELL_STATE_BLOCK_ME := "BLOCK_ME"
 const CELL_STATE_BLOCK_OPPONENT := "BLOCK_OPPONENT"
 
-const FREEZE_TURNS_DEFAULT := 3
-const IMMUNITY_TURNS_DEFAULT := 5
+const FREEZE_TURNS_DEFAULT := 6
+const IMMUNITY_TURNS_DEFAULT := 10
 const BLIND_TURNS_DEFAULT := 6
 const ACTION_LOCK_TIMEOUT_SECONDS := 1.2
 const TURN_TIMER_TICK_SECONDS := 0.5
@@ -282,9 +282,6 @@ func get_cell_visual_state(x: int, y: int) -> String:
 	if _cells_claimed_by_opponent.has(cell_position):
 		return CELL_STATE_CLAIMED_OPPONENT
 
-	if _is_blinded:
-		return CELL_STATE_BLINDED
-
 	if _board == null:
 		if _has_spied and cell_position == _spied_cell:
 			return CELL_STATE_SPY_ME
@@ -315,6 +312,12 @@ func get_cell_visual_state(x: int, y: int) -> String:
 
 		return CELL_STATE_HIDDEN
 
+	if _has_spied and cell_position == _spied_cell:
+		return CELL_STATE_SPY_ME
+
+	if _is_blinded:
+		return CELL_STATE_BLINDED
+
 	match _usecase.classify_player(cell.revealed_by_player_id):
 		"me":
 			return CELL_STATE_REVEALED_ME
@@ -336,10 +339,10 @@ func get_cell_letter(x: int, y: int) -> String:
 	if get_cell_visual_state(x, y) == CELL_STATE_SPY_ME:
 		return cell.letter.to_upper() if not cell.letter.is_empty() else ""
 
-	if _is_blinded:
+	if not cell.revealed:
 		return ""
 
-	if not cell.revealed:
+	if _is_blinded:
 		return ""
 
 	return cell.letter.to_upper()
@@ -463,7 +466,7 @@ func _on_connection_lost(message: String) -> void:
 
 
 func _on_turn_changed(current_turn_player_id: String, turn_ends_at: String, is_my_turn: bool) -> void:
-	if current_turn_player_id != _last_turn_player_id and is_my_turn:
+	if current_turn_player_id != _last_turn_player_id:
 		_apply_turn_effect_decrement()
 
 	_last_turn_player_id = current_turn_player_id
@@ -493,6 +496,10 @@ func _on_my_effect_event(event_name: String) -> void:
 			_is_frozen = false
 			_freeze_turns_left = 0
 		"PLAYER_USE_IMMUNITY", "IMMUNITY_APPLIED":
+			_is_frozen = false
+			_freeze_turns_left = 0
+			_is_blinded = false
+			_blind_turns_left = 0
 			_is_immune = true
 			_immunity_turns_left = IMMUNITY_TURNS_DEFAULT
 		"IMMUNITY_REMOVED":
