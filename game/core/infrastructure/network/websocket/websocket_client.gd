@@ -42,7 +42,7 @@ func connect_socket() -> void:
 		connection_error.emit("Authentication required.")
 		return
 
-	var url := "%s?token=%s" % [GlobalEnvironment.ws_base_url(), token]
+	var url := "%s?token=%s" % [GlobalEnvironment.WS_BASE_URL, token]
 
 	AppLogger.info("Connecting websocket...")
 	var error := _socket.connect_to_url(url)
