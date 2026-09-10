@@ -121,7 +121,7 @@ func _build_payload(body: Dictionary) -> String:
 
 func _build_url(endpoint: String) -> String:
 	return "%s%s" % [
-		GlobalEnvironment.api_base_url(),
+		GlobalEnvironment.API_BASE_URL,
 		endpoint
 	]
 
