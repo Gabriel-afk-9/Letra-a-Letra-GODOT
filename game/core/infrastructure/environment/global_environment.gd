@@ -1,4 +1,4 @@
 extends Node
 
-const API_BASE_URL = "http://localhost:8080"
-const WS_BASE_URL = "ws://localhost:8080/ws/game"
+const API_BASE_URL = "https://api.letraaletradev.qzz.io"
+const WS_BASE_URL = "wss://api.letraaletradev.qzz.io/ws/game"
