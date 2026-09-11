@@ -8,7 +8,7 @@ const CELL_SIZE := Vector2(30, 30)
 const COLOR_BLUE := Color(0.101960786, 0.57254905, 0.9019608, 1)
 const COLOR_ORANGE := Color(0.9529412, 0.52156866, 0.09411765, 1)
 
-const CELL_BORDER_WIDTH := 2
+const CELL_BORDER_WIDTH := 3
 const CELL_CORNER_RADIUS := 5
 const CELL_INNER_CORNER_RADIUS := 4
 
@@ -23,7 +23,7 @@ const CARD_FADE_DURATION := 0.2
 const BOARD_PULSE_DURATION := 0.6
 const BOARD_PULSE_MAX_SHADOW := 8
 const GLOBAL_SWIPE_THRESHOLD_PX := 40.0
-const BOARD_DIMMED_MODULATE := Color(0, 0, 0, 0.55)
+const BOARD_DIMMED_MODULATE := COLOR_WHITE
 const POWER_GRANT_FLASH_COLOR := Color(1, 0.85, 0.3, 1)
 const POWER_GRANT_PULSE_DURATION := 0.16
 const POWER_GRANT_SETTLE_DURATION := 0.24
@@ -54,6 +54,8 @@ const UNBLOCK_POP_SCALE := Vector2(1.2, 1.2)
 @onready var turn_label: Label = $MarginContainer/MainLayout/TopBar/TurnLabel
 @onready var words_container: HFlowContainer = $MarginContainer/MainLayout/WordsContainer
 @onready var board_grid: GridContainer = $MarginContainer/MainLayout/BoardGrid
+@onready var _main_layout: VBoxContainer = $MarginContainer/MainLayout
+@onready var _inventory_panel: PanelContainer = $MarginContainer/MainLayout/InventoryPanel
 @onready var leave_button: Button = $TopBarLeaveButton
 @onready var status_label: Label = $MarginContainer/MainLayout/StatusLabel
 @onready var inventory_slot_1: TextureButton = $MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot1/Icon
@@ -78,6 +80,7 @@ var _was_blinded: bool = false
 var _was_frozen: bool = false
 
 var _board_wrapper: PanelContainer = null
+var _words_wrapper: PanelContainer = null
 
 var _global_power_armed: bool = false
 var _action_locked: bool = false
@@ -101,6 +104,8 @@ var _my_dots: Array = []
 var _opponent_dots: Array = []
 var _icon_cache: Dictionary = {}
 
+var _board_inventory_spacer: Control = null
+
 var _navigation_started: bool = false
 
 
@@ -123,6 +128,7 @@ func _ready() -> void:
 	_wrap_words_container()
 	
 	_wrap_board_grid()
+	_ensure_board_inventory_spacer()
 	
 	for i in _inventory_slots.size():
 		var slot: TextureButton = _inventory_slots[i]
@@ -133,6 +139,10 @@ func _ready() -> void:
 	
 	_shrink_game_cards()
 	GameFactory.bind(self)
+	resized.connect(_on_board_resized)
+	_main_layout.resized.connect(_on_board_resized)
+	_apply_board_90_percent.call_deferred()
+	_apply_inventory_responsive.call_deferred()
 
 
 func _shrink_game_cards() -> void:
@@ -167,7 +177,7 @@ func _wrap_words_container() -> void:
 	
 	var wrapper := PanelContainer.new()
 	wrapper.set_anchors_preset(Control.PRESET_FULL_RECT)
-	wrapper.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	wrapper.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	wrapper.custom_minimum_size = Vector2(0, 72)
 	wrapper.clip_contents = true
 	
@@ -195,6 +205,7 @@ func _wrap_words_container() -> void:
 	words_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	words_container.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	wrapper.add_child(words_container)
+	_words_wrapper = wrapper
 
 
 func _wrap_board_grid() -> void:
@@ -230,6 +241,78 @@ func _wrap_board_grid() -> void:
 	wrapper.add_child(board_grid)
 
 	_board_wrapper = wrapper
+
+
+func _ensure_board_inventory_spacer() -> void:
+	if not is_instance_valid(_main_layout) or not is_instance_valid(_inventory_panel):
+		return
+	if is_instance_valid(_board_inventory_spacer):
+		return
+	var spacer := Control.new()
+	spacer.name = &"BoardInventorySpacer"
+	spacer.custom_minimum_size = Vector2(0, 24)
+	spacer.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var inv_idx: int = _main_layout.get_children().find(_inventory_panel)
+	if inv_idx == -1:
+		return
+	_main_layout.add_child(spacer)
+	_main_layout.move_child(spacer, inv_idx)
+	_board_inventory_spacer = spacer
+
+
+func _on_board_resized() -> void:
+	_apply_board_90_percent.call_deferred()
+	_apply_inventory_responsive.call_deferred()
+
+
+func _apply_inventory_responsive() -> void:
+	if not is_instance_valid(_inventory_panel) or not is_instance_valid(_main_layout):
+		return
+	var layout_w: float = _main_layout.size.x
+	if layout_w < 10.0:
+		var vp := get_viewport_rect().size.x
+		if vp > 10.0:
+			layout_w = vp - 24.0
+		else:
+			layout_w = 456.0
+	var panel_w: float = clamp(layout_w * 0.68, 280.0, 340.0)
+	_inventory_panel.custom_minimum_size = Vector2(panel_w, 0)
+	_inventory_panel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+
+
+func _apply_board_90_percent() -> void:
+	if not is_instance_valid(_board_wrapper) or not is_instance_valid(_main_layout) or not is_instance_valid(board_grid):
+		return
+	var layout_w: float = _main_layout.size.x
+	if layout_w < 10.0:
+		var vp := get_viewport_rect().size.x
+		if vp > 10.0:
+			layout_w = vp - 24.0
+		else:
+			layout_w = 456.0
+	var avail: float = layout_w * 0.90
+	var chrome: float = 16.0 + 8.0 + 9.0
+	var cell_f: float = floor((avail - chrome) / 10.0)
+	cell_f = clamp(cell_f, 30.0, 96.0)
+	var cell := int(cell_f)
+	var font_sz := clampi(int(cell * 0.42), 12, 18)
+	var wrapper_w: float = 10.0 * float(cell) + chrome
+	_board_wrapper.custom_minimum_size = Vector2(wrapper_w, 0)
+	_board_wrapper.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	if is_instance_valid(_words_wrapper):
+		_words_wrapper.custom_minimum_size = Vector2(wrapper_w, 72)
+		_words_wrapper.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	board_grid.add_theme_constant_override("h_separation", 1)
+	board_grid.add_theme_constant_override("v_separation", 1)
+	board_grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	for pos in _cell_buttons:
+		var bv = _cell_buttons[pos]
+		if bv is Button:
+			var btn: Button = bv
+			btn.custom_minimum_size = Vector2(cell, cell)
+			btn.add_theme_font_size_override("font_size", font_sz)
+			btn.pivot_offset = Vector2(cell, cell) / 2.0
 
 
 func setup(view_model: GameViewModel, game_id: String, opponent_id: String, me_nickname: String, opponent_nickname: String) -> void:
@@ -281,6 +364,8 @@ func _build_board_buttons() -> void:
 
 	for cell_position in _cell_buttons:
 		_apply_cell_style(cell_position)
+
+	_apply_board_90_percent.call_deferred()
 
 
 var _shake_tween: Tween
@@ -401,9 +486,9 @@ func _animate_cell_reveal(cell_position: Vector2i) -> void:
 	button.pivot_offset = CELL_SIZE / 2.0
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(button, "scale", Vector2(0.0, 1.0), 0.10)
+	tween.tween_property(button, "scale", Vector2(0.0, 1.0), 0.075)
 	tween.tween_callback(_apply_cell_style.bind(cell_position))
-	tween.tween_property(button, "scale", Vector2.ONE, 0.10)
+	tween.tween_property(button, "scale", Vector2.ONE, 0.075)
 
 
 func _style_cell(button: Button, background: Color, state_shadow_color: Color, font: Color, border_color: Color = Color(0, 0, 0, 1)) -> void:
@@ -1404,7 +1489,7 @@ func _update_cell_trap_icon(button: Button, show: bool) -> void:
 	layer.add_child(icon)
 
 
-func _update_cell_block_bar(button: Button, cell_position: Vector2i, fill_color: Color) -> void:
+func _update_cell_block_bar(button: Button, cell_position: Vector2i, _fill_color: Color) -> void:
 	var layer := _get_cell_extra(button, "BlockBar")
 
 	for child in layer.get_children():
@@ -1412,31 +1497,45 @@ func _update_cell_block_bar(button: Button, cell_position: Vector2i, fill_color:
 
 	layer.visible = true
 
-	var filled := _view_model.get_cell_block_filled(cell_position.x, cell_position.y)
+	var colors: Array = _view_model.get_block_click_colors(cell_position.x, cell_position.y)
+	var filled := colors.size()
+	if filled == 0:
+		filled = _view_model.get_cell_block_filled(cell_position.x, cell_position.y)
+
+	var cell_w: float = button.custom_minimum_size.x
+	if cell_w < 1.0:
+		cell_w = 37.0
+	var d := clampi(int(cell_w * 0.20), 7, 8)
+	var sep := 2
+	var corner := 8
+
+	var center_wrapper := CenterContainer.new()
+	center_wrapper.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center_wrapper.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(center_wrapper)
 
 	var bar := HBoxContainer.new()
-	bar.set_anchors_preset(Control.PRESET_FULL_RECT)
-	bar.offset_left = 3
-	bar.offset_right = -3
-	bar.offset_top = 8
-	bar.offset_bottom = -8
+	bar.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	bar.alignment = BoxContainer.ALIGNMENT_CENTER
-	bar.add_theme_constant_override("separation", 1)
+	bar.add_theme_constant_override("separation", sep)
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	layer.add_child(bar)
+	center_wrapper.add_child(bar)
 
 	for i in BLOCK_BAR_SEGMENTS:
 		var segment := Panel.new()
-		segment.custom_minimum_size = Vector2(7, 10)
+		segment.custom_minimum_size = Vector2(d, d)
+		segment.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		segment.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		segment.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var s_style := StyleBoxFlat.new()
-		s_style.bg_color = fill_color if i < filled else Color.WHITE
+		s_style.bg_color = colors[i] if i < colors.size() else Color.WHITE
 		s_style.border_color = Color.BLACK
-		s_style.border_width_left = 1
-		s_style.border_width_top = 1
-		s_style.border_width_right = 1
-		s_style.border_width_bottom = 1
-		s_style.set_corner_radius_all(6)
+		s_style.border_width_left = 2
+		s_style.border_width_top = 2
+		s_style.border_width_right = 2
+		s_style.border_width_bottom = 2
+		s_style.set_corner_radius_all(corner)
 		segment.add_theme_stylebox_override("panel", s_style)
 		bar.add_child(segment)
 
@@ -1708,7 +1807,7 @@ func _update_board_interactivity() -> void:
 				board_visual_dimmed = false
 				break
 
-	board_grid.modulate = BOARD_DIMMED_MODULATE if board_visual_dimmed else COLOR_WHITE
+	board_grid.modulate = COLOR_WHITE
 	board_grid.mouse_filter = Control.MOUSE_FILTER_IGNORE if board_logical_disabled else Control.MOUSE_FILTER_STOP
 
 	for cell_position in _cell_buttons:

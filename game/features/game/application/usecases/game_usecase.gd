@@ -78,6 +78,10 @@ func leave_game() -> void:
 	_repository.leave_game()
 
 
+func get_my_id() -> String:
+	var user := _current_user_provider.current_user()
+	return user.id if user != null else ""
+
 func classify_player(player_id: String) -> String:
 	var user := _current_user_provider.current_user()
 

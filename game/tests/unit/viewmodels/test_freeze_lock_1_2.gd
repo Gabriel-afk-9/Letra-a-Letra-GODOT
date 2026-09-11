@@ -15,10 +15,10 @@ func before_each() -> void:
 	_vm._on_turn_changed("me", "", true)
 
 func test_action_lock_timeout_is_1_2() -> void:
-	assert_eq(GameViewModel.ACTION_LOCK_TIMEOUT_SECONDS, 1.2)
+	assert_eq(GameViewModel.ACTION_LOCK_TIMEOUT_SECONDS, 0.7)
 
 func test_lock_releases_after_1_2_not_3() -> void:
 	_vm.on_cell_clicked(0, 0)
 	assert_true(_vm.is_action_locked())
-	await wait_seconds(1.3)
+	await wait_seconds(0.8)
 	assert_false(_vm.is_action_locked(), "should unlock after 1.2s")

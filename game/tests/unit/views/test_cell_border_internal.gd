@@ -17,7 +17,7 @@ func test_no_outer_shiny_shadow_for_revealed() -> void:
 
 func test_border_width_is_2() -> void:
 	var text := FileAccess.get_file_as_string("res://features/game/presentation/views/game_screen.gd")
-	assert_true(text.contains("const CELL_BORDER_WIDTH := 2"), "borda interna deve ser 2px conforme escolha 1")
+	assert_true(text.contains("const CELL_BORDER_WIDTH := 3"), "borda interna deve ser 3px conforme pedido 1 nivel a mais")
 	assert_true(text.contains("const CELL_INNER_CORNER_RADIUS := 4"), "inner mais redonda 7 para contraste com outer 5")
 	assert_true(text.contains("set_corner_radius_all(CELL_INNER_CORNER_RADIUS)"), "inner usa const 7")
 
