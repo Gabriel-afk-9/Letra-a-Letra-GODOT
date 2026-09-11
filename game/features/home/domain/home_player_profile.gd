@@ -13,6 +13,11 @@ var gems: int = 0
 var wins: int = 0
 var streak: int = 0
 var matches: int = 0
+var ranking_points: int = 0
+var has_banner: bool = false
+var equipped_avatar: String = ""
+var equipped_frame: String = ""
+var equipped_banner: String = ""
 
 
 static func from_user(user: User) -> HomePlayerProfile:
@@ -27,6 +32,11 @@ static func from_user(user: User) -> HomePlayerProfile:
 	profile.wins = user.total_wins
 	profile.streak = user.win_streak
 	profile.matches = user.total_matches
+	profile.ranking_points = user.ranking_points
+	profile.has_banner = user.has_banner
+	profile.equipped_avatar = user.equipped_avatar
+	profile.equipped_frame = user.equipped_frame
+	profile.equipped_banner = user.equipped_banner
 	return profile
 
 

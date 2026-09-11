@@ -7,6 +7,28 @@ const SEG_BRIGHT := {
 	HomeGameMode.Mode.RANKED: Color(0.961, 0.51, 0.122),
 }
 
+# Fundo do card sem banner: mesmo azul do blue_button_default.tres.
+const CARD_NO_BANNER_BG := Color(0.105882354, 0.6156863, 0.87058824)
+# Fundo com banner equipado: verde anterior do BannerStyle.
+const CARD_BANNER_BG := Color(0.23, 0.62, 0.32)
+
+# Mapeamento de nomes de cosméticos para recursos
+const AVATAR_COSMETICS := {
+	"logo": preload("res://assets/cosmetics/avatar/logo.png"),
+	"stupid": preload("res://assets/cosmetics/avatar/stupid.png"),
+	"pie": preload("res://assets/cosmetics/avatar/pie.png"),
+	"evil": preload("res://assets/cosmetics/avatar/evil.png"),
+	"arvenis": preload("res://assets/cosmetics/avatar/arvenis.png"),
+}
+
+const FRAME_COSMETICS := {
+	# Frames serão adicionados quando houver assets
+}
+
+const BANNER_COSMETICS := {
+	# Banners serão adicionados quando houver assets
+}
+
 @onready var level_number: Label = $SafeMargin/RootVBox/ResourceBar/LevelGroup/LevelBadge/LevelNumber
 @onready var xp_label: Label = $SafeMargin/RootVBox/ResourceBar/LevelGroup/XpPill/XpMargin/XpLabel
 @onready var coins_label: Label = $SafeMargin/RootVBox/ResourceBar/CoinsPill/CoinsMargin/CoinsHBox/CoinsLabel
@@ -15,9 +37,13 @@ const SEG_BRIGHT := {
 @onready var gems_plus_btn: Button = $SafeMargin/RootVBox/ResourceBar/GemsPill/GemsMargin/GemsHBox/GemsPlusBtn
 
 @onready var nickname_label: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/NicknameLabel
-@onready var wins_value: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/WinsValue
-@onready var streak_value: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/StreakValue
-@onready var matches_value: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/MatchesValue
+@onready var profile_card: PanelContainer = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard
+@onready var banner_texture: TextureRect = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/BannerTexture
+@onready var avatar_texture: TextureRect = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/AvatarFrame/AvatarTexture
+@onready var avatar_frame_texture: TextureRect = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/AvatarFrame/AvatarFrameTexture
+@onready var wins_value: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/WinsBox/WinsValue
+@onready var streak_value: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/StreakBox/StreakValue
+@onready var matches_value: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/MatchesBox/MatchesValue
 @onready var settings_btn: Button = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/SettingsBtn
 @onready var menu_btn: Button = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn
 
@@ -49,6 +75,57 @@ func _ready() -> void:
 	_connect_buttons()
 	_refresh_game_mode(_view_model.selected_game_mode())
 	_view_model.load_user()
+	_setup_avatar_shader()
+
+
+func _setup_avatar_shader() -> void:
+	var shader := Shader.new()
+	shader.code = """
+shader_type canvas_item;
+
+uniform float corner_radius : hint_range(0.0, 0.5) = 0.08;
+
+void fragment() {
+	vec2 uv = UV;
+
+	// Distância normalizada até os quatro cantos.
+	vec2 dist = min(uv, 1.0 - uv);
+
+	// Para cada canto, calcula a distância até o centro do arco.
+	float d = min(
+		length(uv - vec2(corner_radius, corner_radius)),
+		min(
+			length(uv - vec2(1.0 - corner_radius, corner_radius)),
+			min(
+				length(uv - vec2(corner_radius, 1.0 - corner_radius)),
+				length(uv - vec2(1.0 - corner_radius, 1.0 - corner_radius))
+			)
+		)
+	);
+
+	// Só aplica o círculo nas regiões próximas aos cantos.
+	float corner_x = step(uv.x, corner_radius) + step(1.0 - corner_radius, uv.x);
+	float corner_y = step(uv.y, corner_radius) + step(1.0 - corner_radius, uv.y);
+
+	float in_corner = min(corner_x, corner_y);
+
+	float mask = 1.0;
+
+	if (in_corner > 0.0) {
+		mask = step(d, corner_radius);
+	}
+
+	vec4 color = texture(TEXTURE, UV);
+	COLOR = vec4(color.rgb, color.a * mask);
+}
+"""
+
+	var mat := ShaderMaterial.new()
+	mat.shader = shader
+
+	mat.set_shader_parameter("corner_radius", 0.03)
+
+	avatar_texture.material = mat
 
 
 func _connect_view_model() -> void:
@@ -92,6 +169,46 @@ func _on_profile_changed(profile: HomePlayerProfile) -> void:
 	wins_value.text = str(profile.wins)
 	streak_value.text = str(profile.streak)
 	matches_value.text = str(profile.matches)
+	_apply_card_background(profile.has_banner)
+	_apply_cosmetics(profile)
+
+
+func _apply_card_background(has_banner: bool) -> void:
+	var sb := profile_card.get_theme_stylebox("panel") as StyleBoxFlat
+	if sb == null:
+		return
+	sb.bg_color = CARD_BANNER_BG if has_banner else CARD_NO_BANNER_BG
+
+
+func _apply_cosmetics(profile: HomePlayerProfile) -> void:
+	# Avatar
+	var avatar_name := profile.equipped_avatar.to_lower()
+	if AVATAR_COSMETICS.has(avatar_name):
+		avatar_texture.texture = AVATAR_COSMETICS[avatar_name]
+	else:
+		avatar_texture.texture = AVATAR_COSMETICS["logo"]
+	
+	# Frame
+	var frame_name := profile.equipped_frame.to_lower()
+	if FRAME_COSMETICS.has(frame_name):
+		avatar_frame_texture.texture = FRAME_COSMETICS[frame_name]
+		avatar_frame_texture.visible = true
+	else:
+		avatar_frame_texture.visible = false
+	
+	# Banner
+	var banner_name := profile.equipped_banner.to_lower()
+	if BANNER_COSMETICS.has(banner_name):
+		banner_texture.texture = BANNER_COSMETICS[banner_name]
+		banner_texture.visible = true
+		# Hide the color background when banner image is shown
+		var sb := profile_card.get_theme_stylebox("panel") as StyleBoxFlat
+		if sb:
+			sb.bg_color = Color(0, 0, 0, 0)
+	else:
+		banner_texture.visible = false
+		# Restore color background
+		_apply_card_background(profile.has_banner)
 
 
 func _on_game_mode_changed(mode: int) -> void:

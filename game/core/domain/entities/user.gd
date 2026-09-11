@@ -10,6 +10,11 @@ var gems: int = 0
 var total_wins: int = 0
 var win_streak: int = 0
 var total_matches: int = 0
+var ranking_points: int = 0
+var has_banner: bool = false
+var equipped_avatar: String = ""
+var equipped_frame: String = ""
+var equipped_banner: String = ""
 
 func _init(
 	p_id: String,
@@ -21,7 +26,12 @@ func _init(
 	p_gems: int = 0,
 	p_total_wins: int = 0,
 	p_win_streak: int = 0,
-	p_total_matches: int = 0
+	p_total_matches: int = 0,
+	p_ranking_points: int = 0,
+	p_has_banner: bool = false,
+	p_equipped_avatar: String = "",
+	p_equipped_frame: String = "",
+	p_equipped_banner: String = ""
 ):
 	id = p_id
 	email = p_email
@@ -33,6 +43,11 @@ func _init(
 	total_wins = p_total_wins
 	win_streak = p_win_streak
 	total_matches = p_total_matches
+	ranking_points = p_ranking_points
+	has_banner = p_has_banner
+	equipped_avatar = p_equipped_avatar
+	equipped_frame = p_equipped_frame
+	equipped_banner = p_equipped_banner
 
 func to_dictionary() -> Dictionary:
 	return {
@@ -46,6 +61,11 @@ func to_dictionary() -> Dictionary:
 		"total_wins": total_wins,
 		"win_streak": win_streak,
 		"total_matches": total_matches,
+		"ranking_points": ranking_points,
+		"has_banner": has_banner,
+		"equipped_avatar": equipped_avatar,
+		"equipped_frame": equipped_frame,
+		"equipped_banner": equipped_banner,
 	}
 
 static func from_dictionary(data: Dictionary) -> User:
@@ -59,7 +79,12 @@ static func from_dictionary(data: Dictionary) -> User:
 		int(data.get("gems", 0)),
 		int(data.get("total_wins", 0)),
 		int(data.get("win_streak", 0)),
-		int(data.get("total_matches", 0))
+		int(data.get("total_matches", 0)),
+		int(data.get("ranking_points", 0)),
+		bool(data.get("has_banner", false)),
+		str(data.get("equipped_avatar", "")),
+		str(data.get("equipped_frame", "")),
+		str(data.get("equipped_banner", ""))
 	)
 	
 func is_valid() -> bool:
@@ -68,5 +93,7 @@ func is_valid() -> bool:
 func copy() -> User:
 	return User.new(
 		id, email, nickname, level, experience,
-		coins, gems, total_wins, win_streak, total_matches
+		coins, gems, total_wins, win_streak, total_matches,
+		ranking_points, has_banner,
+		equipped_avatar, equipped_frame, equipped_banner
 	)

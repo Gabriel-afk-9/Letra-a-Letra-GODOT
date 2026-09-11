@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cdaar7k8dj5rc" path="res://features/home/presentation/views/home_screen.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://ckoyn5cjw0v60" path="res://assets/images/backgrounds/home.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://7timnpl27q6t" path="res://assets/images/avatars/avatar-1.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://ddw4mt7rfhvhp" path="res://assets/cosmetics/avatar/logo.png" id="3_cosmetic_avatar_default"]
 [ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="5"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="7"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="8"]
@@ -85,7 +85,7 @@ corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="BannerStyle"]
-bg_color = Color(0.23, 0.62, 0.32, 1)
+bg_color = Color(0.105882354, 0.6156863, 0.87058824, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
@@ -98,15 +98,16 @@ corner_radius_bottom_left = 18
 
 [sub_resource type="StyleBoxFlat" id="AvatarFrameStyle"]
 bg_color = Color(1, 1, 1, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
 border_color = Color(0.118, 0.165, 0.267, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StatsPillStyle"]
 bg_color = Color(1, 1, 1, 1)
@@ -241,10 +242,10 @@ anchor_bottom = 1.0
 offset_bottom = -88.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 16
 
 [node name="RootVBox" type="VBoxContainer" parent="SafeMargin" unique_id=895071131]
 layout_mode = 2
@@ -407,7 +408,14 @@ theme_override_constants/separation = 8
 [node name="ProfileCard" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow" unique_id=52369079]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.5
 theme_override_styles/panel = SubResource("BannerStyle")
+
+[node name="BannerTexture" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard" unique_id=52369080]
+visible = false
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 6
 
 [node name="ProfileMargin" type="MarginContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard" unique_id=880711546]
 layout_mode = 2
@@ -422,13 +430,19 @@ theme_override_constants/separation = 10
 
 [node name="AvatarFrame" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox" unique_id=790813429]
 custom_minimum_size = Vector2(64, 64)
+clip_contents = true
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("AvatarFrameStyle")
 
 [node name="AvatarTexture" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/AvatarFrame" unique_id=109038505]
 layout_mode = 2
-texture = ExtResource("3")
+texture = ExtResource("3_cosmetic_avatar_default")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AvatarFrameTexture" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/AvatarFrame" unique_id=790813430]
+layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
@@ -464,11 +478,24 @@ layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="WinsValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=174400951]
+[node name="WinsBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1303023206]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="WinsValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=174400951]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
 theme_override_font_sizes/font_size = 17
 text = "87"
+horizontal_alignment = 1
+
+[node name="WinsCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=1194139755]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 0.7)
+theme_override_font_sizes/font_size = 11
+text = "VITÓRIAS"
 horizontal_alignment = 1
 
 [node name="StatsDivA" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=480767760]
@@ -477,11 +504,24 @@ layout_mode = 2
 size_flags_vertical = 3
 color = Color(0.12, 0.16, 0.27, 0.5)
 
-[node name="StreakValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1406867347]
+[node name="StreakBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1851865190]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="StreakValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=1406867347]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
 theme_override_font_sizes/font_size = 17
 text = "5"
+horizontal_alignment = 1
+
+[node name="StreakCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=1659997936]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 0.7)
+theme_override_font_sizes/font_size = 11
+text = "STREAK"
 horizontal_alignment = 1
 
 [node name="StatsDivB" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1130093653]
@@ -490,16 +530,30 @@ layout_mode = 2
 size_flags_vertical = 3
 color = Color(0.12, 0.16, 0.27, 0.5)
 
-[node name="MatchesValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=914725355]
+[node name="MatchesBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1360930194]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="MatchesValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=914725355]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
 theme_override_font_sizes/font_size = 17
 text = "132"
 horizontal_alignment = 1
 
+[node name="MatchesCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=887015844]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 0.7)
+theme_override_font_sizes/font_size = 11
+text = "PARTIDAS"
+horizontal_alignment = 1
+
 [node name="CardSpacer" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow" unique_id=869313747]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
 
 [node name="QuickBtns" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow" unique_id=478022031]
 layout_mode = 2
@@ -577,7 +631,7 @@ custom_minimum_size = Vector2(280, 170)
 layout_mode = 2
 size_flags_horizontal = 4
 texture = ExtResource("16")
-expand_mode = 1
+expand_mode = 5
 stretch_mode = 5
 
 [node name="PlayTopSpacer" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox" unique_id=353610773]
@@ -608,6 +662,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+rotation = 0.0002296703
 mouse_filter = 2
 theme_override_constants/separation = 8
 alignment = 1
