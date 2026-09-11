@@ -11,6 +11,7 @@ const CELL_STATE_REVEALED_ME := "REVEALED_ME"
 const CELL_STATE_REVEALED_OPPONENT := "REVEALED_OPPONENT"
 const CELL_STATE_CLAIMED_ME := "CLAIMED_ME"
 const CELL_STATE_CLAIMED_OPPONENT := "CLAIMED_OPPONENT"
+const CELL_STATE_CLAIMED_BOTH := "CLAIMED_BOTH"
 const CELL_STATE_SPY_ME := "SPY_ME"
 const CELL_STATE_BLINDED := "BLINDED"
 const CELL_STATE_TRAP_ME := "TRAP_ME"
@@ -67,6 +68,7 @@ var _is_spied: bool = false
 
 var _armed_power_id: String = ""
 var _armed_power_type: String = ""
+var _is_game_over: bool = false
 
 var _cells_claimed_by_me: Array[Vector2i] = []
 var _cells_claimed_by_opponent: Array[Vector2i] = []
@@ -96,12 +98,16 @@ func _init(usecase: GameUseCase, navigation: NavigationService) -> void:
 
 
 func start(game_id: String, opponent_id: String) -> void:
+	_is_game_over = false
 	_set_loading(true)
 	_usecase.start(game_id, opponent_id)
 	_set_loading(false)
 
 
 func on_cell_clicked(x: int, y: int) -> void:
+	if _is_game_over:
+		return
+
 	if _is_action_locked:
 		return
 
@@ -262,6 +268,9 @@ func is_immune() -> bool:
 func is_blinded() -> bool:
 	return _is_blinded
 
+func is_game_over() -> bool:
+	return _is_game_over
+
 func is_detecting_traps() -> bool:
 	return _is_detecting_traps
 
@@ -275,6 +284,9 @@ func selected_power_id() -> String:
 
 func get_cell_visual_state(x: int, y: int) -> String:
 	var cell_position := Vector2i(x, y)
+
+	if _cells_claimed_by_me.has(cell_position) and _cells_claimed_by_opponent.has(cell_position):
+		return CELL_STATE_CLAIMED_BOTH
 
 	if _cells_claimed_by_me.has(cell_position):
 		return CELL_STATE_CLAIMED_ME
@@ -466,6 +478,9 @@ func _on_connection_lost(message: String) -> void:
 
 
 func _on_turn_changed(current_turn_player_id: String, turn_ends_at: String, is_my_turn: bool) -> void:
+	if _is_game_over:
+		return
+
 	if current_turn_player_id != _last_turn_player_id:
 		_apply_turn_effect_decrement()
 
@@ -575,9 +590,17 @@ func _apply_turn_effect_decrement() -> void:
 
 
 func _on_game_over(is_winner: bool, reason: String) -> void:
+	if _is_game_over:
+		return
+	_is_game_over = true
+	_turn_timer_generation += 1
 	if is_winner and reason == REASON_WORDS and not _has_any_word_found():
 		reason = REASON_OPPONENT_LEFT
 
+	_is_action_locked = true
+	action_lock_changed.emit(true)
+	turn_state_changed.emit(false)
+	await (Engine.get_main_loop() as SceneTree).create_timer(2.0).timeout
 	_show_game_over(is_winner, reason)
 
 
@@ -639,6 +662,9 @@ func _on_action_rejected(error_code: String, cell_x: int, cell_y: int) -> void:
 
 
 func _start_turn_timer_loop() -> void:
+	if _is_game_over:
+		return
+
 	if _turn_ends_at.is_empty():
 		return
 
@@ -674,7 +700,7 @@ func _parse_turn_deadline(datetime_string: String) -> float:
 
 
 func _run_turn_timer_loop(generation: int, deadline: float) -> void:
-	while generation == _turn_timer_generation:
+	while generation == _turn_timer_generation and not _is_game_over:
 		var remaining := deadline - Time.get_unix_time_from_system()
 
 		if remaining <= 0.0:

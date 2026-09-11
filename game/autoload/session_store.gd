@@ -6,6 +6,7 @@ signal session_changed
 
 var _current_user: User = null
 var _access_token: String = ""
+var _current_game_id: String = ""
 
 
 func start_session(user: User, access_token: String) -> void:
@@ -43,9 +44,21 @@ func get_token() -> String:
 	return _access_token
 
 
+func set_current_game_id(game_id: String) -> void:
+	_current_game_id = game_id
+	session_changed.emit()
+
+func get_current_game_id() -> String:
+	return _current_game_id
+
+func clear_current_game_id() -> void:
+	_current_game_id = ""
+	session_changed.emit()
+
 func _clear_session() -> void:
 	_current_user = null
 	_access_token = ""
+	_current_game_id = ""
 
 func has_session() -> bool:
 	return has_user() and has_token()

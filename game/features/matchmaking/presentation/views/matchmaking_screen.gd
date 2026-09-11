@@ -55,11 +55,12 @@ func _on_error_changed(message: String) -> void:
 
 	if message.to_lower().contains("already in a game"):
 		status_label.text = "Você ainda está em partida. Saindo..."
-		cancel_button.text = "SAIR DA PARTIDA ANTERIOR"
+		cancel_button.text = "SAIR DA PARTIDA"
 		cancel_button.show()
 		cancel_button.disabled = false
-		if not cancel_button.pressed.is_connected(_on_force_leave_pressed):
+		if cancel_button.pressed.is_connected(_on_cancel_button_pressed):
 			cancel_button.pressed.disconnect(_on_cancel_button_pressed)
+		if not cancel_button.pressed.is_connected(_on_force_leave_pressed):
 			cancel_button.pressed.connect(_on_force_leave_pressed)
 		return
 
@@ -107,9 +108,10 @@ func _on_cancel_button_pressed() -> void:
 
 func _on_force_leave_pressed() -> void:
 	cancel_button.disabled = true
+	cancel_button.text = "SAINDO..."
 	status_label.text = "Saindo da partida anterior..."
 	if cancel_button.pressed.is_connected(_on_force_leave_pressed):
 		cancel_button.pressed.disconnect(_on_force_leave_pressed)
+	if not cancel_button.pressed.is_connected(_on_cancel_button_pressed):
 		cancel_button.pressed.connect(_on_cancel_button_pressed)
-	cancel_button.text = "CANCELAR"
 	_view_model.force_leave_and_retry()
