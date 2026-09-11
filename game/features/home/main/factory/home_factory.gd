@@ -5,6 +5,7 @@ static func create() -> HomeViewModel:
 	var services := ServiceRegistry
 
 	var get_current_user_usecase := GetCurrentUserUseCase.new(
+		services.user_repository(),
 		SessionStore
 	)
 
