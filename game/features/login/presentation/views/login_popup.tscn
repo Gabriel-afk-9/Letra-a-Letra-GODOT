@@ -1,0 +1,202 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://features/login/presentation/views/login_popup.gd" id="1_login_popup"]
+[ext_resource type="Script" path="res://shared/animation/animated_error_label.gd" id="2_error"]
+[ext_resource type="Script" path="res://shared/animation/animated_input.gd" id="3_email"]
+[ext_resource type="Script" path="res://assets/scripts/custom_input.gd" id="4_password"]
+[ext_resource type="StyleBox" path="res://assets/styles/input/input_popup.tres" id="5_input"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/orange_button_default.tres" id="6_btn"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/orange_button_pressed.tres" id="7_btn_pressed"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/orange_button_hover.tres" id="8_btn_hover"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/disabled_button.tres" id="9_btn_disabled"]
+[ext_resource type="Texture2D" path="res://assets/images/icons/eye_closed.png" id="10_eye"]
+[ext_resource type="Script" path="res://shared/animation/animated_btn.gd" id="11_btn_fx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_login_card"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.102, 0.137, 0.251, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
+
+[node name="LoginPopup" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_login_popup")
+
+[node name="DimBackground" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Card" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+mouse_filter = 0
+clip_contents = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_login_card")
+
+[node name="Margin" type="MarginContainer" parent="Center/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 20
+
+[node name="Form" type="VBoxContainer" parent="Center/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Center/Card/Margin/Form"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.102, 0.137, 0.251, 1)
+theme_override_font_sizes/font_size = 20
+text = "ENTRAR COM EMAIL"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ErrorLabel" type="Label" parent="Center/Card/Margin/Form"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.302, 0.302, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+script = ExtResource("2_error")
+
+[node name="EmailInput" type="LineEdit" parent="Center/Card/Margin/Form"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = ExtResource("5_input")
+theme_override_styles/focus = ExtResource("5_input")
+placeholder_text = "Email"
+virtual_keyboard_type = 5
+caret_blink = true
+script = ExtResource("3_email")
+force_lowercase = true
+
+[node name="PasswordInput" type="LineEdit" parent="Center/Card/Margin/Form"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = ExtResource("5_input")
+theme_override_styles/focus = ExtResource("5_input")
+placeholder_text = "Senha"
+virtual_keyboard_type = 6
+secret = true
+caret_blink = true
+script = ExtResource("4_password")
+
+[node name="ToggleBtn" type="TextureButton" parent="Center/Card/Margin/Form/PasswordInput"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -10.0
+offset_right = -10.0
+offset_bottom = 10.0
+grow_horizontal = 0
+grow_vertical = 2
+texture_normal = ExtResource("10_eye")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="SwitchRow" type="HBoxContainer" parent="Center/Card/Margin/Form"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="SwitchLabel" type="Label" parent="Center/Card/Margin/Form/SwitchRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 0.6)
+theme_override_font_sizes/font_size = 14
+text = "Não tem conta?"
+vertical_alignment = 1
+
+[node name="SwitchLink" type="LinkButton" parent="Center/Card/Margin/Form/SwitchRow"]
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 0.561, 0.224, 1)
+theme_override_colors/font_hover_color = Color(1, 0.561, 0.224, 1)
+theme_override_colors/font_pressed_color = Color(0.851, 0.455, 0, 1)
+theme_override_font_sizes/font_size = 14
+text = "Cadastre-se"
+
+[node name="ButtonRow" type="HBoxContainer" parent="Center/Card/Margin/Form"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BackButton" type="Button" parent="Center/Card/Margin/Form/ButtonRow"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = ExtResource("6_btn")
+theme_override_styles/pressed = ExtResource("7_btn_pressed")
+theme_override_styles/hover = ExtResource("8_btn_hover")
+theme_override_styles/disabled = ExtResource("9_btn_disabled")
+text = "VOLTAR"
+script = ExtResource("11_btn_fx")
+
+[node name="SubmitButton" type="Button" parent="Center/Card/Margin/Form/ButtonRow"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = ExtResource("6_btn")
+theme_override_styles/pressed = ExtResource("7_btn_pressed")
+theme_override_styles/hover = ExtResource("8_btn_hover")
+theme_override_styles/disabled = ExtResource("9_btn_disabled")
+text = "Entrar"
+script = ExtResource("11_btn_fx")
+
+[connection signal="pressed" from="Center/Card/Margin/Form/ButtonRow/BackButton" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Center/Card/Margin/Form/ButtonRow/SubmitButton" to="." method="_on_submit_pressed"]
+[connection signal="pressed" from="Center/Card/Margin/Form/SwitchRow/SwitchLink" to="." method="_on_switch_pressed"]
+[connection signal="gui_input" from="DimBackground" to="." method="_on_dim_background_gui_input"]

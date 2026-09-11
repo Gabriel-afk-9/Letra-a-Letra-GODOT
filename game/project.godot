@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Letra a Letra"
-run/main_scene="uid://fc4l1gye488"
+run/main_scene="uid://bh236m1jcaled"
 config/features=PackedStringArray("4.7", "Mobile")
 boot_splash/bg_color=Color(0.20942885, 0.20942888, 0.20942888, 1)
 config/icon="uid://dy1fknvv40pop"
@@ -26,9 +26,11 @@ ServiceRegistry="*uid://h4t2ukucfhrk"
 
 [display]
 
-window/size/viewport_width=360
-window/size/viewport_height=640
+window/size/viewport_width=480
+window/size/viewport_height=854
+window/size/initial_position_type=0
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 window/handheld/orientation=1
 
 [editor_plugins]
