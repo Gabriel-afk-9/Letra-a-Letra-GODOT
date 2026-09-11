@@ -61,6 +61,9 @@ func _on_message_received(message: WebSocketMessage) -> void:
 			_handle_matchmaking(message)
 		"ERROR":
 			_handle_error(message)
+		"PARTICIPANT_RECONNECTED", "PARTICIPANT_DISCONNECTED", "PARTICIPANT_LEAVE", "PLAYER_ACTION_RESULT", "TURN_EXPIRED", "GAME_OVER", "POWER_DISCARDED", "REMOVED_BECAUSE_INACTIVITY":
+			AppLogger.debug("[MATCHMAKING] %s - ignoring in matchmaking" % message.event)
+			pass
 		_:
 			AppLogger.debug("Unhandled websocket event: %s" % message.event)
 

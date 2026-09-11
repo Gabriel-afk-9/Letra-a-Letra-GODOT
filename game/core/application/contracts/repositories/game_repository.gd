@@ -45,3 +45,7 @@ func discard_power(power_id: String) -> void:
 
 func leave_game() -> void:
 	push_error("GameRepository.leave_game() must be implemented.")
+
+
+func force_ghost_leave() -> void:
+	push_error("GameRepository.force_ghost_leave() must be implemented.")

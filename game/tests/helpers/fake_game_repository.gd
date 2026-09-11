@@ -35,6 +35,9 @@ func discard_power(power_id: String) -> void:
 func leave_game() -> void:
 	leave_called = true
 
+func force_ghost_leave() -> void:
+	leave_called = true
+
 # helpers para emitir sinais do contrato
 func emit_board(board: GameBoard) -> void:
 	board_updated.emit(board)

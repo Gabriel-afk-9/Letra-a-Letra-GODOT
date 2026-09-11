@@ -7,6 +7,7 @@ const EVENT_TURN_EXPIRED := "TURN_EXPIRED"
 const EVENT_GAME_OVER := "GAME_OVER"
 const EVENT_PARTICIPANT_LEAVE := "PARTICIPANT_LEAVE"
 const EVENT_PARTICIPANT_DISCONNECTED := "PARTICIPANT_DISCONNECTED"
+const EVENT_PARTICIPANT_RECONNECTED := "PARTICIPANT_RECONNECTED"
 const EVENT_REMOVED_BECAUSE_INACTIVITY := "REMOVED_BECAUSE_INACTIVITY"
 const EVENT_POWER_DISCARDED := "POWER_DISCARDED"
 const EVENT_ERROR := "ERROR"
@@ -44,7 +45,60 @@ func _init(websocket_client: WebSocketClient, current_user_provider: CurrentUser
 func start(game_id: String) -> void:
 	_game_id = game_id
 	_leave_started = false
+	SessionStore.set_current_game_id(game_id)
+	_persist_game_id(game_id)
 	_flush_pending_state()
+
+func _persist_game_id(game_id: String) -> void:
+	var user := _current_user_provider.current_user()
+	if user == null:
+		return
+	var path := "user://session_%s.cfg" % str(user.id)
+	var cfg := ConfigFile.new()
+	if FileAccess.file_exists(path):
+		cfg.load(path)
+	cfg.set_value("session", "game_id", game_id)
+	var user_dict := {"id": user.id, "email": user.email, "nickname": user.nickname}
+	for k in user_dict:
+		cfg.set_value("user", k, user_dict[k])
+	var token := SessionStore.get_token()
+	if not token.is_empty():
+		cfg.set_value("session", "token", token)
+	cfg.save(path)
+
+func _load_persisted_game_id() -> String:
+	var user := _current_user_provider.current_user()
+	if user == null:
+		return ""
+	var path := "user://session_%s.cfg" % str(user.id)
+	var cfg := ConfigFile.new()
+	if cfg.load(path) != OK:
+		return ""
+	return str(cfg.get_value("session", "game_id", ""))
+
+func _clear_persisted_game_id() -> void:
+	var user := _current_user_provider.current_user()
+	if user == null:
+		var dir := DirAccess.open("user://")
+		if dir != null:
+			dir.list_dir_begin()
+			var f := dir.get_next()
+			while f != "":
+				if f.begins_with("session_") and f.ends_with(".cfg"):
+					var c := ConfigFile.new()
+					if c.load("user://%s" % f) == OK:
+						c.set_value("session", "game_id", "")
+						c.save("user://%s" % f)
+				f = dir.get_next()
+			dir.list_dir_end()
+		return
+	var path := "user://session_%s.cfg" % str(user.id)
+	var cfg := ConfigFile.new()
+	if cfg.load(path) == OK:
+		cfg.set_value("session", "game_id", "")
+		cfg.save(path)
+	elif FileAccess.file_exists(path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 
 func _flush_pending_state() -> void:
@@ -128,18 +182,50 @@ func leave_game() -> void:
 	if _leave_started:
 		return
 
-	if not _can_send():
-		return
-
 	_leave_started = true
 
-	AppLogger.debug("[GAME][%s] WS OUT LEFT_GAME gameId=%s" % [_current_user_id(), _game_id])
+	var effective_game_id := _game_id
+	if effective_game_id.is_empty():
+		effective_game_id = SessionStore.get_current_game_id()
+	if effective_game_id.is_empty():
+		effective_game_id = _load_persisted_game_id()
+
+	if effective_game_id.is_empty():
+		AppLogger.debug("[GAME][%s] WS GHOST LEAVE without gameId - clearing local and disconnecting" % _current_user_id())
+		_clear_game_state()
+		return
+
+	AppLogger.debug("[GAME][%s] WS OUT LEFT_GAME gameId=%s" % [_current_user_id(), effective_game_id])
 
 	_websocket.send({
 		"type": ACTION_LEFT_GAME,
-		"gameId": _game_id
+		"gameId": effective_game_id
 	})
 
+	_clear_game_state()
+
+func force_ghost_leave() -> void:
+	if _leave_started:
+		_leave_started = false
+	_leave_started = true
+	var ghost_id := _game_id
+	if ghost_id.is_empty():
+		ghost_id = SessionStore.get_current_game_id()
+	if ghost_id.is_empty():
+		ghost_id = _load_persisted_game_id()
+		if not ghost_id.is_empty():
+			AppLogger.debug("[GAME][%s] WS GHOST recovered gameId from file %s" % [_current_user_id(), ghost_id])
+	if not ghost_id.is_empty():
+		AppLogger.debug("[GAME][%s] WS GHOST force leave with gameId=%s" % [_current_user_id(), ghost_id])
+		_websocket.send({
+			"type": ACTION_LEFT_GAME,
+			"gameId": ghost_id
+		})
+	else:
+		AppLogger.debug("[GAME][%s] WS GHOST force leave without gameId" % _current_user_id())
+	_websocket.send({
+		"type": "EXIT_MATCHMAKING"
+	})
 	_clear_game_state()
 
 
@@ -189,6 +275,8 @@ func _clear_game_state() -> void:
 	_pending_turn_player_id = ""
 	_pending_turn_ends_at = ""
 	_game_id = ""
+	SessionStore.clear_current_game_id()
+	_clear_persisted_game_id()
 	_websocket.disconnect_socket()
 
 
@@ -216,6 +304,9 @@ func _on_message_received(message: WebSocketMessage) -> void:
 		EVENT_PARTICIPANT_LEAVE, EVENT_PARTICIPANT_DISCONNECTED:
 			opponent_disconnected.emit()
 			_clear_game_state()
+		EVENT_PARTICIPANT_RECONNECTED:
+			AppLogger.debug("[GAME] participant reconnected - syncing state")
+			pass
 		EVENT_REMOVED_BECAUSE_INACTIVITY:
 			removed_for_inactivity.emit()
 			_clear_game_state()

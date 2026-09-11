@@ -23,7 +23,7 @@ const CARD_FADE_DURATION := 0.2
 const BOARD_PULSE_DURATION := 0.6
 const BOARD_PULSE_MAX_SHADOW := 8
 const GLOBAL_SWIPE_THRESHOLD_PX := 40.0
-const BOARD_DIMMED_MODULATE := Color(1, 1, 1, 0.5)
+const BOARD_DIMMED_MODULATE := Color(0, 0, 0, 0.55)
 const POWER_GRANT_FLASH_COLOR := Color(1, 0.85, 0.3, 1)
 const POWER_GRANT_PULSE_DURATION := 0.16
 const POWER_GRANT_SETTLE_DURATION := 0.24
@@ -362,6 +362,10 @@ func _apply_cell_style(cell_position: Vector2i) -> void:
 		GameViewModel.CELL_STATE_CLAIMED_OPPONENT:
 			_style_cell(button, COLOR_ORANGE, Color(0, 0, 0, 0), COLOR_WHITE, Color.BLACK)
 			_update_cell_inner_border(button, Color(0, 0, 0, 0))
+		GameViewModel.CELL_STATE_CLAIMED_BOTH:
+			_style_cell(button, Color(0, 0, 0, 0), Color(0, 0, 0, 0), COLOR_WHITE, Color.BLACK)
+			_update_cell_inner_border(button, Color(0, 0, 0, 0))
+			_update_cell_diagonal_split(button, COLOR_BLUE, COLOR_ORANGE)
 		GameViewModel.CELL_STATE_SPY_ME:
 			_style_cell(button, COLOR_WHITE, Color(0, 0, 0, 0), COLOR_TEXT_DARK, COLOR_SPY_BORDER)
 			_update_cell_inner_border(button, Color(0, 0, 0, 0))
@@ -1411,25 +1415,34 @@ func _update_cell_block_bar(button: Button, cell_position: Vector2i, fill_color:
 	var filled := _view_model.get_cell_block_filled(cell_position.x, cell_position.y)
 
 	var bar := HBoxContainer.new()
-	bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	bar.offset_left = 4
-	bar.offset_right = -4
-	bar.offset_top = -6
+	bar.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bar.offset_left = 3
+	bar.offset_right = -3
+	bar.offset_top = 8
+	bar.offset_bottom = -8
 	bar.alignment = BoxContainer.ALIGNMENT_CENTER
-	bar.add_theme_constant_override("separation", 2)
+	bar.add_theme_constant_override("separation", 1)
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(bar)
 
 	for i in BLOCK_BAR_SEGMENTS:
-		var segment := ColorRect.new()
-		segment.custom_minimum_size = Vector2(7, 4)
-		segment.color = fill_color if i < filled else BLOCK_BAR_EMPTY
+		var segment := Panel.new()
+		segment.custom_minimum_size = Vector2(7, 10)
 		segment.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var s_style := StyleBoxFlat.new()
+		s_style.bg_color = fill_color if i < filled else Color.WHITE
+		s_style.border_color = Color.BLACK
+		s_style.border_width_left = 1
+		s_style.border_width_top = 1
+		s_style.border_width_right = 1
+		s_style.border_width_bottom = 1
+		s_style.set_corner_radius_all(6)
+		segment.add_theme_stylebox_override("panel", s_style)
 		bar.add_child(segment)
 
 
 func _clear_cell_effect_layers(button: Button) -> void:
-	for layer_name in ["TrapIcon", "BlockBar"]:
+	for layer_name in ["TrapIcon", "BlockBar", "DiagonalSplit"]:
 		var layer := button.get_node_or_null(layer_name)
 
 		if layer is Control:
@@ -1525,6 +1538,59 @@ func _update_cell_inner_border(button: Button, inner_color: Color) -> void:
 	layer.add_child(panel)
 
 
+func _update_cell_diagonal_split(button: Button, color_a: Color, color_b: Color) -> void:
+	var layer := _get_cell_extra(button, "DiagonalSplit")
+	for child in layer.get_children():
+		child.queue_free()
+	layer.visible = true
+	layer.show_behind_parent = true
+	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.clip_contents = true
+	var rect := ColorRect.new()
+	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rect.material = _diagonal_split_material(color_a, color_b)
+	layer.add_child(rect)
+
+
+func _diagonal_split_material(color_a: Color, color_b: Color) -> ShaderMaterial:
+	var key := "diag_%s_%s" % [color_a.to_html(false), color_b.to_html(false)]
+	var cached = _icon_cache.get(key)
+	if cached is ShaderMaterial:
+		return cached
+	var shader := Shader.new()
+	shader.code = """
+shader_type canvas_item;
+uniform vec4 color_a : source_color;
+uniform vec4 color_b : source_color;
+uniform float radius = 5.0;
+void fragment() {
+	vec2 size = vec2(30.0, 30.0);
+	vec2 uv = UV;
+	vec2 pos = uv * size;
+	float r = radius;
+	if (pos.x < r && pos.y < r) {
+		if (distance(pos, vec2(r, r)) > r) discard;
+	} else if (pos.x > size.x - r && pos.y < r) {
+		if (distance(pos, vec2(size.x - r, r)) > r) discard;
+	} else if (pos.x < r && pos.y > size.y - r) {
+		if (distance(pos, vec2(r, size.y - r)) > r) discard;
+	} else if (pos.x > size.x - r && pos.y > size.y - r) {
+		if (distance(pos, vec2(size.x - r, size.y - r)) > r) discard;
+	}
+	vec4 col = (uv.y > uv.x) ? color_a : color_b;
+	COLOR = col;
+}
+"""
+	var mat := ShaderMaterial.new()
+	mat.shader = shader
+	mat.set_shader_parameter("color_a", color_a)
+	mat.set_shader_parameter("color_b", color_b)
+	mat.set_shader_parameter("radius", 5.0)
+	_icon_cache[key] = mat
+	return mat
+
+
 func _get_cell_extra(button: Button, layer_name: String) -> Control:
 	var existing := button.get_node_or_null(layer_name)
 
@@ -1569,6 +1635,32 @@ func _on_word_found_feedback(cells: Array, _is_me: bool) -> void:
 		_last_words_signature = ""
 		_on_words_changed(_view_model.words())
 
+	var pulse_cells: Array[Vector2i] = []
+	for c in cells:
+		if c is Vector2i and _cell_buttons.has(c):
+			pulse_cells.append(c)
+	if not pulse_cells.is_empty():
+		_play_word_pulse_sequence(pulse_cells)
+
+func _play_word_pulse_sequence(cells: Array[Vector2i]) -> void:
+	for idx in cells.size():
+		var pos: Vector2i = cells[idx]
+		if idx > 0:
+			await (Engine.get_main_loop() as SceneTree).create_timer(0.18).timeout
+		_animate_cell_pulse(pos)
+
+func _animate_cell_pulse(cell_position: Vector2i) -> void:
+	var bv = _cell_buttons.get(cell_position)
+	if not bv is Button:
+		return
+	var button: Button = bv
+	button.pivot_offset = CELL_SIZE / 2.0
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "scale", Vector2(1.22, 1.22), 0.12)
+	tween.tween_property(button, "scale", Vector2.ONE, 0.18)
+	tween.parallel().tween_property(button, "modulate", Color(1, 1, 1, 1), 0.25)
+
 
 func _on_trap_event_feedback(event_name: String, x: int, y: int) -> void:
 	match event_name:
@@ -1599,16 +1691,25 @@ func _on_action_lock_changed(is_locked: bool) -> void:
 
 
 func _update_board_interactivity() -> void:
-	var board_disabled := _global_power_armed or _action_locked
+	var board_logical_disabled := _global_power_armed or _action_locked or (_view_model != null and _view_model.is_game_over())
 	if _view_model != null and _view_model.is_frozen() and _armed_scope == GamePowerCatalog.SCOPE_GLOBAL:
 		var selected_id := _view_model.selected_power_id()
 		for p in _cached_my_inventory:
 			if p is GamePower and (p as GamePower).id == selected_id and GamePowerCatalog.can_use_while_frozen((p as GamePower).type):
-				board_disabled = false
+				board_logical_disabled = false
 				break
 
-	board_grid.modulate = BOARD_DIMMED_MODULATE if board_disabled else COLOR_WHITE
-	board_grid.mouse_filter = Control.MOUSE_FILTER_IGNORE if board_disabled else Control.MOUSE_FILTER_STOP
+	var is_over := _view_model != null and _view_model.is_game_over()
+	var board_visual_dimmed := (_global_power_armed or _action_locked) and not is_over
+	if not is_over and _view_model != null and _view_model.is_frozen() and _armed_scope == GamePowerCatalog.SCOPE_GLOBAL:
+		var sel := _view_model.selected_power_id()
+		for p in _cached_my_inventory:
+			if p is GamePower and (p as GamePower).id == sel and GamePowerCatalog.can_use_while_frozen((p as GamePower).type):
+				board_visual_dimmed = false
+				break
+
+	board_grid.modulate = BOARD_DIMMED_MODULATE if board_visual_dimmed else COLOR_WHITE
+	board_grid.mouse_filter = Control.MOUSE_FILTER_IGNORE if board_logical_disabled else Control.MOUSE_FILTER_STOP
 
 	for cell_position in _cell_buttons:
 		var button_variant = _cell_buttons.get(cell_position)
@@ -1618,8 +1719,8 @@ func _update_board_interactivity() -> void:
 
 		var button: Button = button_variant
 		var vs := _view_model.get_cell_visual_state(cell_position.x, cell_position.y)
-		var cell_revealed := vs == GameViewModel.CELL_STATE_REVEALED_ME or vs == GameViewModel.CELL_STATE_REVEALED_OPPONENT or vs == GameViewModel.CELL_STATE_CLAIMED_ME or vs == GameViewModel.CELL_STATE_CLAIMED_OPPONENT
-		var cell_disabled := board_disabled or cell_revealed
+		var cell_revealed := vs == GameViewModel.CELL_STATE_REVEALED_ME or vs == GameViewModel.CELL_STATE_REVEALED_OPPONENT or vs == GameViewModel.CELL_STATE_CLAIMED_ME or vs == GameViewModel.CELL_STATE_CLAIMED_OPPONENT or vs == GameViewModel.CELL_STATE_CLAIMED_BOTH
+		var cell_disabled := board_logical_disabled or cell_revealed
 
 		button.mouse_filter = Control.MOUSE_FILTER_IGNORE if cell_disabled else Control.MOUSE_FILTER_STOP
 
@@ -1661,6 +1762,7 @@ func _show_game_over_overlay(is_winner: bool, title: String, subtitle: String) -
 	overlay.color = Color(0, 0, 0, 0.85)
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index = 100
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	var center := CenterContainer.new()
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -1711,6 +1813,23 @@ func _show_game_over_overlay(is_winner: bool, title: String, subtitle: String) -
 	home_button.custom_minimum_size = Vector2(200, 50)
 	home_button.add_theme_font_size_override("font_size", 18)
 	home_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	var green_normal: StyleBox = preload("res://assets/styles/buttons/green_button_default.tres")
+	var green_hover: StyleBox = preload("res://assets/styles/buttons/green_button_hover.tres")
+	var green_pressed: StyleBox = preload("res://assets/styles/buttons/green_button_pressed.tres")
+	var red_normal: StyleBox = preload("res://assets/styles/buttons/red_button_default.tres")
+	var disabled_style: StyleBox = preload("res://assets/styles/buttons/disabled_button.tres")
+	if is_winner:
+		home_button.add_theme_stylebox_override("normal", green_normal)
+		home_button.add_theme_stylebox_override("hover", green_hover)
+		home_button.add_theme_stylebox_override("pressed", green_pressed)
+		home_button.add_theme_stylebox_override("disabled", disabled_style)
+	else:
+		home_button.add_theme_stylebox_override("normal", red_normal)
+		home_button.add_theme_stylebox_override("hover", red_normal)
+		home_button.add_theme_stylebox_override("pressed", red_normal)
+		home_button.add_theme_stylebox_override("disabled", disabled_style)
+	home_button.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	home_button.add_theme_constant_override("outline_size", 4)
 	home_button.pressed.connect(_navigate_home)
 	vbox.add_child(home_button)
 

@@ -45,12 +45,29 @@ func start_search() -> void:
 func cancel_search() -> void:
 	_usecase.cancel_search()
 
+var _ghost_retry_count: int = 0
+const MAX_GHOST_RETRIES: int = 3
+
 func force_leave_and_retry() -> void:
 	var game_repo: GameRepository = ServiceRegistry.game_repository()
-	game_repo.leave_game()
+	var ws: WebSocketClient = ServiceRegistry.websocket_client()
+	if game_repo.has_method("force_ghost_leave"):
+		game_repo.force_ghost_leave()
+	else:
+		game_repo.leave_game()
+	ws.disconnect_socket()
 	_clear_error()
-	_set_state(MatchmakingState.IDLE)
-	await (Engine.get_main_loop() as SceneTree).create_timer(0.6).timeout
+	_ghost_retry_count += 1
+	if _ghost_retry_count > MAX_GHOST_RETRIES:
+		_set_error("Não foi possível sair da partida. Voltando ao início.")
+		_set_state(MatchmakingState.ERROR)
+		await (Engine.get_main_loop() as SceneTree).create_timer(1.5).timeout
+		_navigation.go_to(AppRoutes.HOME)
+		return
+	await (Engine.get_main_loop() as SceneTree).create_timer(0.8).timeout
+	if ws.is_socket_connected():
+		ws.disconnect_socket()
+		await (Engine.get_main_loop() as SceneTree).create_timer(0.4).timeout
 	start_search()
 
 func is_already_in_game_error() -> bool:
@@ -68,13 +85,17 @@ func _set_state(new_state: MatchmakingState) -> void:
 	state_changed.emit(new_state)
 
 func _on_searching() -> void:
+	_ghost_retry_count = 0
 	_set_state(MatchmakingState.SEARCHING)
 
 func _on_search_cancelled() -> void:
+	_ghost_retry_count = 0
 	_set_state(MatchmakingState.IDLE)
 	_navigation.go_to(AppRoutes.HOME)
 
 func _on_error(message: String) -> void:
+	if not message.to_lower().contains("already in a game"):
+		_ghost_retry_count = 0
 	_set_error(message)
 	_set_state(MatchmakingState.ERROR)
 

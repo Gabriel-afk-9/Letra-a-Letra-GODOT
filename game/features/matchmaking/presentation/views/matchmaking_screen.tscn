@@ -154,15 +154,18 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="CancelButton" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=2144671933 instance=ExtResource("4_78wdp")]
-custom_minimum_size = Vector2(140, 0)
-custom_maximum_size = Vector2(150, -1)
+custom_minimum_size = Vector2(180, 0)
+custom_maximum_size = Vector2(220, -1)
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 16
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 13
 theme_override_styles/disabled = ExtResource("7_dis")
 text = "CANCELAR"
 script = ExtResource("5_n0x0i")
+autowrap_mode = 3
+clip_text = false
 
 [connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/CancelButton" to="." method="_on_cancel_button_pressed"]
