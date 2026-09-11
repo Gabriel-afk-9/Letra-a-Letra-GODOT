@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://brrme07786k2s"
-path="res://.godot/imported/lal.png-da2ffcf1a11c2456d04a7e63f1f1bab1.ctex"
+uid="uid://cjno28oi572by"
+path="res://.godot/imported/envelope.svg-69d0ede8287d4926f68495f3922fd7f7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/logo/lal.png"
-dest_files=["res://.godot/imported/lal.png-da2ffcf1a11c2456d04a7e63f1f1bab1.ctex"]
+source_file="res://features/main/assets/icons/envelope.svg"
+dest_files=["res://.godot/imported/envelope.svg-69d0ede8287d4926f68495f3922fd7f7.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false
