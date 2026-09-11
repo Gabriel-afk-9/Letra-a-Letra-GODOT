@@ -88,9 +88,6 @@ layout_mode = 2
 [node name="PasswordInput" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=933791737 instance=ExtResource("4_3gw1i")]
 layout_mode = 2
 
-[node name="LoginBtn" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1224227437 instance=ExtResource("5_r6ykx")]
-layout_mode = 2
-
 [node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=658482929]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -109,6 +106,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SignUpButton" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1593634469 instance=ExtResource("6_2scoa")]
+layout_mode = 2
+
+[node name="LoginBtn" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1224227437 instance=ExtResource("5_r6ykx")]
 layout_mode = 2
 
 [connection signal="pressed" from="ScrollContainer/CenterContainer/VBoxContainer/LoginBtn" to="." method="_on_login_btn_pressed"]

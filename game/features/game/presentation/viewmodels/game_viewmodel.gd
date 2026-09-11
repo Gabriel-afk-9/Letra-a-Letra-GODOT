@@ -22,7 +22,7 @@ const CELL_STATE_BLOCK_OPPONENT := "BLOCK_OPPONENT"
 const FREEZE_TURNS_DEFAULT := 6
 const IMMUNITY_TURNS_DEFAULT := 10
 const BLIND_TURNS_DEFAULT := 6
-const ACTION_LOCK_TIMEOUT_SECONDS := 1.2
+const ACTION_LOCK_TIMEOUT_SECONDS := 0.7
 const TURN_TIMER_TICK_SECONDS := 0.5
 
 
@@ -70,6 +70,11 @@ var _armed_power_id: String = ""
 var _armed_power_type: String = ""
 var _is_game_over: bool = false
 
+var _opponent_id: String = ""
+var _block_click_history: Dictionary = {}
+var _pending_block_actor: String = ""
+var _pending_block_pos := Vector2i(-1, -1)
+
 var _cells_claimed_by_me: Array[Vector2i] = []
 var _cells_claimed_by_opponent: Array[Vector2i] = []
 var _spied_cell := Vector2i(-1, -1)
@@ -99,6 +104,10 @@ func _init(usecase: GameUseCase, navigation: NavigationService) -> void:
 
 func start(game_id: String, opponent_id: String) -> void:
 	_is_game_over = false
+	_opponent_id = opponent_id
+	_block_click_history.clear()
+	_pending_block_actor = ""
+	_pending_block_pos = Vector2i(-1, -1)
 	_set_loading(true)
 	_usecase.start(game_id, opponent_id)
 	_set_loading(false)
@@ -117,6 +126,14 @@ func on_cell_clicked(x: int, y: int) -> void:
 	if _is_frozen:
 		return
 
+	var is_block_click := false
+	if _board != null:
+		var _cell := _board.get_cell(x, y)
+		if _cell != null and _cell.effect_type.to_upper().contains("BLOCK"):
+			is_block_click = true
+			_pending_block_pos = Vector2i(x, y)
+			_pending_block_actor = _usecase.get_my_id() if _usecase.has_method("get_my_id") else ""
+
 	if not _armed_power_id.is_empty() and GamePowerCatalog.get_scope(_armed_power_type) == GamePowerCatalog.SCOPE_CELL:
 		_usecase.use_power_on_cell(_armed_power_id, _armed_power_type, x, y)
 		_armed_power_id = ""
@@ -127,6 +144,9 @@ func on_cell_clicked(x: int, y: int) -> void:
 		_usecase.reveal_cell(x, y)
 
 	_lock_action()
+	if not is_block_click:
+		_pending_block_pos = Vector2i(-1, -1)
+		_pending_block_actor = ""
 
 
 func select_power(power_id: String, power_type: String) -> void:
@@ -324,9 +344,6 @@ func get_cell_visual_state(x: int, y: int) -> String:
 
 		return CELL_STATE_HIDDEN
 
-	if _has_spied and cell_position == _spied_cell:
-		return CELL_STATE_SPY_ME
-
 	if _is_blinded:
 		return CELL_STATE_BLINDED
 
@@ -373,6 +390,40 @@ func get_cell_block_filled(x: int, y: int) -> int:
 		return 0
 
 	return clampi(3 - cell.remaining_clicks, 0, 3)
+
+
+func get_block_click_colors(x: int, y: int) -> Array:
+	var pos := Vector2i(x, y)
+	var ids: Array = _block_click_history.get(pos, [])
+	if ids.is_empty():
+		var filled := get_cell_block_filled(x, y)
+		if filled > 0:
+			var owner_id := ""
+			if _board != null:
+				var _cell := _board.get_cell(x, y)
+				if _cell != null:
+					owner_id = _cell.effect_owner_id
+			var owner_color := Color(0.5, 0.5, 0.5, 1)
+			if not owner_id.is_empty():
+				var owner := _usecase.classify_player(owner_id)
+				if owner == "me":
+					owner_color = Color(0.101960786, 0.57254905, 0.9019608, 1)
+				elif owner == "opponent":
+					owner_color = Color(0.9529412, 0.52156866, 0.09411765, 1)
+			var fallback: Array = []
+			for i in filled:
+				fallback.append(owner_color)
+			return fallback
+	var colors: Array = []
+	for pid in ids:
+		var owner := _usecase.classify_player(pid)
+		if owner == "me":
+			colors.append(Color(0.101960786, 0.57254905, 0.9019608, 1))
+		elif owner == "opponent":
+			colors.append(Color(0.9529412, 0.52156866, 0.09411765, 1))
+		else:
+			colors.append(Color(0.5, 0.5, 0.5, 1))
+	return colors
 
 
 func get_spied_cell() -> Vector2i:
@@ -423,8 +474,10 @@ func _unlock_action() -> void:
 
 
 func _on_board_updated(board: GameBoard) -> void:
+	var old_board: GameBoard = _board
 	_board = board
 	board_changed.emit(board)
+	_reconcile_block_history(board, old_board)
 
 
 func _on_words_updated(words: Array) -> void:
@@ -471,6 +524,64 @@ func _on_word_found(cells: Array, found_by_player_id: String, is_me: bool) -> vo
 
 func _on_trap_event(event_name: String, x: int, y: int) -> void:
 	trap_event_feedback.emit(event_name, x, y)
+	_sync_block_history_from_event(event_name, x, y)
+
+
+func _reconcile_block_history(board: GameBoard, old_board: GameBoard) -> void:
+	if board == null:
+		return
+	for x in 10:
+		for y in 10:
+			var pos := Vector2i(x, y)
+			var cell := board.get_cell(x, y)
+			var is_block := cell != null and cell.effect_type.to_upper().contains("BLOCK")
+			if not is_block:
+				if _block_click_history.has(pos):
+					_block_click_history.erase(pos)
+				if _pending_block_pos == pos:
+					_pending_block_pos = Vector2i(-1, -1)
+					_pending_block_actor = ""
+				continue
+			var new_filled := clampi(3 - cell.remaining_clicks, 0, 3) if cell.remaining_clicks >= 0 else 0
+			var hist: Array = _block_click_history.get(pos, [])
+			if hist.size() < new_filled:
+				var need: int = new_filled - hist.size()
+				for i in need:
+					if _pending_block_pos == pos and not _pending_block_actor.is_empty():
+						hist.append(_pending_block_actor)
+						_pending_block_pos = Vector2i(-1, -1)
+						_pending_block_actor = ""
+					else:
+						if not _opponent_id.is_empty():
+							hist.append(_opponent_id)
+						else:
+							hist.append("")
+				_block_click_history[pos] = hist
+			elif hist.size() > new_filled:
+				hist.resize(new_filled)
+				_block_click_history[pos] = hist
+
+
+func _sync_block_history_from_event(event_name: String, x: int, y: int) -> void:
+	if event_name != "CELL_BLOCKED" and event_name != "CELL_STILL_BLOCKED" and event_name != "CELL_UNBLOCKED":
+		return
+	var pos := Vector2i(x, y)
+	if event_name == "CELL_UNBLOCKED":
+		if _block_click_history.has(pos):
+			_block_click_history.erase(pos)
+		if _pending_block_pos == pos:
+			_pending_block_pos = Vector2i(-1, -1)
+			_pending_block_actor = ""
+		return
+	if _pending_block_pos == pos and not _pending_block_actor.is_empty():
+		return
+	if not _block_click_history.has(pos) and _board != null:
+		var cell := _board.get_cell(x, y)
+		if cell != null and cell.effect_type.to_upper().contains("BLOCK"):
+			var filled := clampi(3 - cell.remaining_clicks, 0, 3)
+			var hist: Array = _block_click_history.get(pos, [])
+			if hist.size() < filled:
+				_block_click_history[pos] = hist
 
 
 func _on_connection_lost(message: String) -> void:

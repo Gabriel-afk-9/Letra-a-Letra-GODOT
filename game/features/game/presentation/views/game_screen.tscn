@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://baf1iwy43ll3o"]
 
-[ext_resource type="Texture2D" uid="uid://np7c3tdw6y6s" path="res://assets/images/backgrounds/partida.png" id="1_0o6i8"]
 [ext_resource type="Script" uid="uid://ul113dm7j71v" path="res://features/game/presentation/views/game_screen.gd" id="1_1u5yy"]
 [ext_resource type="PackedScene" uid="uid://bntemtnyff4y2" path="res://assets/components/new/PlayerCard.tscn" id="2_1u5yy"]
+[ext_resource type="Texture2D" uid="uid://hb4b5dimdw5i" path="res://assets/images/backgrounds/vertical_clean.jpg" id="2_fiugi"]
 [ext_resource type="StyleBox" uid="uid://b6nvfx34smt17" path="res://assets/styles/buttons/red_button_default.tres" id="4_fiugi"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dot"]
@@ -18,11 +18,11 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inv_panel"]
-content_margin_left = 8.0
+content_margin_left = 4.0
 content_margin_top = 12.0
-content_margin_right = 8.0
+content_margin_right = 4.0
 content_margin_bottom = 12.0
-bg_color = Color(0.08, 0.08, 0.08, 0.92)
+bg_color = Color(0.08, 0.08, 0.08, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -50,7 +50,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_0o6i8")
+texture = ExtResource("2_fiugi")
 expand_mode = 1
 stretch_mode = 6
 
@@ -200,7 +200,7 @@ autowrap_mode = 3
 
 [node name="InventoryPanel" type="PanelContainer" parent="MarginContainer/MainLayout" unique_id=1784113057]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_inv_panel")
 
 [node name="InventoryContainer" type="HBoxContainer" parent="MarginContainer/MainLayout/InventoryPanel" unique_id=1204559819]

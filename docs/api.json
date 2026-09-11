@@ -1,0 +1,5668 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Letra a Letra - API",
+    "description": "Documentação dinâmica da API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Offer",
+      "description": "Rotas relacionadas ao gerenciamento de ofertas da loja"
+    },
+    {
+      "name": "Ticket Admin",
+      "description": "Rotas administrativas de gerenciamento de tickets"
+    },
+    {
+      "name": "Shop",
+      "description": "Rotas relacionadas a funcionalidade da loja do jogo"
+    },
+    {
+      "name": "Game",
+      "description": "Rotas relacionadas a funcionalidade de salas"
+    },
+    {
+      "name": "Cosmetics",
+      "description": "Rotas relacionadas ao gerenciamento de cosméticos"
+    },
+    {
+      "name": "Ticket",
+      "description": "Rotas de criação e consulta de tickets de suporte pelo usuário"
+    },
+    {
+      "name": "Friend",
+      "description": "Rotas relacionadas a funcionalidade de amizades"
+    },
+    {
+      "name": "Audit",
+      "description": "Rotas administrativas de consulta da auditoria de negócio"
+    },
+    {
+      "name": "Transaction",
+      "description": "Rotas relacionadas a funcionalidade de transações dos usuários"
+    },
+    {
+      "name": "Level",
+      "description": "Rotas relacionadas ao gerenciamento dos níveis e suas respectivas recompensas"
+    },
+    {
+      "name": "User",
+      "description": "Rotas relacionadas a funcionalidade de usuários (jogadores)"
+    },
+    {
+      "name": "Admin",
+      "description": "Rotas relacionadas aos logs administrativos"
+    },
+    {
+      "name": "Admin",
+      "description": "Logs das partidas"
+    },
+    {
+      "name": "Admin",
+      "description": "Rotas relacionadas a parte de administração"
+    }
+  ],
+  "paths": {
+    "/level/{levelId}": {
+      "get": {
+        "tags": [
+          "Level"
+        ],
+        "operationId": "handle",
+        "parameters": [
+          {
+            "name": "levelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseFindLevelResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Level"
+        ],
+        "operationId": "handle_1",
+        "parameters": [
+          {
+            "name": "levelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLevelRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseUpdateLevelResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cosmetic/{cosmeticId}": {
+      "put": {
+        "tags": [
+          "Cosmetics"
+        ],
+        "operationId": "handle_2",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UpdateCosmeticRequest"
+            }
+          },
+          {
+            "name": "cosmeticId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseUpdateCosmeticResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Cosmetics"
+        ],
+        "operationId": "handle_3",
+        "parameters": [
+          {
+            "name": "cosmeticId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDeleteCosmeticResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/{adminId}": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "handle_4",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseUpdateAdminResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "handle_5",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDeleteAdminResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_6",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseUserResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_7",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseCreateUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/auth": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_8",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseAuthUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/auth/verify-reset-code": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_9",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyResetCodeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/auth/reset-password": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_10",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/auth/google": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_11",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleAuthRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseAuthUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_12",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ticket": {
+      "post": {
+        "tags": [
+          "Ticket"
+        ],
+        "operationId": "handle_13",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTicketRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseCreateTicketResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shop/offers/{offerId}/buy": {
+      "post": {
+        "tags": [
+          "Shop"
+        ],
+        "operationId": "handle_14",
+        "parameters": [
+          {
+            "name": "offerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseBuyStoreOfferResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offer": {
+      "get": {
+        "tags": [
+          "Offer"
+        ],
+        "operationId": "handle_15",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseOfferResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Offer"
+        ],
+        "operationId": "registerOffer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterOfferRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseRegisterOfferResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/level": {
+      "get": {
+        "tags": [
+          "Level"
+        ],
+        "operationId": "handle_16",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseLevelResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Level"
+        ],
+        "operationId": "handle_17",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLevelRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseCreateLevelResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friend/request": {
+      "post": {
+        "tags": [
+          "Friend"
+        ],
+        "operationId": "handle_18",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendFriendRequestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseSendFriendRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cosmetic": {
+      "get": {
+        "tags": [
+          "Cosmetics"
+        ],
+        "operationId": "handle_19",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseCosmeticResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Cosmetics"
+        ],
+        "operationId": "handle_20",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/RegisterCosmeticRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseRegisterCosmeticResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "handle_21",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseAdminResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "handle_22",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterAdminRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseRegisterAdminResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/auth": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "handle_23",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthAdminRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseAuthAdminResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/auth/verify-reset-token": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "handle_24",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyResetTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/auth/reset-password": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "handle_25",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetAdminPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "handle_26",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotAdminPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/wallet/revoke": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_27",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeUserWalletRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/unban": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_28",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/grant-reward": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_29",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrantUserRewardRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/ban": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_30",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BanUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/nickname": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_31",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeNicknameRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseChangeNicknameResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/cosmetic/{cosmeticId}": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_32",
+        "parameters": [
+          {
+            "name": "cosmeticId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseChangeCosmeticResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offer/enable/{offerId}": {
+      "patch": {
+        "tags": [
+          "Offer"
+        ],
+        "operationId": "handle_33",
+        "parameters": [
+          {
+            "name": "offerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseEnableOfferResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offer/disable/{offerId}": {
+      "patch": {
+        "tags": [
+          "Offer"
+        ],
+        "operationId": "disableOffer",
+        "parameters": [
+          {
+            "name": "offerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDisableOfferResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friend/remove": {
+      "patch": {
+        "tags": [
+          "Friend"
+        ],
+        "operationId": "handle_34",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveFriendRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friend/reject": {
+      "patch": {
+        "tags": [
+          "Friend"
+        ],
+        "operationId": "handle_35",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectFriendRequestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friend/accept": {
+      "patch": {
+        "tags": [
+          "Friend"
+        ],
+        "operationId": "handle_36",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptFriendRequestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cosmetic/enable/{cosmeticId}": {
+      "patch": {
+        "tags": [
+          "Cosmetics"
+        ],
+        "operationId": "handle_37",
+        "parameters": [
+          {
+            "name": "cosmeticId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseEnableCosmeticResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cosmetic/disable/{cosmeticId}": {
+      "patch": {
+        "tags": [
+          "Cosmetics"
+        ],
+        "operationId": "handle_38",
+        "parameters": [
+          {
+            "name": "cosmeticId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDisableCosmeticResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/ticket/{ticketId}/resolve": {
+      "patch": {
+        "tags": [
+          "Ticket Admin"
+        ],
+        "operationId": "handle_39",
+        "parameters": [
+          {
+            "name": "ticketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveTicketRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseResolveTicketResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/activate": {
+      "patch": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "handle_40",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateAccountRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/inventory": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_41",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseInventoryItemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/username/{username}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_42",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseFindUserByUsernameResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/transactions": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_43",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseTransactionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/me": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_44",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseGetMyProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/inventory": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_45",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseGetMyInventoryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "operationId": "handle_46",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseTransactionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/{transactionId}": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "operationId": "handle_47",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseFindTransactionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/user/{userId}": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "operationId": "handle_48",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseTransactionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/user/username/{username}": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "operationId": "handle_49",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseTransactionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ticket/{ticketId}": {
+      "get": {
+        "tags": [
+          "Ticket"
+        ],
+        "operationId": "handle_50",
+        "parameters": [
+          {
+            "name": "ticketId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseTicketResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ticket/my": {
+      "get": {
+        "tags": [
+          "Ticket"
+        ],
+        "operationId": "handle_51",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseTicketResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shop/offers": {
+      "get": {
+        "tags": [
+          "Shop"
+        ],
+        "operationId": "handle_52",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseGetActiveOffersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offer/{offerId}": {
+      "get": {
+        "tags": [
+          "Offer"
+        ],
+        "operationId": "handle_53",
+        "parameters": [
+          {
+            "name": "offerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseFindOfferResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Offer"
+        ],
+        "operationId": "handle_54",
+        "parameters": [
+          {
+            "name": "offerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseDeleteOfferResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/level/value/{value}": {
+      "get": {
+        "tags": [
+          "Level"
+        ],
+        "operationId": "handle_55",
+        "parameters": [
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseFindLevelByValueResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/game": {
+      "get": {
+        "tags": [
+          "Game"
+        ],
+        "operationId": "handle_56",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseGameResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/game/public": {
+      "get": {
+        "tags": [
+          "Game"
+        ],
+        "operationId": "getGames",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseGameResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/game/code/{code}": {
+      "get": {
+        "tags": [
+          "Game"
+        ],
+        "operationId": "getGameByCode",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseFindByCodeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/game/active": {
+      "get": {
+        "tags": [
+          "Game"
+        ],
+        "operationId": "handle_57",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseGameResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friend": {
+      "get": {
+        "tags": [
+          "Friend"
+        ],
+        "operationId": "handle_58",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseGetFriendListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friend/pending": {
+      "get": {
+        "tags": [
+          "Friend"
+        ],
+        "operationId": "handle_59",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseGetFriendPendingRequestsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cosmetic/search": {
+      "get": {
+        "tags": [
+          "Cosmetics"
+        ],
+        "operationId": "handle_60",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseCosmeticResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cosmetic/name/{name}": {
+      "get": {
+        "tags": [
+          "Cosmetics"
+        ],
+        "operationId": "handle_61",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseFindCosmeticByNameResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/ticket": {
+      "get": {
+        "tags": [
+          "Ticket Admin"
+        ],
+        "operationId": "handle_62",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "RESOLVED"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "BUG",
+                "FEEDBACK",
+                "SUGGESTION",
+                "OTHER"
+              ]
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseTicketResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/ticket/user/username/{username}": {
+      "get": {
+        "tags": [
+          "Ticket Admin"
+        ],
+        "operationId": "handle_63",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseTicketResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/me": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "handle_64",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseGetMyAdminProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/logs/game": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "findDates",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/logs/game/{date}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "findGames",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/logs/game/{date}/{gameId}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "findFiles",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "gameId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/logs/game/{date}/{gameId}/{file}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "download",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "gameId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "file",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/logs/game/untracked": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "findLogs",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/logs/game/untracked/{file}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "downloadUntracked",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/logs/admin": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "findLogs_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/logs/admin/{file}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "download_1",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/email/{email}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "handle_65",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseFindAdminByEmailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/audit": {
+      "get": {
+        "tags": [
+          "Audit"
+        ],
+        "operationId": "handle_66",
+        "parameters": [
+          {
+            "name": "targetUserId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "actorId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "eventType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "WALLET_CREDITED",
+                "WALLET_DEBITED",
+                "COSMETIC_ACQUIRED",
+                "COSMETIC_REVOKED",
+                "COSMETIC_EQUIPPED",
+                "COSMETIC_UNEQUIPPED",
+                "MATCH_STARTED",
+                "MATCH_ENDED",
+                "ROOM_CLOSED_INACTIVITY",
+                "PLAYER_REMOVED_INACTIVITY",
+                "MATCHMAKING_PAIRED",
+                "CATALOG_CHANGED",
+                "TICKET_CREATED",
+                "TICKET_RESOLVED",
+                "COMMAND_FAILED"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ECONOMY",
+                "INVENTORY",
+                "GAME",
+                "ACCOUNT",
+                "ADMINISTRATION",
+                "OPERATION"
+              ]
+            }
+          },
+          {
+            "name": "outcome",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SUCCESS",
+                "FAILURE"
+              ]
+            }
+          },
+          {
+            "name": "resourceType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "WALLET",
+                "INVENTORY_ITEM",
+                "COSMETIC",
+                "OFFER",
+                "LEVEL",
+                "USER",
+                "MATCH",
+                "ROOM",
+                "TICKET"
+              ]
+            }
+          },
+          {
+            "name": "resourceId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "requestId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "correlationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transactionId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "DESC"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseAuditEventResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/audit/user/{userId}": {
+      "get": {
+        "tags": [
+          "Audit"
+        ],
+        "operationId": "handle_67",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "eventType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "WALLET_CREDITED",
+                "WALLET_DEBITED",
+                "COSMETIC_ACQUIRED",
+                "COSMETIC_REVOKED",
+                "COSMETIC_EQUIPPED",
+                "COSMETIC_UNEQUIPPED",
+                "MATCH_STARTED",
+                "MATCH_ENDED",
+                "ROOM_CLOSED_INACTIVITY",
+                "PLAYER_REMOVED_INACTIVITY",
+                "MATCHMAKING_PAIRED",
+                "CATALOG_CHANGED",
+                "TICKET_CREATED",
+                "TICKET_RESOLVED",
+                "COMMAND_FAILED"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ECONOMY",
+                "INVENTORY",
+                "GAME",
+                "ACCOUNT",
+                "ADMINISTRATION",
+                "OPERATION"
+              ]
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseAuditEventResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/audit/resource/{type}/{id}": {
+      "get": {
+        "tags": [
+          "Audit"
+        ],
+        "operationId": "handle_68",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "targetUserId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseAuditEventResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}/inventory/{cosmeticId}": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_69",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cosmeticId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UpdateLevelRequest": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rewards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateLevelRewardRequest"
+            }
+          }
+        },
+        "required": [
+          "level",
+          "rewards"
+        ]
+      },
+      "UpdateLevelRewardRequest": {
+        "type": "object",
+        "properties": {
+          "rewardType": {
+            "type": "string",
+            "enum": [
+              "COIN",
+              "GEMS",
+              "COSMETIC"
+            ],
+            "minLength": 1
+          },
+          "rewardReference": {
+            "type": "string",
+            "format": "uuid",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "quantity",
+          "rewardReference",
+          "rewardType"
+        ]
+      },
+      "CosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "EMOTE",
+              "FRAME"
+            ]
+          },
+          "assetPath": {
+            "type": "string"
+          },
+          "available": {
+            "type": "boolean"
+          }
+        }
+      },
+      "LevelResponse": {
+        "type": "object",
+        "properties": {
+          "levelId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rewards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LevelRewardResponse"
+            }
+          }
+        }
+      },
+      "LevelRewardResponse": {
+        "type": "object",
+        "properties": {
+          "levelRewardId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reward": {
+            "$ref": "#/components/schemas/RewardResponse"
+          }
+        }
+      },
+      "RewardResponse": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "COIN",
+              "GEMS",
+              "COSMETIC"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cosmetic": {
+            "$ref": "#/components/schemas/CosmeticResponse"
+          }
+        }
+      },
+      "SuccessResponseUpdateLevelResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/UpdateLevelResponse"
+          }
+        }
+      },
+      "UpdateLevelResponse": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "$ref": "#/components/schemas/LevelResponse"
+          }
+        }
+      },
+      "UpdateCosmeticRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "EMOTE",
+              "FRAME"
+            ]
+          },
+          "asset": {
+            "type": "string",
+            "format": "binary"
+          },
+          "isNewAsset": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "isNewAsset",
+          "name",
+          "type"
+        ]
+      },
+      "Cosmetic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "EMOTE",
+              "FRAME"
+            ]
+          },
+          "assetPath": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "available": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponseUpdateCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/UpdateCosmeticResponse"
+          }
+        }
+      },
+      "UpdateCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "cosmetic": {
+            "$ref": "#/components/schemas/Cosmetic"
+          }
+        }
+      },
+      "Permission": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "LOGS",
+              "ADMIN",
+              "COSMETIC",
+              "GAME",
+              "LEVELS",
+              "OFFERS",
+              "TRANSACTIONS",
+              "AUDIT",
+              "TICKET"
+            ]
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "VIEW",
+                "CREATE",
+                "EDIT",
+                "DELETE",
+                "TOGGLE"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "UpdateAdminRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "isSuper": {
+            "type": "boolean"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Permission"
+            }
+          }
+        },
+        "required": [
+          "email",
+          "isSuper",
+          "name",
+          "permissions"
+        ]
+      },
+      "AdminResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionResponse"
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "PermissionResponse": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "LOGS",
+              "ADMIN",
+              "COSMETIC",
+              "GAME",
+              "LEVELS",
+              "OFFERS",
+              "TRANSACTIONS",
+              "AUDIT",
+              "TICKET"
+            ]
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "VIEW",
+                "CREATE",
+                "EDIT",
+                "DELETE",
+                "TOGGLE"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "SuccessResponseUpdateAdminResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/UpdateAdminResponse"
+          }
+        }
+      },
+      "UpdateAdminResponse": {
+        "type": "object",
+        "properties": {
+          "admin": {
+            "$ref": "#/components/schemas/AdminResponse"
+          }
+        }
+      },
+      "CreateUserRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 16,
+            "minLength": 8
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "CreateUserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          }
+        }
+      },
+      "SuccessResponseCreateUserResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CreateUserResponse"
+          }
+        }
+      },
+      "AuthUserRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 2147483647,
+            "minLength": 8
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthUserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "SuccessResponseAuthUserResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AuthUserResponse"
+          }
+        }
+      },
+      "VerifyResetCodeRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 6,
+            "minLength": 6
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "SuccessResponseVoid": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+
+          }
+        }
+      },
+      "ResetPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "maxLength": 16,
+            "minLength": 8
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 6,
+            "minLength": 6
+          }
+        },
+        "required": [
+          "code",
+          "newPassword"
+        ]
+      },
+      "GoogleAuthRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "ForgotPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "CreateTicketRequest": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "BUG",
+              "FEEDBACK",
+              "SUGGESTION",
+              "OTHER"
+            ]
+          },
+          "subject": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 5
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 10
+          }
+        },
+        "required": [
+          "category",
+          "description",
+          "subject"
+        ]
+      },
+      "CreateTicketResponse": {
+        "type": "object",
+        "properties": {
+          "ticket": {
+            "$ref": "#/components/schemas/TicketResponse"
+          }
+        }
+      },
+      "SuccessResponseCreateTicketResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CreateTicketResponse"
+          }
+        }
+      },
+      "TicketResponse": {
+        "type": "object",
+        "properties": {
+          "ticketId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "BUG",
+              "FEEDBACK",
+              "SUGGESTION",
+              "OTHER"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "RESOLVED"
+            ]
+          },
+          "subject": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "resolutionNote": {
+            "type": "string"
+          },
+          "resolvedByAdminId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "adminName": {
+            "type": "string"
+          },
+          "resolvedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BuyStoreOfferResponse": {
+        "type": "object",
+        "properties": {
+          "offer": {
+            "$ref": "#/components/schemas/Offer"
+          }
+        }
+      },
+      "CosmeticReward": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Reward"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "cosmetic": {
+                "$ref": "#/components/schemas/Cosmetic"
+              }
+            }
+          }
+        ]
+      },
+      "HardGemsReward": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Reward"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        ]
+      },
+      "Offer": {
+        "type": "object",
+        "properties": {
+          "offerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "coinType": {
+            "type": "string",
+            "enum": [
+              "SOFT",
+              "HARD",
+              "REAL"
+            ]
+          },
+          "price": {
+            "type": "number"
+          },
+          "rewards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferReward"
+            }
+          },
+          "repeatable": {
+            "type": "boolean"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "hasExpiration": {
+            "type": "boolean"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OfferReward": {
+        "type": "object",
+        "properties": {
+          "offerRewardId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reward": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CosmeticReward"
+              },
+              {
+                "$ref": "#/components/schemas/HardGemsReward"
+              },
+              {
+                "$ref": "#/components/schemas/SoftCoinsReward"
+              }
+            ]
+          }
+        }
+      },
+      "Reward": {
+
+      },
+      "SoftCoinsReward": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Reward"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        ]
+      },
+      "SuccessResponseBuyStoreOfferResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/BuyStoreOfferResponse"
+          }
+        }
+      },
+      "RegisterOfferRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "coinType": {
+            "type": "string",
+            "enum": [
+              "SOFT",
+              "HARD",
+              "REAL"
+            ]
+          },
+          "price": {
+            "type": "number"
+          },
+          "rewards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegisterOfferRewardRequest"
+            },
+            "minItems": 1
+          },
+          "repeatable": {
+            "type": "boolean"
+          },
+          "hasExpiration": {
+            "type": "boolean"
+          },
+          "expiresIn": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "coinType",
+          "hasExpiration",
+          "repeatable",
+          "rewards",
+          "title"
+        ]
+      },
+      "RegisterOfferRewardRequest": {
+        "type": "object",
+        "properties": {
+          "rewardType": {
+            "type": "string",
+            "enum": [
+              "COIN",
+              "GEMS",
+              "COSMETIC"
+            ]
+          },
+          "rewardReference": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "rewardType"
+        ]
+      },
+      "OfferResponse": {
+        "type": "object",
+        "properties": {
+          "offerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "coinType": {
+            "type": "string",
+            "enum": [
+              "SOFT",
+              "HARD",
+              "REAL"
+            ]
+          },
+          "price": {
+            "type": "number"
+          },
+          "rewards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferRewardResponse"
+            }
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "repeatable": {
+            "type": "boolean"
+          },
+          "hasExpiration": {
+            "type": "boolean"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OfferRewardResponse": {
+        "type": "object",
+        "properties": {
+          "offerRewardId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reward": {
+            "$ref": "#/components/schemas/RewardResponse"
+          }
+        }
+      },
+      "RegisterOfferResponse": {
+        "type": "object",
+        "properties": {
+          "offer": {
+            "$ref": "#/components/schemas/OfferResponse"
+          }
+        }
+      },
+      "SuccessResponseRegisterOfferResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RegisterOfferResponse"
+          }
+        }
+      },
+      "CreateLevelRequest": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rewards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateLevelRewardRequest"
+            }
+          }
+        },
+        "required": [
+          "level",
+          "rewards"
+        ]
+      },
+      "CreateLevelRewardRequest": {
+        "type": "object",
+        "properties": {
+          "rewardType": {
+            "type": "string",
+            "enum": [
+              "COIN",
+              "GEMS",
+              "COSMETIC"
+            ],
+            "minLength": 1
+          },
+          "rewardReference": {
+            "type": "string",
+            "format": "uuid",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "quantity",
+          "rewardReference",
+          "rewardType"
+        ]
+      },
+      "CreateLevelResponse": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "$ref": "#/components/schemas/LevelResponse"
+          }
+        }
+      },
+      "SuccessResponseCreateLevelResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CreateLevelResponse"
+          }
+        }
+      },
+      "SendFriendRequestRequest": {
+        "type": "object",
+        "properties": {
+          "friendId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "friendId"
+        ]
+      },
+      "FriendResponse": {
+        "type": "object",
+        "properties": {
+          "userId1": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId2": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACCEPT",
+              "DECLINED",
+              "PENDING"
+            ]
+          },
+          "requestDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SendFriendRequestResponse": {
+        "type": "object",
+        "properties": {
+          "request": {
+            "$ref": "#/components/schemas/FriendResponse"
+          }
+        }
+      },
+      "SuccessResponseSendFriendRequestResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SendFriendRequestResponse"
+          }
+        }
+      },
+      "RegisterCosmeticRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cosmeticType": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "EMOTE",
+              "FRAME"
+            ]
+          },
+          "asset": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "asset",
+          "cosmeticType",
+          "name"
+        ]
+      },
+      "RegisterCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "cosmetic": {
+            "$ref": "#/components/schemas/Cosmetic"
+          }
+        }
+      },
+      "SuccessResponseRegisterCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RegisterCosmeticResponse"
+          }
+        }
+      },
+      "RegisterAdminRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "email",
+          "name"
+        ]
+      },
+      "RegisterAdminResponse": {
+        "type": "object",
+        "properties": {
+          "admin": {
+            "$ref": "#/components/schemas/AdminResponse"
+          }
+        }
+      },
+      "SuccessResponseRegisterAdminResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RegisterAdminResponse"
+          }
+        }
+      },
+      "AuthAdminRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 8
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "AuthAdminResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "SuccessResponseAuthAdminResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AuthAdminResponse"
+          }
+        }
+      },
+      "VerifyResetTokenRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "ResetAdminPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "maxLength": 16,
+            "minLength": 8
+          },
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "newPassword",
+          "token"
+        ]
+      },
+      "ForgotAdminPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "RevokeUserWalletRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "SOFT",
+              "HARD",
+              "REAL"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "amount",
+          "type"
+        ]
+      },
+      "GrantUserRewardRequest": {
+        "type": "object",
+        "properties": {
+          "rewardType": {
+            "type": "string",
+            "enum": [
+              "COIN",
+              "GEMS",
+              "COSMETIC"
+            ]
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rewardReference": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "BanUserRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "TEMPORARY"
+            ]
+          },
+          "expiresIn": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "reason",
+          "type"
+        ]
+      },
+      "ChangeNicknameRequest": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string",
+            "maxLength": 16,
+            "minLength": 3
+          }
+        },
+        "required": [
+          "nickname"
+        ]
+      },
+      "ChangeNicknameResponse": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string"
+          }
+        }
+      },
+      "SuccessResponseChangeNicknameResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ChangeNicknameResponse"
+          }
+        }
+      },
+      "ChangeCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "inventoryItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryItemResponse"
+            }
+          }
+        }
+      },
+      "InventoryItemResponse": {
+        "type": "object",
+        "properties": {
+          "cosmeticId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "EMOTE",
+              "FRAME"
+            ]
+          },
+          "equipped": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponseChangeCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ChangeCosmeticResponse"
+          }
+        }
+      },
+      "EnableOfferResponse": {
+        "type": "object",
+        "properties": {
+          "offer": {
+            "$ref": "#/components/schemas/OfferResponse"
+          }
+        }
+      },
+      "SuccessResponseEnableOfferResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/EnableOfferResponse"
+          }
+        }
+      },
+      "DisableOfferResponse": {
+        "type": "object",
+        "properties": {
+          "offer": {
+            "$ref": "#/components/schemas/OfferResponse"
+          }
+        }
+      },
+      "SuccessResponseDisableOfferResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/DisableOfferResponse"
+          }
+        }
+      },
+      "RemoveFriendRequest": {
+        "type": "object",
+        "properties": {
+          "friendId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "friendId"
+        ]
+      },
+      "RejectFriendRequestRequest": {
+        "type": "object",
+        "properties": {
+          "friendId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "friendId"
+        ]
+      },
+      "AcceptFriendRequestRequest": {
+        "type": "object",
+        "properties": {
+          "friendId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "friendId"
+        ]
+      },
+      "EnableCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "cosmetic": {
+            "$ref": "#/components/schemas/CosmeticResponse"
+          }
+        }
+      },
+      "SuccessResponseEnableCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/EnableCosmeticResponse"
+          }
+        }
+      },
+      "DisableCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "cosmetic": {
+            "$ref": "#/components/schemas/CosmeticResponse"
+          }
+        }
+      },
+      "SuccessResponseDisableCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/DisableCosmeticResponse"
+          }
+        }
+      },
+      "ResolveTicketRequest": {
+        "type": "object",
+        "properties": {
+          "resolutionNote": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          }
+        }
+      },
+      "ResolveTicketResponse": {
+        "type": "object",
+        "properties": {
+          "ticket": {
+            "$ref": "#/components/schemas/TicketResponse"
+          }
+        }
+      },
+      "SuccessResponseResolveTicketResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ResolveTicketResponse"
+          }
+        }
+      },
+      "ActivateAccountRequest": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "Pageable": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "BanInfoResponse": {
+        "type": "object",
+        "properties": {
+          "banned": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "TEMPORARY"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PageResponseUserResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponse"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponsePageResponseUserResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResponseUserResponse"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "banInfo": {
+            "$ref": "#/components/schemas/BanInfoResponse"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/UserStats"
+          },
+          "equipped": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryItemResponse"
+            }
+          },
+          "wallet": {
+            "$ref": "#/components/schemas/WalletResponse"
+          }
+        }
+      },
+      "UserStats": {
+        "type": "object",
+        "properties": {
+          "totalMatches": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalWins": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "winStreak": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "experience": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rankingPoints": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "WalletResponse": {
+        "type": "object",
+        "properties": {
+          "coins": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "gems": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PageResponseInventoryItemResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryItemResponse"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponsePageResponseInventoryItemResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResponseInventoryItemResponse"
+          }
+        }
+      },
+      "FindUserByUsernameResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserResponse"
+          }
+        }
+      },
+      "SuccessResponseFindUserByUsernameResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FindUserByUsernameResponse"
+          }
+        }
+      },
+      "PageResponseTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionResponse"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponsePageResponseTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResponseTransactionResponse"
+          }
+        }
+      },
+      "TransactionResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "coinType": {
+            "type": "string",
+            "enum": [
+              "SOFT",
+              "HARD",
+              "REAL"
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "balanceBefore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "balanceAfter": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "DEBIT",
+              "CREDIT"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "SHOP_PURCHASE",
+              "LEVEL_UP",
+              "ADMIN_GIVE",
+              "ADMIN_REVOKE",
+              "REFUND",
+              "DAILY_REWARD",
+              "RANKING_REWARD"
+            ]
+          },
+          "referenceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "referenceType": {
+            "type": "string"
+          },
+          "referenceName": {
+            "type": "string"
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetMyProfileResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserResponse"
+          }
+        }
+      },
+      "SuccessResponseGetMyProfileResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetMyProfileResponse"
+          }
+        }
+      },
+      "GetMyInventoryResponse": {
+        "type": "object",
+        "properties": {
+          "inventory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryItemResponse"
+            }
+          }
+        }
+      },
+      "SuccessResponseGetMyInventoryResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetMyInventoryResponse"
+          }
+        }
+      },
+      "FindTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "transaction": {
+            "$ref": "#/components/schemas/TransactionResponse"
+          }
+        }
+      },
+      "SuccessResponseFindTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FindTransactionResponse"
+          }
+        }
+      },
+      "SuccessResponseTicketResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/TicketResponse"
+          }
+        }
+      },
+      "PageResponseTicketResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TicketResponse"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponsePageResponseTicketResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResponseTicketResponse"
+          }
+        }
+      },
+      "GetActiveOffersResponse": {
+        "type": "object",
+        "properties": {
+          "offers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Offer"
+            }
+          }
+        }
+      },
+      "SuccessResponseGetActiveOffersResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetActiveOffersResponse"
+          }
+        }
+      },
+      "PageResponseOfferResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferResponse"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponsePageResponseOfferResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResponseOfferResponse"
+          }
+        }
+      },
+      "FindOfferResponse": {
+        "type": "object",
+        "properties": {
+          "offer": {
+            "$ref": "#/components/schemas/OfferResponse"
+          }
+        }
+      },
+      "SuccessResponseFindOfferResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FindOfferResponse"
+          }
+        }
+      },
+      "PageResponseLevelResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LevelResponse"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponsePageResponseLevelResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResponseLevelResponse"
+          }
+        }
+      },
+      "FindLevelResponse": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "$ref": "#/components/schemas/LevelResponse"
+          }
+        }
+      },
+      "SuccessResponseFindLevelResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FindLevelResponse"
+          }
+        }
+      },
+      "FindLevelByValueResponse": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "$ref": "#/components/schemas/LevelResponse"
+          }
+        }
+      },
+      "SuccessResponseFindLevelByValueResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FindLevelByValueResponse"
+          }
+        }
+      },
+      "GameResponse": {
+        "type": "object",
+        "properties": {
+          "gameId": {
+            "type": "string"
+          },
+          "gameName": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "CUSTOM",
+              "MATCHMAKING",
+              "RANKING"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "WAITING",
+              "RUNNING",
+              "CLOSED",
+              "CANCELED"
+            ]
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantResponse"
+            }
+          },
+          "positions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MatchHistoryResponse"
+            }
+          }
+        }
+      },
+      "InventoryItem": {
+        "type": "object",
+        "properties": {
+          "cosmeticId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "EMOTE",
+              "FRAME"
+            ]
+          },
+          "equipped": {
+            "type": "boolean"
+          },
+          "unlockedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MatchHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "finishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "players": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlayerHistoryResponse"
+            }
+          },
+          "spectators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpectatorHistoryResponse"
+            }
+          }
+        }
+      },
+      "PageResponseGameResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GameResponse"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ParticipantResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "cosmeticsEquipped": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryItem"
+            }
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "PLAYER",
+              "SPECTATOR"
+            ]
+          },
+          "isConnected": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PlayerHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "winner": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SpectatorHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          }
+        }
+      },
+      "SuccessResponsePageResponseGameResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResponseGameResponse"
+          }
+        }
+      },
+      "FindByCodeResponse": {
+        "type": "object",
+        "properties": {
+          "gameId": {
+            "type": "string"
+          }
+        }
+      },
+      "SuccessResponseFindByCodeResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FindByCodeResponse"
+          }
+        }
+      },
+      "GetFriendListResponse": {
+        "type": "object",
+        "properties": {
+          "friends": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FriendResponse"
+            }
+          }
+        }
+      },
+      "SuccessResponseGetFriendListResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetFriendListResponse"
+          }
+        }
+      },
+      "GetFriendPendingRequestsResponse": {
+        "type": "object",
+        "properties": {
+          "requests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FriendResponse"
+            }
+          }
+        }
+      },
+      "SuccessResponseGetFriendPendingRequestsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetFriendPendingRequestsResponse"
+          }
+        }
+      },
+      "PageResponseCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CosmeticResponse"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponsePageResponseCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResponseCosmeticResponse"
+          }
+        }
+      },
+      "FindCosmeticByNameResponse": {
+        "type": "object",
+        "properties": {
+          "cosmetic": {
+            "$ref": "#/components/schemas/CosmeticResponse"
+          }
+        }
+      },
+      "SuccessResponseFindCosmeticByNameResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FindCosmeticByNameResponse"
+          }
+        }
+      },
+      "PageResponseAdminResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminResponse"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponsePageResponseAdminResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResponseAdminResponse"
+          }
+        }
+      },
+      "GetMyAdminProfileResponse": {
+        "type": "object",
+        "properties": {
+          "admin": {
+            "$ref": "#/components/schemas/AdminResponse"
+          }
+        }
+      },
+      "SuccessResponseGetMyAdminProfileResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetMyAdminProfileResponse"
+          }
+        }
+      },
+      "FindAdminByEmailResponse": {
+        "type": "object",
+        "properties": {
+          "admin": {
+            "$ref": "#/components/schemas/AdminResponse"
+          }
+        }
+      },
+      "SuccessResponseFindAdminByEmailResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FindAdminByEmailResponse"
+          }
+        }
+      },
+      "AuditEventResponse": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "category": {
+            "type": "string"
+          },
+          "eventType": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string"
+          },
+          "failureReason": {
+            "type": "string"
+          },
+          "actorType": {
+            "type": "string"
+          },
+          "actorId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "actorName": {
+            "type": "string"
+          },
+          "targetUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "targetUsername": {
+            "type": "string"
+          },
+          "resourceType": {
+            "type": "string"
+          },
+          "resourceId": {
+            "type": "string"
+          },
+          "beforeState": {
+            "type": "object",
+            "additionalProperties": {
+
+            }
+          },
+          "afterState": {
+            "type": "object",
+            "additionalProperties": {
+
+            }
+          },
+          "delta": {
+            "type": "object",
+            "additionalProperties": {
+
+            }
+          },
+          "reasonCode": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          },
+          "operationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "correlationId": {
+            "type": "string"
+          },
+          "sourceType": {
+            "type": "string"
+          },
+          "sourceDetail": {
+            "type": "string"
+          },
+          "transactionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+
+            }
+          }
+        }
+      },
+      "PageResponseAuditEventResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditEventResponse"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponsePageResponseAuditEventResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResponseAuditEventResponse"
+          }
+        }
+      },
+      "DeleteOfferResponse": {
+        "type": "object",
+        "properties": {
+          "offer": {
+            "$ref": "#/components/schemas/OfferResponse"
+          }
+        }
+      },
+      "SuccessResponseDeleteOfferResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/DeleteOfferResponse"
+          }
+        }
+      },
+      "DeleteCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "cosmetic": {
+            "$ref": "#/components/schemas/CosmeticResponse"
+          }
+        }
+      },
+      "SuccessResponseDeleteCosmeticResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/DeleteCosmeticResponse"
+          }
+        }
+      },
+      "DeleteAdminResponse": {
+        "type": "object",
+        "properties": {
+          "admin": {
+            "$ref": "#/components/schemas/AdminResponse"
+          }
+        }
+      },
+      "SuccessResponseDeleteAdminResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/DeleteAdminResponse"
+          }
+        }
+      }
+    }
+  }
+}

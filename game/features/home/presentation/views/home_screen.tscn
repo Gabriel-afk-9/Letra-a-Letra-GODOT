@@ -1,259 +1,1247 @@
 [gd_scene format=3 uid="uid://b1gbmuj31b2um"]
 
-[ext_resource type="Script" uid="uid://cdaar7k8dj5rc" path="res://features/home/presentation/views/home_screen.gd" id="1_xtv2u"]
-[ext_resource type="Texture2D" uid="uid://ckoyn5cjw0v60" path="res://assets/images/backgrounds/home.png" id="2_6ks1k"]
-[ext_resource type="PackedScene" uid="uid://bntemtnyff4y2" path="res://assets/components/new/PlayerCard.tscn" id="3_tjqq1"]
-[ext_resource type="Texture2D" uid="uid://c6bifs6l41y1w" path="res://assets/images/icons/config-icon.png" id="5_8nrkw"]
-[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="6_0kgn5"]
-[ext_resource type="StyleBox" uid="uid://7mj12tjr63g1" path="res://assets/styles/buttons/orange_button_home.tres" id="7_mq5ll"]
-[ext_resource type="Texture2D" uid="uid://e753xeshtu33" path="res://assets/images/icons/Play.png" id="8_tuw21"]
-[ext_resource type="StyleBox" uid="uid://c5kob6xbifitw" path="res://assets/styles/buttons/blue_button_home.tres" id="9_5y35w"]
-[ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="10_w82ii"]
-[ext_resource type="Texture2D" uid="uid://qy6k3fcwndys" path="res://assets/images/icons/room-icon.png" id="11_4q0sw"]
-[ext_resource type="PackedScene" uid="uid://d0iu2kvhddnlj" path="res://assets/components/boot_btn.tscn" id="12_7yyda"]
-[ext_resource type="StyleBox" uid="uid://br8xv828524au" path="res://assets/styles/buttons/green_button_home.tres" id="13_0ql3y"]
-[ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="14_mqpyh"]
+[ext_resource type="Script" uid="uid://cdaar7k8dj5rc" path="res://features/home/presentation/views/home_screen.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://ckoyn5cjw0v60" path="res://assets/images/backgrounds/home.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://ddw4mt7rfhvhp" path="res://assets/cosmetics/avatar/logo.png" id="3_cosmetic_avatar_default"]
+[ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="5"]
+[ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="7"]
+[ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="8"]
+[ext_resource type="Texture2D" uid="uid://e753xeshtu33" path="res://assets/images/icons/Play.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://c71dswpbkg2b3" path="res://assets/images/icons/icon-mais.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://dlgn8q0dgwcj4" path="res://assets/images/icons/Enter.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://8qd34wfwm1fp" path="res://assets/images/icons/icon-user.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://qy6k3fcwndys" path="res://assets/images/icons/room-icon.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://c6bifs6l41y1w" path="res://assets/images/icons/config-icon.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://brrme07786k2s" path="res://assets/images/logo/lal.png" id="16"]
 
+[sub_resource type="StyleBoxFlat" id="LevelBadge"]
+bg_color = Color(0.184, 0.608, 0.847, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sotyy"]
-bg_color = Color(0, 0.38178387, 0.626266, 0.8352941)
+[sub_resource type="StyleBoxFlat" id="XpPillStyle"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="CoinPillStyle"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="CoinDot"]
+bg_color = Color(1, 0.8, 0.2, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.38, 0.05, 1)
+corner_radius_top_left = 11
+corner_radius_top_right = 11
+corner_radius_bottom_right = 11
+corner_radius_bottom_left = 11
+
+[sub_resource type="StyleBoxFlat" id="GreenPlus"]
+bg_color = Color(0.208, 0.78, 0.349, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxEmpty" id="NavEmpty"]
+
+[sub_resource type="StyleBoxFlat" id="GemPillStyle"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="BannerStyle"]
+bg_color = Color(0.105882354, 0.6156863, 0.87058824, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vsnff"]
-bg_color = Color(18.892157, 18.892157, 18.892157, 0.75686276)
-border_width_left = 6
-border_width_top = 6
-border_width_right = 6
-border_width_bottom = 6
-border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
-corner_detail = 20
+[sub_resource type="StyleBoxFlat" id="AvatarFrameStyle"]
+bg_color = Color(1, 1, 1, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_fq8fn"]
-load_path = "res://.godot/imported/lal.png-da2ffcf1a11c2456d04a7e63f1f1bab1.ctex"
+[sub_resource type="StyleBoxFlat" id="StatsPillStyle"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
 
-[node name="HomeScreen" type="Control" unique_id=2133168357]
+[sub_resource type="StyleBoxFlat" id="QuickOrange"]
+bg_color = Color(0.961, 0.51, 0.122, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.54, 0.29, 0.05, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="JogarStyle"]
+bg_color = Color(0.353, 0.643, 0.902, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="ModeBarFrame"]
+bg_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="SegCasualStyle"]
+bg_color = Color(0.243, 0.573, 0.839, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="SegBotStyle"]
+bg_color = Color(0.184, 0.749, 0.443, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="SegRankStyle"]
+bg_color = Color(0.961, 0.51, 0.122, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="NavSlate"]
+bg_color = Color(0.227, 0.271, 0.322, 1)
+
+[sub_resource type="StyleBoxFlat" id="PlayTile"]
+bg_color = Color(0.329, 0.388, 0.478, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="ModeCardStyle"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.102, 0.137, 0.251, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="OptCasual"]
+bg_color = Color(0.243, 0.573, 0.839, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="OptBot"]
+bg_color = Color(0.184, 0.749, 0.443, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="OptRank"]
+bg_color = Color(0.961, 0.51, 0.122, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="HomeScreen" type="Control" unique_id=2082771205]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_xtv2u")
+script = ExtResource("1")
 
-[node name="BackgroundHome" type="TextureRect" parent="." unique_id=1945114364]
+[node name="BackgroundHome" type="TextureRect" parent="." unique_id=798392658]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_6ks1k")
+texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=726361923]
+[node name="SafeMargin" type="MarginContainer" parent="." unique_id=1083931309]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -88.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 16
+
+[node name="RootVBox" type="VBoxContainer" parent="SafeMargin" unique_id=895071131]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ResourceBar" type="HBoxContainer" parent="SafeMargin/RootVBox" unique_id=966898295]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LevelGroup" type="HBoxContainer" parent="SafeMargin/RootVBox/ResourceBar" unique_id=1128921286]
+layout_mode = 2
+theme_override_constants/separation = -16
+
+[node name="LevelBadge" type="PanelContainer" parent="SafeMargin/RootVBox/ResourceBar/LevelGroup" unique_id=1145443856]
+z_index = 1
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("LevelBadge")
+
+[node name="LevelNumber" type="Label" parent="SafeMargin/RootVBox/ResourceBar/LevelGroup/LevelBadge" unique_id=123854575]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 20
+text = "12"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="XpPill" type="PanelContainer" parent="SafeMargin/RootVBox/ResourceBar/LevelGroup" unique_id=1398855388]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("XpPillStyle")
+
+[node name="XpMargin" type="MarginContainer" parent="SafeMargin/RootVBox/ResourceBar/LevelGroup/XpPill" unique_id=1984896824]
+layout_mode = 2
+theme_override_constants/margin_left = 34
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 4
+
+[node name="XpLabel" type="Label" parent="SafeMargin/RootVBox/ResourceBar/LevelGroup/XpPill/XpMargin" unique_id=898448785]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
+theme_override_font_sizes/font_size = 17
+text = "350 XP"
+vertical_alignment = 1
+
+[node name="TopSpacer" type="Control" parent="SafeMargin/RootVBox/ResourceBar" unique_id=1402579119]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CoinsPill" type="PanelContainer" parent="SafeMargin/RootVBox/ResourceBar" unique_id=1660624190]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("CoinPillStyle")
+
+[node name="CoinsMargin" type="MarginContainer" parent="SafeMargin/RootVBox/ResourceBar/CoinsPill" unique_id=1453662727]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 5
+
+[node name="CoinsHBox" type="HBoxContainer" parent="SafeMargin/RootVBox/ResourceBar/CoinsPill/CoinsMargin" unique_id=238747069]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="CoinDot" type="PanelContainer" parent="SafeMargin/RootVBox/ResourceBar/CoinsPill/CoinsMargin/CoinsHBox" unique_id=718787995]
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("CoinDot")
+
+[node name="CoinsLabel" type="Label" parent="SafeMargin/RootVBox/ResourceBar/CoinsPill/CoinsMargin/CoinsHBox" unique_id=467314457]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
+theme_override_font_sizes/font_size = 17
+text = "1.250"
+vertical_alignment = 1
+
+[node name="CoinsPlusBtn" type="Button" parent="SafeMargin/RootVBox/ResourceBar/CoinsPill/CoinsMargin/CoinsHBox" unique_id=1989711613]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("GreenPlus")
+theme_override_styles/pressed = SubResource("GreenPlus")
+theme_override_styles/hover = SubResource("GreenPlus")
+theme_override_styles/disabled = SubResource("GreenPlus")
+theme_override_styles/focus = SubResource("NavEmpty")
+text = "+"
+
+[node name="GemsPill" type="PanelContainer" parent="SafeMargin/RootVBox/ResourceBar" unique_id=1273082981]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("GemPillStyle")
+
+[node name="GemsMargin" type="MarginContainer" parent="SafeMargin/RootVBox/ResourceBar/GemsPill" unique_id=1093362439]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 5
+
+[node name="GemsHBox" type="HBoxContainer" parent="SafeMargin/RootVBox/ResourceBar/GemsPill/GemsMargin" unique_id=1155062046]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="GemDiamond" type="ColorRect" parent="SafeMargin/RootVBox/ResourceBar/GemsPill/GemsMargin/GemsHBox" unique_id=1097817845]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.25, 0.75, 1, 1)
+
+[node name="GemsLabel" type="Label" parent="SafeMargin/RootVBox/ResourceBar/GemsPill/GemsMargin/GemsHBox" unique_id=1274449964]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
+theme_override_font_sizes/font_size = 17
+text = "45"
+vertical_alignment = 1
+
+[node name="GemsPlusBtn" type="Button" parent="SafeMargin/RootVBox/ResourceBar/GemsPill/GemsMargin/GemsHBox" unique_id=453498092]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("GreenPlus")
+theme_override_styles/pressed = SubResource("GreenPlus")
+theme_override_styles/hover = SubResource("GreenPlus")
+theme_override_styles/disabled = SubResource("GreenPlus")
+theme_override_styles/focus = SubResource("NavEmpty")
+text = "+"
+
+[node name="ResourceBar2" type="HBoxContainer" parent="SafeMargin/RootVBox" unique_id=461864414]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HomeScroll" type="ScrollContainer" parent="SafeMargin/RootVBox" unique_id=463416390]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ScrollVBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll" unique_id=1192698246]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="ProfileRow" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox" unique_id=1281085104]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="ProfileCard" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow" unique_id=52369079]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.5
+theme_override_styles/panel = SubResource("BannerStyle")
+
+[node name="BannerTexture" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard" unique_id=52369080]
+visible = false
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="ProfileMargin" type="MarginContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard" unique_id=880711546]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ProfileHBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin" unique_id=1178891237]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="AvatarFrame" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox" unique_id=790813429]
+custom_minimum_size = Vector2(64, 64)
+clip_contents = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("AvatarFrameStyle")
+
+[node name="AvatarTexture" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/AvatarFrame" unique_id=109038505]
+layout_mode = 2
+texture = ExtResource("3_cosmetic_avatar_default")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AvatarFrameTexture" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/AvatarFrame" unique_id=790813430]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ProfileInfo" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox" unique_id=599158578]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="NicknameLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo" unique_id=960189649]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+text = "Jogador"
+text_overrun_behavior = 3
+
+[node name="StatsPill" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo" unique_id=55535428]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StatsPillStyle")
+
+[node name="StatsMargin" type="MarginContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill" unique_id=660541266]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 5
+
+[node name="StatsRow" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin" unique_id=866101055]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="WinsBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1303023206]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="WinsValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=174400951]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
+theme_override_font_sizes/font_size = 17
+text = "87"
+horizontal_alignment = 1
+
+[node name="WinsCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=1194139755]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 0.7)
+theme_override_font_sizes/font_size = 11
+text = "VITÓRIAS"
+horizontal_alignment = 1
+
+[node name="StatsDivA" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=480767760]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+color = Color(0.12, 0.16, 0.27, 0.5)
+
+[node name="StreakBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1851865190]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="StreakValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=1406867347]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
+theme_override_font_sizes/font_size = 17
+text = "5"
+horizontal_alignment = 1
+
+[node name="StreakCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=1659997936]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 0.7)
+theme_override_font_sizes/font_size = 11
+text = "STREAK"
+horizontal_alignment = 1
+
+[node name="StatsDivB" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1130093653]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+color = Color(0.12, 0.16, 0.27, 0.5)
+
+[node name="MatchesBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1360930194]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="MatchesValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=914725355]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
+theme_override_font_sizes/font_size = 17
+text = "132"
+horizontal_alignment = 1
+
+[node name="MatchesCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=887015844]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 0.7)
+theme_override_font_sizes/font_size = 11
+text = "PARTIDAS"
+horizontal_alignment = 1
+
+[node name="CardSpacer" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow" unique_id=869313747]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+
+[node name="QuickBtns" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow" unique_id=478022031]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="SettingsBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns" unique_id=1690250201]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+theme_override_constants/icon_max_width = 28
+theme_override_styles/normal = SubResource("QuickOrange")
+theme_override_styles/pressed = SubResource("QuickOrange")
+theme_override_styles/hover = SubResource("QuickOrange")
+theme_override_styles/disabled = SubResource("QuickOrange")
+theme_override_styles/focus = SubResource("NavEmpty")
+icon = ExtResource("14")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("7")
+
+[node name="MenuBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns" unique_id=410807315]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+theme_override_styles/normal = SubResource("QuickOrange")
+theme_override_styles/pressed = SubResource("QuickOrange")
+theme_override_styles/hover = SubResource("QuickOrange")
+theme_override_styles/disabled = SubResource("QuickOrange")
+theme_override_styles/focus = SubResource("NavEmpty")
+script = ExtResource("7")
+
+[node name="MenuBars" type="CenterContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn" unique_id=362046750]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
+mouse_filter = 2
 
-[node name="MainLayout" type="VBoxContainer" parent="MarginContainer" unique_id=1990357549]
+[node name="BarsBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn/MenuBars" unique_id=2079813992]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Bar1" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn/MenuBars/BarsBox" unique_id=1937779952]
+custom_minimum_size = Vector2(22, 3)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Bar2" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn/MenuBars/BarsBox" unique_id=528027822]
+custom_minimum_size = Vector2(22, 3)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Bar3" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn/MenuBars/BarsBox" unique_id=1703923316]
+custom_minimum_size = Vector2(22, 3)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="FeedbackLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox" unique_id=307040945]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+script = ExtResource("8")
+
+[node name="Logo" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox" unique_id=1228597371]
+custom_minimum_size = Vector2(280, 170)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("16")
+expand_mode = 5
+stretch_mode = 5
+
+[node name="PlayTopSpacer" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox" unique_id=353610773]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlayArea" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox" unique_id=923606783]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="PlayBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea" unique_id=1171412795]
+custom_minimum_size = Vector2(260, 68)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = SubResource("JogarStyle")
+theme_override_styles/pressed = SubResource("JogarStyle")
+theme_override_styles/hover = SubResource("JogarStyle")
+theme_override_styles/disabled = ExtResource("5")
+theme_override_styles/focus = SubResource("NavEmpty")
+script = ExtResource("7")
+
+[node name="PlayBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayBtn" unique_id=1809348918]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.0002296703
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="PlayBtnIcon" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayBtn/PlayBox" unique_id=838800511]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayBtnLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayBtn/PlayBox" unique_id=822299047]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 26
+text = "JOGAR"
+vertical_alignment = 1
+
+[node name="ModeBar" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea" unique_id=460801904]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("ModeBarFrame")
+
+[node name="ModeBarMargin" type="MarginContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar" unique_id=546464878]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="ModeSegRow" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin" unique_id=1650195599]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="SegCasualBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=376635692]
+custom_minimum_size = Vector2(64, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("SegCasualStyle")
+theme_override_styles/pressed = SubResource("SegCasualStyle")
+theme_override_styles/hover = SubResource("SegCasualStyle")
+theme_override_styles/disabled = SubResource("SegCasualStyle")
+theme_override_styles/focus = SubResource("NavEmpty")
+script = ExtResource("7")
+
+[node name="SegCasualBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegCasualBtn" unique_id=220799910]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="SegCasualIcon" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegCasualBtn/SegCasualBox" unique_id=1582296498]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SegCasualLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegCasualBtn/SegCasualBox" unique_id=1520682186]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "CASUAL"
+vertical_alignment = 1
+
+[node name="SegBotBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=1324482687]
+custom_minimum_size = Vector2(64, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("SegBotStyle")
+theme_override_styles/pressed = SubResource("SegBotStyle")
+theme_override_styles/hover = SubResource("SegBotStyle")
+theme_override_styles/disabled = SubResource("SegBotStyle")
+theme_override_styles/focus = SubResource("NavEmpty")
+script = ExtResource("7")
+
+[node name="SegBotBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegBotBtn" unique_id=82998273]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="SegBotIcon" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegBotBtn/SegBotBox" unique_id=1478308146]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("15")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SegBotLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegBotBtn/SegBotBox" unique_id=374058844]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "BOT"
+vertical_alignment = 1
+
+[node name="SegRankBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=1330464890]
+custom_minimum_size = Vector2(64, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("SegRankStyle")
+theme_override_styles/pressed = SubResource("SegRankStyle")
+theme_override_styles/hover = SubResource("SegRankStyle")
+theme_override_styles/disabled = SubResource("SegRankStyle")
+theme_override_styles/focus = SubResource("NavEmpty")
+script = ExtResource("7")
+
+[node name="SegRankBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegRankBtn" unique_id=744231051]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="CrownWrap" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegRankBtn/SegRankBox" unique_id=1621495236]
+custom_minimum_size = Vector2(20, 14)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Crown" type="Polygon2D" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegRankBtn/SegRankBox/CrownWrap" unique_id=1736331664]
+polygon = PackedVector2Array(0, 14, 0, 4, 5, 8, 10, 0, 15, 8, 20, 4, 20, 14)
+
+[node name="SegRankLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegRankBtn/SegRankBox" unique_id=494134014]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "RANK"
+vertical_alignment = 1
+
+[node name="PlayBottomSpacer" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox" unique_id=52319805]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BottomNav" type="PanelContainer" parent="." unique_id=1613608127]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -72.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("NavSlate")
+
+[node name="NavMargin" type="MarginContainer" parent="BottomNav" unique_id=433286477]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="NavRow" type="HBoxContainer" parent="BottomNav/NavMargin" unique_id=1262806761]
 layout_mode = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="Header" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=870841090]
-layout_mode = 2
-
-[node name="PlayerCard" parent="MarginContainer/MainLayout/Header" unique_id=1864201814 instance=ExtResource("3_tjqq1")]
-custom_minimum_size = Vector2(230, 80)
-layout_mode = 2
-
-[node name="AvatarFrame" parent="MarginContainer/MainLayout/Header/PlayerCard/MarginContainer/HBoxContainer" parent_id_path=PackedInt32Array(1864201814, 1064369548) index="0" unique_id=213700357]
-custom_minimum_size = Vector2(60, 60)
-clip_contents = true
-
-[node name="AvatarTexture" parent="MarginContainer/MainLayout/Header/PlayerCard/MarginContainer/HBoxContainer/AvatarFrame" index="0" unique_id=1771369700]
-custom_minimum_size = Vector2(60, 40)
-clip_contents = true
-
-[node name="NameBackground" parent="MarginContainer/MainLayout/Header/PlayerCard/MarginContainer/HBoxContainer" parent_id_path=PackedInt32Array(1864201814, 1064369548) index="1" unique_id=384194472]
-custom_minimum_size = Vector2(100, 10)
-
-[node name="NicknameLabel" parent="MarginContainer/MainLayout/Header/PlayerCard/MarginContainer/HBoxContainer/NameBackground" index="0" unique_id=1086036629]
-theme_override_font_sizes/font_size = 13
-
-[node name="Spacer" type="Control" parent="MarginContainer/MainLayout/Header" unique_id=593550104]
+[node name="NavShopBtn" type="Button" parent="BottomNav/NavMargin/NavRow" unique_id=1259293851]
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("NavEmpty")
+theme_override_styles/pressed = SubResource("NavEmpty")
+theme_override_styles/hover = SubResource("NavEmpty")
+theme_override_styles/disabled = SubResource("NavEmpty")
+theme_override_styles/focus = SubResource("NavEmpty")
 
-[node name="SettingBtn" type="Button" parent="MarginContainer/MainLayout/Header" unique_id=5570231]
-custom_minimum_size = Vector2(60, 60)
+[node name="ShopBox" type="VBoxContainer" parent="BottomNav/NavMargin/NavRow/NavShopBtn" unique_id=1886420246]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="ShopIcon" type="TextureRect" parent="BottomNav/NavMargin/NavRow/NavShopBtn/ShopBox" unique_id=1152965777]
+custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 4
-theme_override_constants/icon_max_width = 40
-theme_override_styles/normal = SubResource("StyleBoxFlat_sotyy")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_sotyy")
-theme_override_styles/hover = SubResource("StyleBoxFlat_sotyy")
-icon = ExtResource("5_8nrkw")
-icon_alignment = 1
-expand_icon = true
-script = ExtResource("6_0kgn5")
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("10")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="TopSpacer" type="Control" parent="MarginContainer/MainLayout" unique_id=886091915]
+[node name="ShopLabel" type="Label" parent="BottomNav/NavMargin/NavRow/NavShopBtn/ShopBox" unique_id=1108407432]
 layout_mode = 2
-size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
+theme_override_font_sizes/font_size = 12
+text = "Loja"
+horizontal_alignment = 1
 
-[node name="CenterPanel" type="PanelContainer" parent="MarginContainer/MainLayout" unique_id=842649325]
+[node name="NavItemsBtn" type="Button" parent="BottomNav/NavMargin/NavRow" unique_id=956759018]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("NavEmpty")
+theme_override_styles/pressed = SubResource("NavEmpty")
+theme_override_styles/hover = SubResource("NavEmpty")
+theme_override_styles/disabled = SubResource("NavEmpty")
+theme_override_styles/focus = SubResource("NavEmpty")
+
+[node name="ItemsBox" type="VBoxContainer" parent="BottomNav/NavMargin/NavRow/NavItemsBtn" unique_id=2023685199]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="ItemsIcon" type="TextureRect" parent="BottomNav/NavMargin/NavRow/NavItemsBtn/ItemsBox" unique_id=1932438636]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("11")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ItemsLabel" type="Label" parent="BottomNav/NavMargin/NavRow/NavItemsBtn/ItemsBox" unique_id=1076515099]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
+theme_override_font_sizes/font_size = 12
+text = "Itens"
+horizontal_alignment = 1
+
+[node name="NavPlayBtn" type="Button" parent="BottomNav/NavMargin/NavRow" unique_id=1771433806]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("NavEmpty")
+theme_override_styles/pressed = SubResource("NavEmpty")
+theme_override_styles/hover = SubResource("NavEmpty")
+theme_override_styles/disabled = SubResource("NavEmpty")
+theme_override_styles/focus = SubResource("NavEmpty")
+
+[node name="PlayTile" type="PanelContainer" parent="BottomNav/NavMargin/NavRow/NavPlayBtn" unique_id=582987446]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("PlayTile")
+
+[node name="PlayTileMargin" type="MarginContainer" parent="BottomNav/NavMargin/NavRow/NavPlayBtn/PlayTile" unique_id=176460426]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="PlayBox" type="VBoxContainer" parent="BottomNav/NavMargin/NavRow/NavPlayBtn/PlayTile/PlayTileMargin" unique_id=2127630087]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="PlayIcon" type="TextureRect" parent="BottomNav/NavMargin/NavRow/NavPlayBtn/PlayTile/PlayTileMargin/PlayBox" unique_id=1146504850]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayLabel" type="Label" parent="BottomNav/NavMargin/NavRow/NavPlayBtn/PlayTile/PlayTileMargin/PlayBox" unique_id=1808808741]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "Play"
+horizontal_alignment = 1
+
+[node name="NavSocialBtn" type="Button" parent="BottomNav/NavMargin/NavRow" unique_id=287480259]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("NavEmpty")
+theme_override_styles/pressed = SubResource("NavEmpty")
+theme_override_styles/hover = SubResource("NavEmpty")
+theme_override_styles/disabled = SubResource("NavEmpty")
+theme_override_styles/focus = SubResource("NavEmpty")
+
+[node name="SocialBox" type="VBoxContainer" parent="BottomNav/NavMargin/NavRow/NavSocialBtn" unique_id=1797501753]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="SocialIcon" type="TextureRect" parent="BottomNav/NavMargin/NavRow/NavSocialBtn/SocialBox" unique_id=667650735]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("12")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SocialLabel" type="Label" parent="BottomNav/NavMargin/NavRow/NavSocialBtn/SocialBox" unique_id=935267090]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
+theme_override_font_sizes/font_size = 12
+text = "Amigos"
+horizontal_alignment = 1
+
+[node name="NavRoomsBtn" type="Button" parent="BottomNav/NavMargin/NavRow" unique_id=68822051]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("NavEmpty")
+theme_override_styles/pressed = SubResource("NavEmpty")
+theme_override_styles/hover = SubResource("NavEmpty")
+theme_override_styles/disabled = SubResource("NavEmpty")
+theme_override_styles/focus = SubResource("NavEmpty")
+
+[node name="RoomsBox" type="VBoxContainer" parent="BottomNav/NavMargin/NavRow/NavRoomsBtn" unique_id=1879242361]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="RoomsIcon" type="TextureRect" parent="BottomNav/NavMargin/NavRow/NavRoomsBtn/RoomsBox" unique_id=2003039403]
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("13")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RoomsLabel" type="Label" parent="BottomNav/NavMargin/NavRow/NavRoomsBtn/RoomsBox" unique_id=160721718]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
+theme_override_font_sizes/font_size = 11
+text = "Salas Personalizadas"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ModePopup" type="Control" parent="." unique_id=702259690]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DimBackground" type="ColorRect" parent="ModePopup" unique_id=82805474]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Center" type="CenterContainer" parent="ModePopup" unique_id=1388042571]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ModeCard" type="PanelContainer" parent="ModePopup/Center" unique_id=219973243]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_vsnff")
+theme_override_styles/panel = SubResource("ModeCardStyle")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MainLayout/CenterPanel" unique_id=1052945474]
+[node name="ModeCardMargin" type="MarginContainer" parent="ModePopup/Center/ModeCard" unique_id=1859949291]
 layout_mode = 2
-theme_override_constants/margin_left = 25
-theme_override_constants/margin_top = 25
-theme_override_constants/margin_right = 25
-theme_override_constants/margin_bottom = 25
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 16
 
-[node name="ContentVBox" type="VBoxContainer" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer" unique_id=857368710]
+[node name="ModeCardVBox" type="VBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin" unique_id=1598566784]
 layout_mode = 2
-theme_override_constants/separation = 30
+theme_override_constants/separation = 10
 
-[node name="LogoWrapper" type="Control" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=708133049]
-custom_minimum_size = Vector2(250, 100)
+[node name="ModeTitle" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=232661764]
 layout_mode = 2
-size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.102, 0.137, 0.251, 1)
+theme_override_font_sizes/font_size = 20
+text = "MODO DE JOGO"
+horizontal_alignment = 1
 
-[node name="Logo" type="TextureRect" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/LogoWrapper" unique_id=1646469893]
-custom_minimum_size = Vector2(200, 100)
-layout_mode = 0
-offset_left = 28.0
-offset_top = 4.9999995
-offset_right = 228.0
-offset_bottom = 105.0
-scale = Vector2(1.5, 1.5)
-pivot_offset = Vector2(100, 50)
-size_flags_horizontal = 4
-offset_transform_scale = Vector2(1.2, 1.2)
-offset_transform_pivot = Vector2(100, 50)
-texture = SubResource("CompressedTexture2D_fq8fn")
+[node name="OptCasualBtn" type="Button" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1037737629]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_styles/normal = SubResource("OptCasual")
+theme_override_styles/pressed = SubResource("OptCasual")
+theme_override_styles/hover = SubResource("OptCasual")
+theme_override_styles/disabled = SubResource("OptCasual")
+theme_override_styles/focus = SubResource("NavEmpty")
+script = ExtResource("7")
+
+[node name="OptCasualBox" type="VBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn" unique_id=2026336804]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="OptCasualTopRow" type="HBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox" unique_id=1689399275]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="OptCasualIcon" type="TextureRect" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox/OptCasualTopRow" unique_id=2132301538]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("9")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PlayBtn" type="Button" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=387605248]
-custom_minimum_size = Vector2(140, 35)
+[node name="OptCasualName" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox/OptCasualTopRow" unique_id=126870883]
 layout_mode = 2
-size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 17
-theme_override_styles/normal = ExtResource("7_mq5ll")
-theme_override_styles/pressed = ExtResource("7_mq5ll")
-theme_override_styles/hover = ExtResource("7_mq5ll")
-text = "JOGAR"
-script = ExtResource("6_0kgn5")
+text = "Casual"
+vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn" unique_id=1806391914]
-custom_minimum_size = Vector2(25, 25)
+[node name="OptCasualDesc" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox" unique_id=460972268]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.85)
+theme_override_font_sizes/font_size = 12
+text = "Partida rápida contra outro jogador."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="OptBotBtn" type="Button" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1382637656]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_styles/normal = SubResource("OptBot")
+theme_override_styles/pressed = SubResource("OptBot")
+theme_override_styles/hover = SubResource("OptBot")
+theme_override_styles/disabled = SubResource("OptBot")
+theme_override_styles/focus = SubResource("NavEmpty")
+script = ExtResource("7")
+
+[node name="OptBotBox" type="VBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn" unique_id=435126566]
 layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 26.0
-offset_top = -16.0
-offset_right = 54.0
-offset_bottom = 16.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("8_tuw21")
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="OptBotTopRow" type="HBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox" unique_id=348458890]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="OptBotIcon" type="TextureRect" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox/OptBotTopRow" unique_id=1986996209]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("15")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="RoomBtn" type="Button" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=345545251]
-custom_minimum_size = Vector2(140, 35)
+[node name="OptBotName" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox/OptBotTopRow" unique_id=1636775737]
 layout_mode = 2
-size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 17
-theme_override_styles/normal = ExtResource("9_5y35w")
-theme_override_styles/pressed = ExtResource("9_5y35w")
-theme_override_styles/hover = ExtResource("9_5y35w")
-theme_override_styles/disabled = ExtResource("10_w82ii")
-text = "SALAS"
-expand_icon = true
-script = ExtResource("6_0kgn5")
+text = "Bot"
+vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/RoomBtn" unique_id=731969151]
-custom_minimum_size = Vector2(25, 25)
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 25.0
-offset_top = -15.0
-offset_right = 53.0
-offset_bottom = 17.0
-grow_vertical = 2
-texture = ExtResource("11_4q0sw")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="BootBtn" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox" unique_id=790580343 instance=ExtResource("12_7yyda")]
-custom_minimum_size = Vector2(140, 35)
+[node name="OptBotDesc" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox" unique_id=554131564]
 layout_mode = 2
-size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 0.85)
+theme_override_font_sizes/font_size = 12
+text = "Treine suas estratégias contra o robô."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="OptRankBtn" type="Button" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1326886001]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_styles/normal = SubResource("OptRank")
+theme_override_styles/pressed = SubResource("OptRank")
+theme_override_styles/hover = SubResource("OptRank")
+theme_override_styles/disabled = SubResource("OptRank")
+theme_override_styles/focus = SubResource("NavEmpty")
+script = ExtResource("7")
+
+[node name="OptRankBox" type="VBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn" unique_id=1721785008]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="OptRankTopRow" type="HBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox" unique_id=1842845879]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="OptRankCrownWrap" type="Control" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox/OptRankTopRow" unique_id=2061650422]
+custom_minimum_size = Vector2(28, 20)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="OptRankCrown" type="Polygon2D" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox/OptRankTopRow/OptRankCrownWrap" unique_id=1310196483]
+position = Vector2(2, 2)
+polygon = PackedVector2Array(0, 16, 0, 5, 6, 10, 12, 1, 18, 10, 24, 5, 24, 16)
+
+[node name="OptRankName" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox/OptRankTopRow" unique_id=391975025]
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 3
-theme_override_styles/normal = ExtResource("13_0ql3y")
-theme_override_styles/pressed = ExtResource("13_0ql3y")
-theme_override_styles/hover = ExtResource("13_0ql3y")
-text = "TREINO
-"
-expand_icon = true
-script = ExtResource("6_0kgn5")
+theme_override_font_sizes/font_size = 17
+text = "Rank"
+vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/BootBtn" unique_id=2032858387]
-custom_minimum_size = Vector2(25, 25)
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 23.0
-offset_top = -16.5
-offset_right = 51.0
-offset_bottom = 15.5
-grow_vertical = 2
-texture = ExtResource("14_mqpyh")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="BottomSpacer" type="Control" parent="MarginContainer/MainLayout" unique_id=1689906567]
+[node name="OptRankDesc" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox" unique_id=996776144]
 layout_mode = 2
-size_flags_vertical = 3
-
-[connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn" to="." method="_navigate_to_matchmaking"]
-[connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/PlayBtn" to="." method="_on_play_btn_pressed"]
-[connection signal="pressed" from="MarginContainer/MainLayout/CenterPanel/MarginContainer/ContentVBox/RoomBtn" to="." method="_on_room_btn_pressed"]
-
-[editable path="MarginContainer/MainLayout/Header/PlayerCard"]
+theme_override_colors/font_color = Color(1, 1, 1, 0.85)
+theme_override_font_sizes/font_size = 12
+text = "Vença outros jogadores e suba no ranking."
+horizontal_alignment = 1
+autowrap_mode = 2

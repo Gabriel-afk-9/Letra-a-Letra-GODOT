@@ -1,13 +1,19 @@
 extends Button
 
 func _ready() -> void:
-	pivot_offset = size / 2 
-	
+	pivot_offset = size / 2
+
+	resized.connect(_on_resized)
+
 	mouse_entered.connect(_on_hover)
 	mouse_exited.connect(_on_exit)
-	
+
 	button_down.connect(_on_press)
 	button_up.connect(_on_release)
+
+
+func _on_resized() -> void:
+	pivot_offset = size / 2
 
 func _on_hover() -> void:
 	var tween = create_tween()
