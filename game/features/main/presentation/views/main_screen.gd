@@ -1,17 +1,13 @@
 extends Control
 
 
-@onready var logo: TextureRect = $Main/LogoZone/Logo
+@onready var logo: TextureRect = $Main/Logo
 @onready var google_btn: Button = $Main/ButtonsBox/GoogleBtn
 @onready var email_btn: Button = $Main/ButtonsBox/EmailBtn
 @onready var guest_btn: Button = $Main/ButtonsBox/GuestBtn
 @onready var error_label: Label = $Main/ButtonsBox/ErrorLabel
-@onready var auth_overlay: Control = $AuthOverlay
-@onready var popup_title: Label = $AuthOverlay/AuthPopup/PopupCard/Margin/VBox/PopupHeader/PopupTitle
-@onready var login_holder: Control = $AuthOverlay/AuthPopup/PopupCard/Margin/VBox/LoginHolder
-@onready var register_holder: Control = $AuthOverlay/AuthPopup/PopupCard/Margin/VBox/RegisterHolder
-@onready var login_panel: Control = $AuthOverlay/AuthPopup/PopupCard/Margin/VBox/LoginHolder/LoginPanel
-@onready var register_panel: Control = $AuthOverlay/AuthPopup/PopupCard/Margin/VBox/RegisterHolder/RegisterPanel
+@onready var login_popup: LoginPopup = $LoginPopup
+@onready var register_popup: RegisterPopup = $RegisterPopup
 
 
 var _view_model: MainViewModel
@@ -20,8 +16,24 @@ var _view_model: MainViewModel
 func _ready() -> void:
 	_view_model = MainFactory.create()
 	_connect_view_model()
-	_setup_auth_panels()
+	_connect_popups()
 	_start_logo_animation()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		if _is_any_popup_open():
+			_close_all_popups()
+			get_viewport().set_input_as_handled()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		var key_event := event as InputEventKey
+		if key_event.pressed and not key_event.echo and key_event.keycode == KEY_ESCAPE:
+			if _is_any_popup_open():
+				_close_all_popups()
+				get_viewport().set_input_as_handled()
 
 
 func _connect_view_model() -> void:
@@ -29,36 +41,37 @@ func _connect_view_model() -> void:
 	_view_model.error_changed.connect(_on_error_changed)
 
 
-func _setup_auth_panels() -> void:
-	login_panel.set_popup_mode()
-	login_panel.set_switch_handler(_open_register)
-	register_panel.set_popup_mode()
-	register_panel.set_switch_handler(_open_login)
+func _connect_popups() -> void:
+	login_popup.closed.connect(_close_all_popups)
+	login_popup.switch_requested.connect(_open_register)
+	register_popup.closed.connect(_close_all_popups)
+	register_popup.switch_requested.connect(_open_login)
 
 
 func _open_login() -> void:
-	popup_title.text = "Login"
-	register_holder.hide()
-	login_holder.show()
-	auth_overlay.show()
+	register_popup.close()
+	login_popup.open()
 
 
 func _open_register() -> void:
-	popup_title.text = "Cadastro"
-	login_holder.hide()
-	register_holder.show()
-	auth_overlay.show()
+	login_popup.close()
+	register_popup.open()
 
 
-func _close_auth_popup() -> void:
-	auth_overlay.hide()
+func _close_all_popups() -> void:
+	login_popup.close()
+	register_popup.close()
+
+
+func _is_any_popup_open() -> bool:
+	return login_popup.visible or register_popup.visible
 
 
 func _start_logo_animation() -> void:
 	logo.pivot_offset = logo.get_combined_minimum_size() * 0.5
 	var tween := create_tween().set_loops()
-	tween.tween_property(logo, "scale", Vector2(1.06, 1.06), 1.5).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(logo, "scale", Vector2.ONE, 1.5).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(logo, "scale", Vector2(1.05, 1.05), 1.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(logo, "scale", Vector2.ONE, 1.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 
 func _on_google_btn_pressed() -> void:
@@ -71,17 +84,6 @@ func _on_email_btn_pressed() -> void:
 
 func _on_guest_btn_pressed() -> void:
 	_view_model.continue_as_guest()
-
-
-func _on_close_btn_pressed() -> void:
-	_close_auth_popup()
-
-
-func _on_dim_background_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT:
-			_close_auth_popup()
 
 
 func _on_loading_changed(is_loading: bool) -> void:

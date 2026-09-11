@@ -7,8 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://do2fjcs6bxobn" path="res://features/main/assets/icons/google_g.svg" id="5_google"]
 [ext_resource type="Texture2D" uid="uid://cjno28oi572by" path="res://features/main/assets/icons/envelope.svg" id="6_mail"]
 [ext_resource type="Texture2D" uid="uid://c6sukmshy45c0" path="res://features/main/assets/icons/person.svg" id="7_person"]
-[ext_resource type="PackedScene" uid="uid://fc4l1gye488" path="res://features/login/presentation/views/login_screen.tscn" id="8_login"]
-[ext_resource type="PackedScene" uid="uid://c50cbbtkr55tk" path="res://features/register/presentation/views/register_screen.tscn" id="9_register"]
+[ext_resource type="PackedScene" path="res://features/login/presentation/views/login_popup.tscn" id="8_login_popup"]
+[ext_resource type="PackedScene" path="res://features/register/presentation/views/register_popup.tscn" id="9_register_popup"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_logo"]
 atlas = ExtResource("3_logo")
@@ -174,26 +174,7 @@ corner_radius_top_right = 24
 corner_radius_bottom_right = 24
 corner_radius_bottom_left = 24
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_popup_card"]
-content_margin_left = 20.0
-content_margin_top = 16.0
-content_margin_right = 20.0
-content_margin_bottom = 16.0
-bg_color = Color(1, 1, 1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.102, 0.137, 0.251, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-shadow_color = Color(0, 0, 0, 0.35)
-shadow_size = 8
-shadow_offset = Vector2(0, 4)
-
-[node name="MainScreen" type="Control" unique_id=586970613]
+ [node name="MainScreen" type="Control" unique_id=586970613]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -224,17 +205,21 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 12
 
-[node name="LogoZone" type="CenterContainer" parent="Main" unique_id=841413877]
+[node name="TopSpacer" type="Control" parent="Main" unique_id=1607640349]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Logo" type="TextureRect" parent="Main/LogoZone" unique_id=2142097414]
+[node name="Logo" type="TextureRect" parent="Main" unique_id=2142097414]
 custom_minimum_size = Vector2(240, 136)
 layout_mode = 2
 size_flags_horizontal = 4
 texture = SubResource("AtlasTexture_logo")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="MiddleSpacer" type="Control" parent="Main" unique_id=1515087208]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
 
 [node name="ButtonsBox" type="VBoxContainer" parent="Main" unique_id=503083194]
 layout_mode = 2
@@ -314,7 +299,7 @@ script = ExtResource("4_error")
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="AuthOverlay" type="Control" parent="." unique_id=545885959]
+[node name="LoginPopup" parent="." instance=ExtResource("8_login_popup")]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -323,70 +308,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="DimBackground" type="ColorRect" parent="AuthOverlay" unique_id=34171663]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.6)
-
-[node name="AuthPopup" type="CenterContainer" parent="AuthOverlay" unique_id=1645823646]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="PopupCard" type="PanelContainer" parent="AuthOverlay/AuthPopup" unique_id=1516132358]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_popup_card")
-
-[node name="Margin" type="MarginContainer" parent="AuthOverlay/AuthPopup/PopupCard" unique_id=926249086]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 16
-
-[node name="VBox" type="VBoxContainer" parent="AuthOverlay/AuthPopup/PopupCard/Margin" unique_id=1640948824]
-layout_mode = 2
-theme_override_constants/separation = 12
-alignment = 1
-
-[node name="PopupHeader" type="HBoxContainer" parent="AuthOverlay/AuthPopup/PopupCard/Margin/VBox" unique_id=1923854367]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="PopupTitle" type="Label" parent="AuthOverlay/AuthPopup/PopupCard/Margin/VBox/PopupHeader" unique_id=1231447538]
-custom_minimum_size = Vector2(0, 36)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.102, 0.137, 0.251, 1)
-theme_override_font_sizes/font_size = 20
-text = "ENTRAR COM EMAIL"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="LoginHolder" type="Control" parent="AuthOverlay/AuthPopup/PopupCard/Margin/VBox" unique_id=1776481848]
-custom_minimum_size = Vector2(260, 370)
-layout_mode = 2
-
-[node name="LoginPanel" parent="AuthOverlay/AuthPopup/PopupCard/Margin/VBox/LoginHolder" unique_id=1231252895 instance=ExtResource("8_login")]
-layout_mode = 1
-
-[node name="RegisterHolder" type="Control" parent="AuthOverlay/AuthPopup/PopupCard/Margin/VBox" unique_id=1691319554]
+[node name="RegisterPopup" parent="." instance=ExtResource("9_register_popup")]
 visible = false
-custom_minimum_size = Vector2(260, 460)
-layout_mode = 2
-
-[node name="RegisterPanel" parent="AuthOverlay/AuthPopup/PopupCard/Margin/VBox/RegisterHolder" unique_id=1273721558 instance=ExtResource("9_register")]
 layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [connection signal="pressed" from="Main/ButtonsBox/GoogleBtn" to="." method="_on_google_btn_pressed"]
 [connection signal="pressed" from="Main/ButtonsBox/EmailBtn" to="." method="_on_email_btn_pressed"]
 [connection signal="pressed" from="Main/ButtonsBox/GuestBtn" to="." method="_on_guest_btn_pressed"]
-[connection signal="gui_input" from="AuthOverlay/DimBackground" to="." method="_on_dim_background_gui_input"]
