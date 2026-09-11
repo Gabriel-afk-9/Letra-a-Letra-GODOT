@@ -26,9 +26,11 @@ ServiceRegistry="*uid://h4t2ukucfhrk"
 
 [display]
 
-window/size/viewport_width=360
-window/size/viewport_height=640
+window/size/viewport_width=480
+window/size/viewport_height=854
+window/size/initial_position_type=0
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 window/handheld/orientation=1
 
 [editor_plugins]

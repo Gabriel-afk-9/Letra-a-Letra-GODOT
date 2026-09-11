@@ -2,9 +2,12 @@
 
 [ext_resource type="Script" uid="uid://doigf5sq67fxh" path="res://features/main/presentation/views/main_screen.gd" id="1_main"]
 [ext_resource type="Texture2D" uid="uid://hb4b5dimdw5i" path="res://assets/images/backgrounds/vertical_clean.jpg" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://dffl7ur3vpb6p" path="res://assets/images/cells/l-cell.png" id="3_am426"]
 [ext_resource type="Texture2D" uid="uid://brrme07786k2s" path="res://assets/images/logo/lal.png" id="3_logo"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="4_error"]
+[ext_resource type="Texture2D" uid="uid://cfaxrdbtgo6w2" path="res://assets/images/cells/a-cell.png" id="4_yo8vn"]
 [ext_resource type="Texture2D" uid="uid://do2fjcs6bxobn" path="res://features/main/assets/icons/google_g.svg" id="5_google"]
+[ext_resource type="Texture2D" uid="uid://c2jgqct6t1mv5" path="res://assets/images/cells/l-cell-right.png" id="5_u32c6"]
 [ext_resource type="Texture2D" uid="uid://cjno28oi572by" path="res://features/main/assets/icons/envelope.svg" id="6_mail"]
 [ext_resource type="Texture2D" uid="uid://c6sukmshy45c0" path="res://features/main/assets/icons/person.svg" id="7_person"]
 [ext_resource type="PackedScene" path="res://features/login/presentation/views/login_popup.tscn" id="8_login_popup"]
@@ -174,15 +177,15 @@ corner_radius_top_right = 24
 corner_radius_bottom_right = 24
 corner_radius_bottom_left = 24
 
- [node name="MainScreen" type="Control" unique_id=586970613]
+[node name="MainScreen" type="Control" unique_id=586970613]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_horizontal = 6
+size_flags_vertical = 6
 script = ExtResource("1_main")
 
 [node name="Background" type="TextureRect" parent="." unique_id=845082276]
@@ -196,47 +199,116 @@ texture = ExtResource("2_bg")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Main" type="VBoxContainer" parent="." unique_id=538419620]
+[node name="Main" type="Control" parent="." unique_id=538419620]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 12
 
-[node name="TopSpacer" type="Control" parent="Main" unique_id=1607640349]
+[node name="HBoxContainer" type="HBoxContainer" parent="Main" unique_id=450925810]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -214.5
+offset_bottom = -114.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="CellSlot1" type="Control" parent="Main/HBoxContainer" unique_id=810101]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-size_flags_vertical = 3
+
+[node name="Cell1" type="TextureRect" parent="Main/HBoxContainer/CellSlot1" unique_id=810102]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_am426")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CellSlot2" type="Control" parent="Main/HBoxContainer" unique_id=810103]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="Cell2" type="TextureRect" parent="Main/HBoxContainer/CellSlot2" unique_id=810104]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_yo8vn")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CellSlot3" type="Control" parent="Main/HBoxContainer" unique_id=810105]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="Cell3" type="TextureRect" parent="Main/HBoxContainer/CellSlot3" unique_id=810106]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_u32c6")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Logo" type="TextureRect" parent="Main" unique_id=2142097414]
-custom_minimum_size = Vector2(240, 136)
-layout_mode = 2
-size_flags_horizontal = 4
+z_index = 2
+custom_minimum_size = Vector2(320, 181)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -90.5
+offset_right = 160.0
+offset_bottom = 90.5
+grow_horizontal = 2
+grow_vertical = 2
 texture = SubResource("AtlasTexture_logo")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="MiddleSpacer" type="Control" parent="Main" unique_id=1515087208]
-custom_minimum_size = Vector2(0, 36)
-layout_mode = 2
-
 [node name="ButtonsBox" type="VBoxContainer" parent="Main" unique_id=503083194]
-layout_mode = 2
-theme_override_constants/separation = 14
-alignment = 1
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -244.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 16
+alignment = 2
 
 [node name="GoogleBtn" type="Button" parent="Main/ButtonsBox" unique_id=413515080]
-custom_minimum_size = Vector2(240, 48)
+custom_minimum_size = Vector2(280, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.102, 0.137, 0.251, 1)
 theme_override_colors/font_pressed_color = Color(0.102, 0.137, 0.251, 1)
 theme_override_colors/font_hover_color = Color(0.102, 0.137, 0.251, 1)
 theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.7)
-theme_override_constants/h_separation = 10
-theme_override_constants/icon_max_width = 24
-theme_override_font_sizes/font_size = 14
+theme_override_constants/h_separation = 12
+theme_override_constants/icon_max_width = 28
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_google")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_google_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_google_hover")
@@ -246,16 +318,16 @@ icon = ExtResource("5_google")
 expand_icon = true
 
 [node name="EmailBtn" type="Button" parent="Main/ButtonsBox" unique_id=546474771]
-custom_minimum_size = Vector2(240, 48)
+custom_minimum_size = Vector2(280, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.7)
-theme_override_constants/h_separation = 10
-theme_override_constants/icon_max_width = 24
-theme_override_font_sizes/font_size = 14
+theme_override_constants/h_separation = 12
+theme_override_constants/icon_max_width = 28
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_email")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_email_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_email_hover")
@@ -265,16 +337,16 @@ icon = ExtResource("6_mail")
 expand_icon = true
 
 [node name="GuestBtn" type="Button" parent="Main/ButtonsBox" unique_id=242232262]
-custom_minimum_size = Vector2(240, 48)
+custom_minimum_size = Vector2(280, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.7)
-theme_override_constants/h_separation = 10
-theme_override_constants/icon_max_width = 24
-theme_override_font_sizes/font_size = 14
+theme_override_constants/h_separation = 12
+theme_override_constants/icon_max_width = 28
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_guest")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_guest_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_guest_hover")
@@ -295,27 +367,13 @@ autowrap_mode = 2
 text_overrun_behavior = 3
 script = ExtResource("4_error")
 
-[node name="BottomSpacer" type="Control" parent="Main" unique_id=446665973]
-custom_minimum_size = Vector2(0, 32)
-layout_mode = 2
-
-[node name="LoginPopup" parent="." instance=ExtResource("8_login_popup")]
-visible = false
+[node name="LoginPopup" parent="." unique_id=414094504 instance=ExtResource("8_login_popup")]
+z_index = 5
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
-[node name="RegisterPopup" parent="." instance=ExtResource("9_register_popup")]
-visible = false
+[node name="RegisterPopup" parent="." unique_id=271324013 instance=ExtResource("9_register_popup")]
+z_index = 5
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [connection signal="pressed" from="Main/ButtonsBox/GoogleBtn" to="." method="_on_google_btn_pressed"]
 [connection signal="pressed" from="Main/ButtonsBox/EmailBtn" to="." method="_on_email_btn_pressed"]
