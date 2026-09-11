@@ -10,10 +10,32 @@ extends Control
 
 var _view_model: RegisterViewModel
 
+var _switch_handler: Callable
+
+var _popup_mode: bool = false
+
 
 func _ready() -> void:
 	_view_model = RegisterFactory.create()
 	_connect_view_model()
+	if _popup_mode:
+		_apply_popup_mode()
+
+
+func set_switch_handler(handler: Callable) -> void:
+	_switch_handler = handler
+
+
+func set_popup_mode() -> void:
+	_popup_mode = true
+	if is_node_ready():
+		_apply_popup_mode()
+
+
+func _apply_popup_mode() -> void:
+	$Background.hide()
+	$Logo.hide()
+	$ScrollContainer/CenterContainer/VBoxContainer/Separation.hide()
 
 
 func _connect_view_model() -> void:
@@ -84,4 +106,7 @@ func _on_error_changed(message: String) -> void:
 
 
 func _on_sign_in_button_pressed() -> void:
+	if _switch_handler.is_valid():
+		_switch_handler.call()
+		return
 	_view_model.go_to_login()

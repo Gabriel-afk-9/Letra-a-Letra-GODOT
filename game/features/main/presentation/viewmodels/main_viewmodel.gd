@@ -11,10 +11,6 @@ func _init(
 	_navigation = navigation
 
 
-func go_to_login() -> void:
-	_navigation.go_to(AppRoutes.LOGIN)
-
-
 func login_with_google() -> void:
 	AppLogger.debug("MainViewModel: login_with_google ainda não implementado")
 	_set_error("Login com Google em breve!")
