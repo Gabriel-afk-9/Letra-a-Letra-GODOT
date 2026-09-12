@@ -50,10 +50,7 @@ const BANNER_COSMETICS := {
 @onready var feedback_label: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/FeedbackLabel
 
 @onready var play_btn: Button = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayBtn
-@onready var seg_casual_btn: Button = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegCasualBtn
-@onready var seg_bot_btn: Button = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegBotBtn
-@onready var seg_rank_btn: Button = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegRankBtn
-
+@onready var mode_bar: PanelContainer = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar
 @onready var mode_popup: Control = $ModePopup
 @onready var dim_background: ColorRect = $ModePopup/DimBackground
 @onready var opt_casual_btn: Button = $ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn
@@ -137,9 +134,7 @@ func _connect_view_model() -> void:
 
 
 func _connect_buttons() -> void:
-	seg_casual_btn.pressed.connect(_on_mode_selector_btn_pressed)
-	seg_bot_btn.pressed.connect(_on_mode_selector_btn_pressed)
-	seg_rank_btn.pressed.connect(_on_mode_selector_btn_pressed)
+	mode_bar.gui_input.connect(_on_mode_bar_gui_input)
 	opt_casual_btn.pressed.connect(_on_mode_option_pressed.bind(HomeGameMode.Mode.NORMAL))
 	opt_bot_btn.pressed.connect(_on_mode_option_pressed.bind(HomeGameMode.Mode.BOT))
 	opt_rank_btn.pressed.connect(_on_mode_option_pressed.bind(HomeGameMode.Mode.RANKED))
@@ -226,8 +221,13 @@ func _paint_button(btn: Button, color: Color) -> void:
 	sb.bg_color = color
 
 
-func _on_mode_selector_btn_pressed() -> void:
-	mode_popup.show()
+func _on_mode_bar_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var click := event as InputEventMouseButton
+		if click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
+			if _view_model != null and _view_model.is_loading():
+				return
+			mode_popup.show()
 
 
 func _on_mode_option_pressed(mode: int) -> void:
@@ -254,9 +254,6 @@ func _on_nav_btn_pressed(section: String) -> void:
 
 func _on_loading_changed(is_loading: bool) -> void:
 	play_btn.disabled = is_loading
-	seg_casual_btn.disabled = is_loading
-	seg_bot_btn.disabled = is_loading
-	seg_rank_btn.disabled = is_loading
 
 
 func _on_error_changed(message: String) -> void:

@@ -12,3 +12,6 @@
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Segredos
+*.keystore

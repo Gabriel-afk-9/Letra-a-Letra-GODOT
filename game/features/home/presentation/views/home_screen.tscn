@@ -14,8 +14,8 @@
 [ext_resource type="Texture2D" uid="uid://c6bifs6l41y1w" path="res://assets/images/icons/config-icon.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="15"]
 [ext_resource type="Texture2D" uid="uid://brrme07786k2s" path="res://assets/images/logo/lal.png" id="16"]
-[ext_resource type="Texture2D" uid="uid://coin_icon" path="res://assets/images/art/letraCoin.png" id="17"]
-[ext_resource type="Texture2D" uid="uid://gem_icon" path="res://assets/images/art/letraGem.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://7qca7tdjacgk" path="res://assets/images/art/letraCoin.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://djfl7kt6bm64t" path="res://assets/images/art/letraGem.png" id="18"]
 
 [sub_resource type="StyleBoxFlat" id="LevelBadge"]
 bg_color = Color(0.184, 0.608, 0.847, 1)
@@ -36,10 +36,8 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.118, 0.165, 0.267, 1)
-corner_radius_top_left = 18
 corner_radius_top_right = 18
 corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
 
 [sub_resource type="StyleBoxFlat" id="CoinPillStyle"]
 bg_color = Color(1, 1, 1, 1)
@@ -52,18 +50,6 @@ corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
-
-[sub_resource type="StyleBoxFlat" id="CoinDot"]
-bg_color = Color(1, 0.8, 0.2, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.55, 0.38, 0.05, 1)
-corner_radius_top_left = 11
-corner_radius_top_right = 11
-corner_radius_bottom_right = 11
-corner_radius_bottom_left = 11
 
 [sub_resource type="StyleBoxFlat" id="GreenPlus"]
 bg_color = Color(0.208, 0.78, 0.349, 1)
@@ -149,22 +135,22 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
-[sub_resource type="StyleBoxFlat" id="SegCasualStyle"]
-bg_color = Color(0.243, 0.573, 0.839, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dkdn4"]
+bg_color = Color(0.24313726, 0.57254905, 0.8392157, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="SegBotStyle"]
-bg_color = Color(0.184, 0.749, 0.443, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dlv83"]
+bg_color = Color(0.18431373, 0.7490196, 0.44313726, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="SegRankStyle"]
-bg_color = Color(0.961, 0.51, 0.122, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jhbxb"]
+bg_color = Color(0.9607843, 0.50980395, 0.12156863, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -654,6 +640,7 @@ alignment = 1
 custom_minimum_size = Vector2(260, 68)
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
 theme_override_styles/normal = SubResource("JogarStyle")
 theme_override_styles/pressed = SubResource("JogarStyle")
 theme_override_styles/hover = SubResource("JogarStyle")
@@ -694,10 +681,12 @@ vertical_alignment = 1
 [node name="ModeBar" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea" unique_id=460801904]
 layout_mode = 2
 size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
 theme_override_styles/panel = SubResource("ModeBarFrame")
 
 [node name="ModeBarMargin" type="MarginContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar" unique_id=546464878]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 3
 theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 3
@@ -705,31 +694,26 @@ theme_override_constants/margin_bottom = 3
 
 [node name="ModeSegRow" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin" unique_id=1650195599]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 3
 
-[node name="SegCasualBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=376635692]
+[node name="Match" type="Panel" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=1603964006]
 custom_minimum_size = Vector2(64, 36)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("SegCasualStyle")
-theme_override_styles/pressed = SubResource("SegCasualStyle")
-theme_override_styles/hover = SubResource("SegCasualStyle")
-theme_override_styles/disabled = SubResource("SegCasualStyle")
-theme_override_styles/focus = SubResource("NavEmpty")
-script = ExtResource("7")
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dkdn4")
 
-[node name="SegCasualBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegCasualBtn" unique_id=220799910]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="SegCasualBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Match" unique_id=220799910]
+layout_mode = 0
+offset_right = 62.0
+offset_bottom = 36.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="SegCasualIcon" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegCasualBtn/SegCasualBox" unique_id=1582296498]
+[node name="SegCasualIcon" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Match/SegCasualBox" unique_id=1582296498]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
@@ -738,36 +722,32 @@ texture = ExtResource("9")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SegCasualLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegCasualBtn/SegCasualBox" unique_id=1520682186]
+[node name="SegCasualLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Match/SegCasualBox" unique_id=1520682186]
 layout_mode = 2
+mouse_filter = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
 text = "CASUAL"
 vertical_alignment = 1
 
-[node name="SegBotBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=1324482687]
+[node name="Bot" type="Panel" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=1550188329]
 custom_minimum_size = Vector2(64, 36)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("SegBotStyle")
-theme_override_styles/pressed = SubResource("SegBotStyle")
-theme_override_styles/hover = SubResource("SegBotStyle")
-theme_override_styles/disabled = SubResource("SegBotStyle")
-theme_override_styles/focus = SubResource("NavEmpty")
-script = ExtResource("7")
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dlv83")
 
-[node name="SegBotBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegBotBtn" unique_id=82998273]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="SegBotBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Bot" unique_id=82998273]
+layout_mode = 0
+offset_left = 3.0
+offset_right = 47.0
+offset_bottom = 36.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="SegBotIcon" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegBotBtn/SegBotBox" unique_id=1478308146]
+[node name="SegBotIcon" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Bot/SegBotBox" unique_id=1478308146]
 custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
 size_flags_vertical = 4
@@ -776,46 +756,50 @@ texture = ExtResource("15")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SegBotLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegBotBtn/SegBotBox" unique_id=374058844]
+[node name="SegBotLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Bot/SegBotBox" unique_id=374058844]
 layout_mode = 2
+mouse_filter = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
 text = "BOT"
 vertical_alignment = 1
 
-[node name="SegRankBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=1330464890]
+[node name="Rank" type="Panel" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=1427982363]
 custom_minimum_size = Vector2(64, 36)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("SegRankStyle")
-theme_override_styles/pressed = SubResource("SegRankStyle")
-theme_override_styles/hover = SubResource("SegRankStyle")
-theme_override_styles/disabled = SubResource("SegRankStyle")
-theme_override_styles/focus = SubResource("NavEmpty")
-script = ExtResource("7")
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jhbxb")
 
-[node name="SegRankBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegRankBtn" unique_id=744231051]
+[node name="SegRankBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Rank" unique_id=744231051]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -27.0
+offset_top = -18.0
+offset_right = 28.0
+offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="CrownWrap" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegRankBtn/SegRankBox" unique_id=1621495236]
+[node name="CrownWrap" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Rank/SegRankBox" unique_id=1621495236]
 custom_minimum_size = Vector2(20, 14)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="Crown" type="Polygon2D" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegRankBtn/SegRankBox/CrownWrap" unique_id=1736331664]
+[node name="Crown" type="Polygon2D" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Rank/SegRankBox/CrownWrap" unique_id=1736331664]
+position = Vector2(0, -2)
 polygon = PackedVector2Array(0, 14, 0, 4, 5, 8, 10, 0, 15, 8, 20, 4, 20, 14)
 
-[node name="SegRankLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/SegRankBtn/SegRankBox" unique_id=494134014]
+[node name="SegRankLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Rank/SegRankBox" unique_id=494134014]
 layout_mode = 2
+mouse_filter = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
 text = "RANK"
