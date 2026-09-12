@@ -54,3 +54,13 @@ func test_auth_redirects_to_shell() -> void:
 	assert_true(login.contains("AppRoutes.SHELL"), "login vai para o shell")
 	var register := FileAccess.get_file_as_string("res://features/register/presentation/viewmodels/register_viewmodel.gd")
 	assert_true(register.contains("AppRoutes.SHELL"), "registro vai para o shell")
+
+func test_navbar_selected_state_is_dynamic() -> void:
+	var gd := FileAccess.get_file_as_string("res://shared/components/navbar/navbar.gd")
+	assert_true(gd.contains("func selected_page"), "navbar expõe a página selecionada")
+	assert_true(gd.contains("_apply_tile"), "navbar move o destaque entre tiles")
+
+func test_navbar_tscn_has_dividers() -> void:
+	var tscn := FileAccess.get_file_as_string("res://shared/components/navbar/navbar.tscn")
+	for div in ["NavDiv1", "NavDiv2", "NavDiv3", "NavDiv4"]:
+		assert_true(tscn.contains(div), "navbar deve ter divisória %s" % div)

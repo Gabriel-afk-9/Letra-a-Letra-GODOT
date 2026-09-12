@@ -53,7 +53,25 @@ theme_override_styles/hover = SubResource("NavEmpty")
 theme_override_styles/disabled = SubResource("NavEmpty")
 theme_override_styles/focus = SubResource("NavEmpty")
 
-[node name="ShopBox" type="VBoxContainer" parent="NavMargin/NavRow/NavShopBtn"]
+[node name="ShopTile" type="PanelContainer" parent="NavMargin/NavRow/NavShopBtn"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("NavEmpty")
+
+[node name="ShopTileMargin" type="MarginContainer" parent="NavMargin/NavRow/NavShopBtn/ShopTile"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ShopBox" type="VBoxContainer" parent="NavMargin/NavRow/NavShopBtn/ShopTile/ShopTileMargin"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -64,7 +82,7 @@ mouse_filter = 2
 theme_override_constants/separation = 2
 alignment = 1
 
-[node name="ShopIcon" type="TextureRect" parent="NavMargin/NavRow/NavShopBtn/ShopBox"]
+[node name="ShopIcon" type="TextureRect" parent="NavMargin/NavRow/NavShopBtn/ShopTile/ShopTileMargin/ShopBox"]
 custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -73,12 +91,19 @@ texture = ExtResource("10")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ShopLabel" type="Label" parent="NavMargin/NavRow/NavShopBtn/ShopBox"]
+[node name="ShopLabel" type="Label" parent="NavMargin/NavRow/NavShopBtn/ShopTile/ShopTileMargin/ShopBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
 theme_override_font_sizes/font_size = 12
 text = "Loja"
 horizontal_alignment = 1
+
+[node name="NavDiv1" type="ColorRect" parent="NavMargin/NavRow"]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(0.85, 0.89, 0.94, 0.25)
 
 [node name="NavItemsBtn" type="Button" parent="NavMargin/NavRow"]
 custom_minimum_size = Vector2(0, 56)
@@ -90,7 +115,25 @@ theme_override_styles/hover = SubResource("NavEmpty")
 theme_override_styles/disabled = SubResource("NavEmpty")
 theme_override_styles/focus = SubResource("NavEmpty")
 
-[node name="ItemsBox" type="VBoxContainer" parent="NavMargin/NavRow/NavItemsBtn"]
+[node name="ItemsTile" type="PanelContainer" parent="NavMargin/NavRow/NavItemsBtn"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("NavEmpty")
+
+[node name="ItemsTileMargin" type="MarginContainer" parent="NavMargin/NavRow/NavItemsBtn/ItemsTile"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ItemsBox" type="VBoxContainer" parent="NavMargin/NavRow/NavItemsBtn/ItemsTile/ItemsTileMargin"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -101,7 +144,7 @@ mouse_filter = 2
 theme_override_constants/separation = 2
 alignment = 1
 
-[node name="ItemsIcon" type="TextureRect" parent="NavMargin/NavRow/NavItemsBtn/ItemsBox"]
+[node name="ItemsIcon" type="TextureRect" parent="NavMargin/NavRow/NavItemsBtn/ItemsTile/ItemsTileMargin/ItemsBox"]
 custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -110,12 +153,19 @@ texture = ExtResource("11")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ItemsLabel" type="Label" parent="NavMargin/NavRow/NavItemsBtn/ItemsBox"]
+[node name="ItemsLabel" type="Label" parent="NavMargin/NavRow/NavItemsBtn/ItemsTile/ItemsTileMargin/ItemsBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
 theme_override_font_sizes/font_size = 12
 text = "Inventário"
 horizontal_alignment = 1
+
+[node name="NavDiv2" type="ColorRect" parent="NavMargin/NavRow"]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(0.85, 0.89, 0.94, 0.25)
 
 [node name="NavPlayBtn" type="Button" parent="NavMargin/NavRow"]
 custom_minimum_size = Vector2(0, 56)
@@ -168,6 +218,13 @@ theme_override_font_sizes/font_size = 12
 text = "Play"
 horizontal_alignment = 1
 
+[node name="NavDiv3" type="ColorRect" parent="NavMargin/NavRow"]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(0.85, 0.89, 0.94, 0.25)
+
 [node name="NavSocialBtn" type="Button" parent="NavMargin/NavRow"]
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
@@ -178,7 +235,25 @@ theme_override_styles/hover = SubResource("NavEmpty")
 theme_override_styles/disabled = SubResource("NavEmpty")
 theme_override_styles/focus = SubResource("NavEmpty")
 
-[node name="SocialBox" type="VBoxContainer" parent="NavMargin/NavRow/NavSocialBtn"]
+[node name="SocialTile" type="PanelContainer" parent="NavMargin/NavRow/NavSocialBtn"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("NavEmpty")
+
+[node name="SocialTileMargin" type="MarginContainer" parent="NavMargin/NavRow/NavSocialBtn/SocialTile"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="SocialBox" type="VBoxContainer" parent="NavMargin/NavRow/NavSocialBtn/SocialTile/SocialTileMargin"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -189,7 +264,7 @@ mouse_filter = 2
 theme_override_constants/separation = 2
 alignment = 1
 
-[node name="SocialIcon" type="TextureRect" parent="NavMargin/NavRow/NavSocialBtn/SocialBox"]
+[node name="SocialIcon" type="TextureRect" parent="NavMargin/NavRow/NavSocialBtn/SocialTile/SocialTileMargin/SocialBox"]
 custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -198,12 +273,19 @@ texture = ExtResource("12")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="SocialLabel" type="Label" parent="NavMargin/NavRow/NavSocialBtn/SocialBox"]
+[node name="SocialLabel" type="Label" parent="NavMargin/NavRow/NavSocialBtn/SocialTile/SocialTileMargin/SocialBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
 theme_override_font_sizes/font_size = 12
 text = "Amigos"
 horizontal_alignment = 1
+
+[node name="NavDiv4" type="ColorRect" parent="NavMargin/NavRow"]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(0.85, 0.89, 0.94, 0.25)
 
 [node name="NavRoomsBtn" type="Button" parent="NavMargin/NavRow"]
 custom_minimum_size = Vector2(0, 56)
@@ -215,7 +297,25 @@ theme_override_styles/hover = SubResource("NavEmpty")
 theme_override_styles/disabled = SubResource("NavEmpty")
 theme_override_styles/focus = SubResource("NavEmpty")
 
-[node name="RoomsBox" type="VBoxContainer" parent="NavMargin/NavRow/NavRoomsBtn"]
+[node name="RoomsTile" type="PanelContainer" parent="NavMargin/NavRow/NavRoomsBtn"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("NavEmpty")
+
+[node name="RoomsTileMargin" type="MarginContainer" parent="NavMargin/NavRow/NavRoomsBtn/RoomsTile"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="RoomsBox" type="VBoxContainer" parent="NavMargin/NavRow/NavRoomsBtn/RoomsTile/RoomsTileMargin"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -226,7 +326,7 @@ mouse_filter = 2
 theme_override_constants/separation = 2
 alignment = 1
 
-[node name="RoomsIcon" type="TextureRect" parent="NavMargin/NavRow/NavRoomsBtn/RoomsBox"]
+[node name="RoomsIcon" type="TextureRect" parent="NavMargin/NavRow/NavRoomsBtn/RoomsTile/RoomsTileMargin/RoomsBox"]
 custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -235,7 +335,7 @@ texture = ExtResource("13")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="RoomsLabel" type="Label" parent="NavMargin/NavRow/NavRoomsBtn/RoomsBox"]
+[node name="RoomsLabel" type="Label" parent="NavMargin/NavRow/NavRoomsBtn/RoomsTile/RoomsTileMargin/RoomsBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
 theme_override_font_sizes/font_size = 11
