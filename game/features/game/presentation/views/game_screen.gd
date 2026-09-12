@@ -105,6 +105,7 @@ var _opponent_dots: Array = []
 var _icon_cache: Dictionary = {}
 
 var _board_inventory_spacer: Control = null
+var _cached_defense_pulse_ids: Array = []
 
 var _navigation_started: bool = false
 
@@ -229,9 +230,9 @@ func _wrap_board_grid() -> void:
 	style.corner_radius_bottom_right = 12
 	style.corner_radius_bottom_left = 12
 	style.content_margin_left = 8
-	style.content_margin_top = 8
+	style.content_margin_top = 10
 	style.content_margin_right = 8
-	style.content_margin_bottom = 8
+	style.content_margin_bottom = 10
 	wrapper.add_theme_stylebox_override("panel", style)
 	
 	var idx: int = parent.get_children().find(board_grid)
@@ -338,6 +339,7 @@ func _connect_view_model() -> void:
 	_view_model.effect_state_changed.connect(_on_effect_state_changed)
 	_view_model.game_ended.connect(_on_game_ended)
 	_view_model.armed_power_changed.connect(_on_armed_power_changed)
+	_view_model.defense_pulse_changed.connect(_on_defense_pulse_changed)
 	_view_model.notification_requested.connect(_on_notification_requested)
 	_view_model.word_found_feedback.connect(_on_word_found_feedback)
 	_view_model.trap_event_feedback.connect(_on_trap_event_feedback)
@@ -565,7 +567,7 @@ func _rebuild_words(words: Array) -> void:
 
 		var label := Label.new()
 		label.text = word.word.to_upper()
-		label.add_theme_font_size_override("font_size", 12)
+		label.add_theme_font_size_override("font_size", 14)
 		label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		pill.add_child(label)
@@ -628,21 +630,22 @@ func _update_inventory_panel() -> void:
 
 		if power is GamePower:
 			slot.texture_normal = _power_icon(power.type)
-			var solid_style := StyleBoxFlat.new()
-			solid_style.bg_color = Color(0, 0, 0, 0)
-			solid_style.corner_radius_top_left = 8
-			solid_style.corner_radius_top_right = 8
-			solid_style.corner_radius_bottom_right = 8
-			solid_style.corner_radius_bottom_left = 8
-			solid_style.border_width_left = 0
-			solid_style.border_width_top = 0
-			solid_style.border_width_right = 0
-			solid_style.border_width_bottom = 0
-			solid_style.content_margin_left = 0
-			solid_style.content_margin_top = 0
-			solid_style.content_margin_right = 0
-			solid_style.content_margin_bottom = 0
-			frame.add_theme_stylebox_override("panel", solid_style)
+			if not slot.has_meta("defense_pulse"):
+				var solid_style := StyleBoxFlat.new()
+				solid_style.bg_color = Color(0, 0, 0, 0)
+				solid_style.corner_radius_top_left = 8
+				solid_style.corner_radius_top_right = 8
+				solid_style.corner_radius_bottom_right = 8
+				solid_style.corner_radius_bottom_left = 8
+				solid_style.border_width_left = 0
+				solid_style.border_width_top = 0
+				solid_style.border_width_right = 0
+				solid_style.border_width_bottom = 0
+				solid_style.content_margin_left = 0
+				solid_style.content_margin_top = 0
+				solid_style.content_margin_right = 0
+				solid_style.content_margin_bottom = 0
+				frame.add_theme_stylebox_override("panel", solid_style)
 			frame.clip_contents = false
 			if frame.get_script():
 				frame.set_script(null)
@@ -661,6 +664,11 @@ func _update_inventory_panel() -> void:
 			slot.add_theme_stylebox_override("pressed", icon_style)
 			slot.add_theme_stylebox_override("disabled", icon_style)
 			slot.add_theme_stylebox_override("focus", icon_style)
+			var is_frozen_now: bool = _view_model != null and _view_model.is_frozen()
+			var should_disable: bool = is_frozen_now and not GamePowerCatalog.can_use_while_frozen(power.type)
+			slot.disabled = should_disable
+			slot.mouse_filter = Control.MOUSE_FILTER_IGNORE if should_disable else Control.MOUSE_FILTER_STOP
+			slot.modulate = Color(0.45, 0.45, 0.45, 1) if should_disable else Color.WHITE
 		else:
 			slot.texture_normal = null
 			slot.material = null
@@ -676,14 +684,18 @@ func _update_inventory_panel() -> void:
 			slot.add_theme_stylebox_override("normal", empty_icon_style)
 			slot.add_theme_stylebox_override("hover", empty_icon_style)
 			slot.add_theme_stylebox_override("pressed", empty_icon_style)
+			slot.disabled = true
+			slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			slot.modulate = Color.WHITE
 
 	_update_armed_power_highlight()
+	_update_defense_pulse()
 
 	_update_power_dots(_my_dots, _cached_my_inventory)
 
 
-const ARMED_LIFT_Y := -10.0
-const ARMED_LIFT_SCALE := Vector2(1.12, 1.12)
+const ARMED_LIFT_Y := 0.0
+const ARMED_LIFT_SCALE := Vector2.ONE
 const ARMED_LIFT_DURATION := 0.18
 const ARMED_SNAP_DURATION := 0.14
 const ARMED_SHADOW_SIZE := 6
@@ -699,6 +711,91 @@ func _update_armed_power_highlight() -> void:
 		var power = _cached_my_inventory[index] if index < _cached_my_inventory.size() else null
 		var is_armed: bool = power is GamePower and power.id == armed_id
 		_animate_slot_lift(slot, frame, is_armed)
+
+
+func _on_defense_pulse_changed(pulse_ids: Array) -> void:
+	_cached_defense_pulse_ids = pulse_ids.duplicate()
+	_update_defense_pulse()
+
+
+func _update_defense_pulse() -> void:
+	if _view_model == null:
+		return
+	var pulse_ids: Array = _view_model.get_defense_pulse_ids() if _view_model.has_method("get_defense_pulse_ids") else _cached_defense_pulse_ids
+	for index in _inventory_slots.size():
+		var slot: TextureButton = _inventory_slots[index] if index < _inventory_slots.size() and _inventory_slots[index] is TextureButton else null
+		if slot == null:
+			continue
+		var frame := slot.get_parent() as PanelContainer
+		var power = _cached_my_inventory[index] if index < _cached_my_inventory.size() else null
+		var should_pulse: bool = power is GamePower and pulse_ids.has(power.id)
+		if should_pulse:
+			_start_defense_pulse(slot, frame)
+		else:
+			_stop_defense_pulse(slot, frame)
+
+
+func _start_defense_pulse(slot: TextureButton, frame: PanelContainer) -> void:
+	if not is_instance_valid(slot):
+		return
+	if slot.has_meta("defense_pulse"):
+		return
+	slot.pivot_offset = Vector2(26, 26)
+	slot.position.y = 0
+	slot.scale = Vector2.ONE
+	slot.z_index = 0
+	if is_instance_valid(frame):
+		frame.clip_contents = false
+		var fstyle := frame.get_theme_stylebox("panel") as StyleBoxFlat
+		if fstyle == null:
+			fstyle = StyleBoxFlat.new()
+			frame.add_theme_stylebox_override("panel", fstyle)
+		fstyle.bg_color = Color(0, 0, 0, 0)
+		fstyle.border_width_left = 3
+		fstyle.border_width_top = 3
+		fstyle.border_width_right = 3
+		fstyle.border_width_bottom = 3
+		fstyle.border_color = COLOR_NEON_GREEN
+		fstyle.shadow_color = Color(0.2, 1.0, 0.4, 0.9)
+		fstyle.shadow_size = 0
+	var tween := create_tween()
+	tween.set_loops()
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	if is_instance_valid(frame):
+		var fs := frame.get_theme_stylebox("panel") as StyleBoxFlat
+		if fs != null:
+			tween.tween_property(fs, "shadow_size", 8, 0.30)
+			tween.tween_property(fs, "shadow_size", 0, 0.30)
+	slot.set_meta("defense_pulse", tween)
+
+
+func _stop_defense_pulse(slot: TextureButton, frame: PanelContainer) -> void:
+	if not is_instance_valid(slot):
+		return
+	var is_armed_now := false
+	if _view_model != null and slot.get_parent() is PanelContainer:
+		var idx := _inventory_slots.find(slot)
+		if idx != -1 and idx < _cached_my_inventory.size():
+			var p = _cached_my_inventory[idx]
+			if p is GamePower and p.id == _view_model.selected_power_id():
+				is_armed_now = true
+	if slot.has_meta("defense_pulse"):
+		var t = slot.get_meta("defense_pulse")
+		if t is Tween and t.is_valid():
+			t.kill()
+		slot.remove_meta("defense_pulse")
+	if is_armed_now:
+		return
+	if is_instance_valid(frame):
+		var fstyle := frame.get_theme_stylebox("panel") as StyleBoxFlat
+		if fstyle != null and not slot.has_meta("lift_tween"):
+			fstyle.border_width_left = 0
+			fstyle.border_width_top = 0
+			fstyle.border_width_right = 0
+			fstyle.border_width_bottom = 0
+			fstyle.border_color = Color(0, 0, 0, 0)
+			fstyle.shadow_color = Color(0, 0, 0, 0)
+			fstyle.shadow_size = 0
 
 
 func _ensure_global_arrow(frame: PanelContainer, show: bool) -> void:
@@ -745,39 +842,76 @@ func _animate_slot_lift(slot: TextureButton, frame: PanelContainer, lifted: bool
 		var old = slot.get_meta(meta_key)
 		if old is Tween and old.is_valid():
 			old.kill()
+	var is_defense_armed := false
+	if lifted and _view_model != null:
+		var s_idx := _inventory_slots.find(slot)
+		if s_idx != -1 and s_idx < _cached_my_inventory.size():
+			var pp = _cached_my_inventory[s_idx]
+			if pp is GamePower:
+				var t: String = (pp as GamePower).type
+				if _view_model.is_frozen() and GamePowerCatalog.get_counters_for_debuff("PLAYER_FROZEN").has(t):
+					is_defense_armed = true
+				elif _view_model.is_blinded() and GamePowerCatalog.get_counters_for_debuff("PLAYER_BLINDED").has(t):
+					is_defense_armed = true
+	var has_defense_pulse := slot.has_meta("defense_pulse")
 	if is_instance_valid(frame):
-		frame.clip_contents = false
-		var fstyle := frame.get_theme_stylebox("panel") as StyleBoxFlat
-		if fstyle != null:
-			if lifted:
-				fstyle.border_width_left = 2
-				fstyle.border_width_top = 2
-				fstyle.border_width_right = 2
-				fstyle.border_width_bottom = 2
-				fstyle.border_color = Color.WHITE
-				fstyle.bg_color = Color(0, 0, 0, 0)
-				fstyle.shadow_color = Color(0.047, 1, 0.396, 0.9)
-			else:
-				fstyle.border_width_left = 0
-				fstyle.border_width_top = 0
-				fstyle.border_width_right = 0
-				fstyle.border_width_bottom = 0
-				fstyle.border_color = Color(0, 0, 0, 0)
-				fstyle.bg_color = Color(0, 0, 0, 0)
-				fstyle.shadow_color = Color(0, 0, 0, 0)
-				fstyle.shadow_size = 0
+		if slot.has_meta("defense_pulse"):
+			var fstyle_dp := frame.get_theme_stylebox("panel") as StyleBoxFlat
+			if fstyle_dp != null:
+				if lifted and is_defense_armed:
+					fstyle_dp.border_width_left = 3
+					fstyle_dp.border_width_top = 3
+					fstyle_dp.border_width_right = 3
+					fstyle_dp.border_width_bottom = 3
+					fstyle_dp.border_color = COLOR_NEON_GREEN
+					fstyle_dp.bg_color = Color(0, 0, 0, 0)
+					fstyle_dp.shadow_color = Color(0.2, 1.0, 0.4, 0.9)
+					fstyle_dp.shadow_size = 4
+		elif not has_defense_pulse:
+			frame.clip_contents = false
+			var fstyle := frame.get_theme_stylebox("panel") as StyleBoxFlat
+			if fstyle != null:
+				if lifted:
+					if is_defense_armed:
+						fstyle.border_width_left = 3
+						fstyle.border_width_top = 3
+						fstyle.border_width_right = 3
+						fstyle.border_width_bottom = 3
+						fstyle.border_color = COLOR_NEON_GREEN
+						fstyle.bg_color = Color(0, 0, 0, 0)
+						fstyle.shadow_color = Color(0.2, 1.0, 0.4, 0.9)
+						fstyle.shadow_size = 4
+					else:
+						fstyle.border_width_left = 2
+						fstyle.border_width_top = 2
+						fstyle.border_width_right = 2
+						fstyle.border_width_bottom = 2
+						fstyle.border_color = Color.WHITE
+						fstyle.bg_color = Color(0, 0, 0, 0)
+						fstyle.shadow_color = Color(0.047, 1, 0.396, 0.9)
+				else:
+					fstyle.border_width_left = 0
+					fstyle.border_width_top = 0
+					fstyle.border_width_right = 0
+					fstyle.border_width_bottom = 0
+					fstyle.border_color = Color(0, 0, 0, 0)
+					fstyle.bg_color = Color(0, 0, 0, 0)
+					fstyle.shadow_color = Color(0, 0, 0, 0)
+					fstyle.shadow_size = 0
+	var is_disabled_slot: bool = slot.disabled
+	var target_modulate: Color = Color(0.45, 0.45, 0.45, 1) if is_disabled_slot else Color.WHITE
 	var tween := create_tween()
 	slot.set_meta(meta_key, tween)
-	tween.set_trans(Tween.TRANS_BACK if lifted else Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	if lifted:
-		tween.tween_property(slot, "position:y", ARMED_LIFT_Y, ARMED_LIFT_DURATION)
-		tween.parallel().tween_property(slot, "scale", ARMED_LIFT_SCALE, 0.16)
+		tween.tween_property(slot, "position:y", 0.0, ARMED_SNAP_DURATION)
+		tween.parallel().tween_property(slot, "scale", Vector2.ONE, 0.16)
 		tween.parallel().tween_property(slot, "modulate", Color.WHITE, 0.16)
-		if is_instance_valid(frame):
+		if is_instance_valid(frame) and not has_defense_pulse:
 			var fs := frame.get_theme_stylebox("panel") as StyleBoxFlat
 			if fs != null:
 				tween.parallel().tween_property(fs, "shadow_size", 4, ARMED_LIFT_DURATION)
-		slot.z_index = 10
+		slot.z_index = 0
 		if _armed_scope == GamePowerCatalog.SCOPE_GLOBAL:
 			_ensure_global_arrow(frame, true)
 		else:
@@ -785,7 +919,7 @@ func _animate_slot_lift(slot: TextureButton, frame: PanelContainer, lifted: bool
 	else:
 		tween.tween_property(slot, "position:y", 0.0, ARMED_SNAP_DURATION)
 		tween.parallel().tween_property(slot, "scale", Vector2.ONE, ARMED_SNAP_DURATION)
-		tween.parallel().tween_property(slot, "modulate", Color.WHITE, ARMED_SNAP_DURATION)
+		tween.parallel().tween_property(slot, "modulate", target_modulate, ARMED_SNAP_DURATION)
 		slot.z_index = 0
 		_ensure_global_arrow(frame, false)
 	tween.finished.connect(func() -> void:
@@ -1287,6 +1421,7 @@ func _update_turn_label() -> void:
 func _on_effect_state_changed() -> void:
 	_update_board_interactivity()
 	_refresh_all_cell_styles()
+	_update_inventory_panel()
 
 	if _view_model == null:
 		return

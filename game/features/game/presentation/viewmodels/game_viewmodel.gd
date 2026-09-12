@@ -41,6 +41,7 @@ signal trap_animation_requested(x: int, y: int)
 signal notification_requested(message: String)
 signal selected_power_changed(power_id: String)
 signal armed_power_changed(power_id: String, power_type: String, scope: String)
+signal defense_pulse_changed(pulse_ids: Array)
 signal game_ended(is_winner: bool, title: String, subtitle: String)
 
 var _usecase: GameUseCase
@@ -74,6 +75,7 @@ var _opponent_id: String = ""
 var _block_click_history: Dictionary = {}
 var _pending_block_actor: String = ""
 var _pending_block_pos := Vector2i(-1, -1)
+var _defense_pulse_ids: Array = []
 
 var _cells_claimed_by_me: Array[Vector2i] = []
 var _cells_claimed_by_opponent: Array[Vector2i] = []
@@ -168,6 +170,7 @@ func select_power(power_id: String, power_type: String) -> void:
 	_armed_power_type = power_type
 	selected_power_changed.emit(power_id)
 	armed_power_changed.emit(power_id, power_type, GamePowerCatalog.get_scope(power_type))
+	_refresh_defense_pulse()
 
 
 func on_power_clicked(power_id: String) -> void:
@@ -190,12 +193,14 @@ func on_power_clicked(power_id: String) -> void:
 
 	if _armed_power_id == power_id:
 		clear_selected_power()
+		_refresh_defense_pulse()
 		return
 
 	_armed_power_id = power_id
 	_armed_power_type = power.type
 	selected_power_changed.emit(power_id)
 	armed_power_changed.emit(power_id, power.type, scope)
+	_refresh_defense_pulse()
 
 
 func confirm_armed_global_power() -> void:
@@ -225,6 +230,7 @@ func clear_selected_power() -> void:
 	_armed_power_type = ""
 	selected_power_changed.emit("")
 	armed_power_changed.emit("", "", "")
+	_refresh_defense_pulse()
 
 
 func discard_power(power_id: String) -> void:
@@ -434,6 +440,35 @@ func has_spied_cell() -> bool:
 	return _has_spied
 
 
+func get_defense_pulse_ids() -> Array:
+	return _defense_pulse_ids.duplicate()
+
+
+func _refresh_defense_pulse() -> void:
+	var new_ids: Array = []
+	if _is_my_turn:
+		if _is_frozen:
+			var counters: Array = GamePowerCatalog.get_counters_for_debuff("PLAYER_FROZEN")
+			for p in _my_inventory:
+				if p is GamePower and counters.has(p.type):
+					new_ids.append(p.id)
+		if _is_blinded:
+			var counters_blind: Array = GamePowerCatalog.get_counters_for_debuff("PLAYER_BLINDED")
+			for p in _my_inventory:
+				if p is GamePower and counters_blind.has(p.type):
+					if not new_ids.has(p.id):
+						new_ids.append(p.id)
+	var changed := new_ids.size() != _defense_pulse_ids.size()
+	if not changed:
+		for id in new_ids:
+			if not _defense_pulse_ids.has(id):
+				changed = true
+				break
+	if changed:
+		_defense_pulse_ids = new_ids
+		defense_pulse_changed.emit(_defense_pulse_ids.duplicate())
+
+
 func classify_word_owner(word: GameWord) -> String:
 	if not word.found:
 		return ""
@@ -488,6 +523,7 @@ func _on_words_updated(words: Array) -> void:
 func _on_my_inventory_updated(inventory: Array) -> void:
 	_my_inventory = inventory
 	my_inventory_changed.emit(inventory)
+	_refresh_defense_pulse()
 
 
 func _on_opponent_inventory_updated(inventory: Array) -> void:
@@ -605,6 +641,9 @@ func _on_turn_changed(current_turn_player_id: String, turn_ends_at: String, is_m
 		if warm_deadline > 0.0:
 			turn_timer_updated.emit(maxf(0.0, warm_deadline - Time.get_unix_time_from_system()))
 
+	if not is_my_turn and not _armed_power_id.is_empty():
+		clear_selected_power()
+	_refresh_defense_pulse()
 	turn_state_changed.emit(is_my_turn)
 
 	if not is_my_turn:
@@ -648,8 +687,8 @@ func _on_my_effect_event(event_name: String) -> void:
 		_:
 			AppLogger.debug("GameViewModel: efeito não mapeado: %s" % event_name)
 			return
-
 	effect_state_changed.emit()
+	_refresh_defense_pulse()
 
 
 func _on_spy_position_changed(pos: Vector2i, active: bool) -> void:
@@ -698,6 +737,7 @@ func _apply_turn_effect_decrement() -> void:
 
 	if changed:
 		effect_state_changed.emit()
+		_refresh_defense_pulse()
 
 
 func _on_game_over(is_winner: bool, reason: String) -> void:

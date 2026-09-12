@@ -453,7 +453,7 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
 theme_override_font_sizes/font_size = 17
-text = "87"
+text = "0"
 horizontal_alignment = 1
 
 [node name="WinsCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=1194139755]
@@ -479,7 +479,7 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
 theme_override_font_sizes/font_size = 17
-text = "5"
+text = "0"
 horizontal_alignment = 1
 
 [node name="StreakCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=1659997936]
@@ -505,7 +505,7 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
 theme_override_font_sizes/font_size = 17
-text = "132"
+text = "0"
 horizontal_alignment = 1
 
 [node name="MatchesCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=887015844]

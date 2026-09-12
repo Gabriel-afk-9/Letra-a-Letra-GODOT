@@ -374,7 +374,6 @@ func _handle_state_sync(message: WebSocketMessage) -> void:
 
 	if message.data.has("players"):
 		var raw_players = message.data.get("players")
-
 		if raw_players is Array:
 			var parsed_players: Array = []
 

@@ -121,3 +121,13 @@ static func get_rarity(power_type: String) -> String:
 		return str(entry.get("rarity", ""))
 
 	return ""
+
+
+static func get_counters_for_debuff(debuff: String) -> Array:
+	match debuff.to_upper():
+		"FROZEN", "FREEZE", "PLAYER_FROZEN":
+			return [POWER_TYPE_UNFREEZE, POWER_TYPE_IMMUNITY]
+		"BLINDED", "BLIND", "PLAYER_BLINDED":
+			return [POWER_TYPE_LANTERN, POWER_TYPE_IMMUNITY]
+		_:
+			return []

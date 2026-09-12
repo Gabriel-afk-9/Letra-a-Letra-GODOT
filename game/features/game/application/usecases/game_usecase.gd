@@ -186,9 +186,7 @@ func _sync_my_effects(effects: Array) -> void:
 	_my_spy_active = has_spy
 
 	if _my_had_effects and not has_effects:
-		my_effect_event.emit("PLAYER_UNFREEZE")
-		my_effect_event.emit("IMMUNITY_REMOVED")
-
+		pass
 	_my_had_effects = has_effects
 
 
@@ -256,7 +254,6 @@ func _handle_effect_event(event: GameInternalEvent) -> void:
 
 	if user == null:
 		return
-
 	if event.contains_player_id(user.id):
 		my_effect_event.emit(event.event_name)
 
