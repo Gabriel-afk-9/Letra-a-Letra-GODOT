@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://b1gbmuj31b2um"]
 
 [ext_resource type="Script" uid="uid://cdaar7k8dj5rc" path="res://features/home/presentation/views/home_screen.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://ckoyn5cjw0v60" path="res://assets/images/backgrounds/home.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://ddw4mt7rfhvhp" path="res://assets/cosmetics/avatar/logo.png" id="3_cosmetic_avatar_default"]
 [ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="5"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="7"]
@@ -196,17 +195,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
-
-[node name="BackgroundHome" type="TextureRect" parent="." unique_id=798392658]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2")
-expand_mode = 1
-stretch_mode = 6
 
 [node name="SafeMargin" type="MarginContainer" parent="." unique_id=1083931309]
 layout_mode = 1
