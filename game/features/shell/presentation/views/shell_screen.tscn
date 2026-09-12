@@ -33,6 +33,7 @@ offset_bottom = -72.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+clip_contents = true
 
 [node name="Navbar" parent="." instance=ExtResource("3")]
 layout_mode = 1
