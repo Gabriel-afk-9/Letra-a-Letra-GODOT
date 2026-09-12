@@ -1,6 +1,75 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://features/inventory/presentation/views/inventory_screen.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://8qd34wfwm1fp" path="res://assets/images/icons/icon-user.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://qy6k3fcwndys" path="res://assets/images/icons/room-icon.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://cwsigw0q1oibh" path="res://assets/images/icons/navbar-2.png" id="5"]
+
+[sub_resource type="StyleBoxFlat" id="TabGreen"]
+bg_color = Color(0.2, 0.72, 0.42, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="NavEmpty"]
+
+[sub_resource type="StyleBoxFlat" id="PanelStyle"]
+bg_color = Color(0.878, 0.914, 0.945, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="PagerPill"]
+bg_color = Color(0.878, 0.914, 0.945, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="ArrowOrange"]
+bg_color = Color(0.96, 0.51, 0.12, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="ArrowBlue"]
+bg_color = Color(0.16, 0.6, 0.85, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [node name="InventoryScreen" type="Control"]
 layout_mode = 3
@@ -11,31 +80,257 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Content" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 8
 
-[node name="VBox" type="VBoxContainer" parent="Center"]
+[node name="MainVBox" type="VBoxContainer" parent="Content"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 0
+
+[node name="TabsRow" type="HBoxContainer" parent="Content/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 6
 alignment = 1
 
-[node name="Title" type="Label" parent="Center/VBox"]
+[node name="AvatarTab" type="Button" parent="Content/MainVBox/TabsRow"]
+custom_minimum_size = Vector2(116, 56)
+layout_mode = 2
+theme_override_styles/normal = SubResource("TabGreen")
+theme_override_styles/hover = SubResource("TabGreen")
+theme_override_styles/pressed = SubResource("TabGreen")
+theme_override_styles/disabled = SubResource("TabGreen")
+theme_override_styles/focus = SubResource("NavEmpty")
+
+[node name="TabBox" type="VBoxContainer" parent="Content/MainVBox/TabsRow/AvatarTab"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="TabIcon" type="TextureRect" parent="Content/MainVBox/TabsRow/AvatarTab/TabBox"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TabLabel" type="Label" parent="Content/MainVBox/TabsRow/AvatarTab/TabBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "AVATAR"
+horizontal_alignment = 1
+
+[node name="FrameTab" type="Button" parent="Content/MainVBox/TabsRow"]
+custom_minimum_size = Vector2(96, 46)
+layout_mode = 2
+theme_override_styles/normal = SubResource("TabGreen")
+theme_override_styles/hover = SubResource("TabGreen")
+theme_override_styles/pressed = SubResource("TabGreen")
+theme_override_styles/disabled = SubResource("TabGreen")
+theme_override_styles/focus = SubResource("NavEmpty")
+
+[node name="TabBox" type="VBoxContainer" parent="Content/MainVBox/TabsRow/FrameTab"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="TabIcon" type="TextureRect" parent="Content/MainVBox/TabsRow/FrameTab/TabBox"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TabLabel" type="Label" parent="Content/MainVBox/TabsRow/FrameTab/TabBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 12
+text = "MOLDURA"
+horizontal_alignment = 1
+
+[node name="EmoteTab" type="Button" parent="Content/MainVBox/TabsRow"]
+custom_minimum_size = Vector2(96, 46)
+layout_mode = 2
+theme_override_styles/normal = SubResource("TabGreen")
+theme_override_styles/hover = SubResource("TabGreen")
+theme_override_styles/pressed = SubResource("TabGreen")
+theme_override_styles/disabled = SubResource("TabGreen")
+theme_override_styles/focus = SubResource("NavEmpty")
+
+[node name="TabBox" type="VBoxContainer" parent="Content/MainVBox/TabsRow/EmoteTab"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="TabIcon" type="TextureRect" parent="Content/MainVBox/TabsRow/EmoteTab/TabBox"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TabLabel" type="Label" parent="Content/MainVBox/TabsRow/EmoteTab/TabBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 12
+text = "EMOTE"
+horizontal_alignment = 1
+
+[node name="ConsumableTab" type="Button" parent="Content/MainVBox/TabsRow"]
+custom_minimum_size = Vector2(96, 46)
+layout_mode = 2
+theme_override_styles/normal = SubResource("TabGreen")
+theme_override_styles/hover = SubResource("TabGreen")
+theme_override_styles/pressed = SubResource("TabGreen")
+theme_override_styles/disabled = SubResource("TabGreen")
+theme_override_styles/focus = SubResource("NavEmpty")
+
+[node name="TabBox" type="VBoxContainer" parent="Content/MainVBox/TabsRow/ConsumableTab"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="TabIcon" type="TextureRect" parent="Content/MainVBox/TabsRow/ConsumableTab/TabBox"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TabLabel" type="Label" parent="Content/MainVBox/TabsRow/ConsumableTab/TabBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 12
+text = "CONSUMÍVEIS"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Panel" type="PanelContainer" parent="Content/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("PanelStyle")
+
+[node name="PanelMargin" type="MarginContainer" parent="Content/MainVBox/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
+
+[node name="PanelVBox" type="VBoxContainer" parent="Content/MainVBox/Panel/PanelMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ItemGrid" type="GridContainer" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 3
+
+[node name="PagerRow" type="HBoxContainer" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="PrevBtn" type="Button" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow"]
+custom_minimum_size = Vector2(72, 44)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 28
-text = "Inventário"
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("ArrowOrange")
+theme_override_styles/hover = SubResource("ArrowOrange")
+theme_override_styles/pressed = SubResource("ArrowOrange")
+theme_override_styles/disabled = SubResource("ArrowOrange")
+theme_override_styles/focus = SubResource("NavEmpty")
+text = "<"
 
-[node name="Subtitle" type="Label" parent="Center/VBox"]
+[node name="PagePill" type="PanelContainer" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 0.85)
-theme_override_font_sizes/font_size = 15
-text = "Em breve!"
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("PagerPill")
+
+[node name="PageMargin" type="MarginContainer" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow/PagePill"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 6
+
+[node name="PageLabel" type="Label" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow/PagePill/PageMargin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.118, 0.165, 0.267, 1)
+theme_override_font_sizes/font_size = 20
+text = "Pág 1"
 horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextBtn" type="Button" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow"]
+custom_minimum_size = Vector2(72, 44)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("ArrowBlue")
+theme_override_styles/hover = SubResource("ArrowBlue")
+theme_override_styles/pressed = SubResource("ArrowBlue")
+theme_override_styles/disabled = SubResource("ArrowBlue")
+theme_override_styles/focus = SubResource("NavEmpty")
+text = ">"
