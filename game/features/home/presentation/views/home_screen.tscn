@@ -7,15 +7,16 @@
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="7"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="8"]
 [ext_resource type="Texture2D" uid="uid://e753xeshtu33" path="res://assets/images/icons/Play.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://c71dswpbkg2b3" path="res://assets/images/icons/icon-mais.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://dlgn8q0dgwcj4" path="res://assets/images/icons/Enter.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://8qd34wfwm1fp" path="res://assets/images/icons/icon-user.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://qy6k3fcwndys" path="res://assets/images/icons/room-icon.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://buttfrs0e7tfn" path="res://assets/images/icons/navbar-1.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://cwsigw0q1oibh" path="res://assets/images/icons/navbar-2.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://d3p2pnpdorub" path="res://assets/images/icons/navbar-4.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://b7biibru2ssyu" path="res://assets/images/icons/navbar-5.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://c6bifs6l41y1w" path="res://assets/images/icons/config-icon.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="15"]
 [ext_resource type="Texture2D" uid="uid://brrme07786k2s" path="res://assets/images/logo/lal.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://7qca7tdjacgk" path="res://assets/images/art/letraCoin.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://djfl7kt6bm64t" path="res://assets/images/art/letraGem.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://b330j3nqkuq6w" path="res://assets/images/icons/navbar-3.png" id="19"]
 
 [sub_resource type="StyleBoxFlat" id="LevelBadge"]
 bg_color = Color(0.184, 0.608, 0.847, 1)
@@ -724,7 +725,6 @@ stretch_mode = 5
 
 [node name="SegCasualLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Match/SegCasualBox" unique_id=1520682186]
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
 text = "CASUAL"
@@ -758,7 +758,6 @@ stretch_mode = 5
 
 [node name="SegBotLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Bot/SegBotBox" unique_id=374058844]
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
 text = "BOT"
@@ -799,7 +798,6 @@ polygon = PackedVector2Array(0, 14, 0, 4, 5, 8, 10, 0, 15, 8, 20, 4, 20, 14)
 
 [node name="SegRankLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Rank/SegRankBox" unique_id=494134014]
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
 text = "RANK"
@@ -904,7 +902,7 @@ stretch_mode = 5
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
 theme_override_font_sizes/font_size = 12
-text = "Itens"
+text = "Inventário"
 horizontal_alignment = 1
 
 [node name="NavPlayBtn" type="Button" parent="BottomNav/NavMargin/NavRow" unique_id=1771433806]
@@ -947,7 +945,7 @@ custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
-texture = ExtResource("9")
+texture = ExtResource("19")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1029,7 +1027,7 @@ stretch_mode = 5
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
 theme_override_font_sizes/font_size = 11
-text = "Salas Personalizadas"
+text = "Personalizadas"
 horizontal_alignment = 1
 autowrap_mode = 2
 

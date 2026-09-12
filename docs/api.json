@@ -2015,13 +2015,23 @@
           "Friend"
         ],
         "operationId": "handle_58",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponseGetFriendListResponse"
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseFriendResponse"
                 }
               }
             }
@@ -3417,6 +3427,11 @@
       "VerifyResetCodeRequest": {
         "type": "object",
         "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
           "code": {
             "type": "string",
             "maxLength": 6,
@@ -3424,7 +3439,8 @@
           }
         },
         "required": [
-          "code"
+          "code",
+          "email"
         ]
       },
       "SuccessResponseVoid": {
@@ -3441,6 +3457,11 @@
       "ResetPasswordRequest": {
         "type": "object",
         "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
           "newPassword": {
             "type": "string",
             "maxLength": 16,
@@ -3454,6 +3475,7 @@
         },
         "required": [
           "code",
+          "email",
           "newPassword"
         ]
       },
@@ -3935,7 +3957,7 @@
         "properties": {
           "friendId": {
             "type": "string",
-            "minLength": 1
+            "format": "uuid"
           }
         },
         "required": [
@@ -4113,18 +4135,29 @@
       "VerifyResetTokenRequest": {
         "type": "object",
         "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
           "token": {
             "type": "string",
             "minLength": 1
           }
         },
         "required": [
+          "email",
           "token"
         ]
       },
       "ResetAdminPasswordRequest": {
         "type": "object",
         "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
           "newPassword": {
             "type": "string",
             "maxLength": 16,
@@ -4136,6 +4169,7 @@
           }
         },
         "required": [
+          "email",
           "newPassword",
           "token"
         ]
@@ -4213,6 +4247,9 @@
             "type": "string",
             "maxLength": 500,
             "minLength": 0
+          },
+          "expiresInValid": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -4341,7 +4378,7 @@
         "properties": {
           "friendId": {
             "type": "string",
-            "minLength": 1
+            "format": "uuid"
           }
         },
         "required": [
@@ -4353,7 +4390,7 @@
         "properties": {
           "friendId": {
             "type": "string",
-            "minLength": 1
+            "format": "uuid"
           }
         },
         "required": [
@@ -4365,7 +4402,7 @@
         "properties": {
           "friendId": {
             "type": "string",
-            "minLength": 1
+            "format": "uuid"
           }
         },
         "required": [
@@ -4737,15 +4774,15 @@
           },
           "amount": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "balanceBefore": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "balanceAfter": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "operation": {
             "type": "string",
@@ -5278,25 +5315,47 @@
           }
         }
       },
-      "GetFriendListResponse": {
+      "PageResponseFriendResponse": {
         "type": "object",
         "properties": {
-          "friends": {
+          "content": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/FriendResponse"
             }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           }
         }
       },
-      "SuccessResponseGetFriendListResponse": {
+      "SuccessResponsePageResponseFriendResponse": {
         "type": "object",
         "properties": {
           "success": {
             "type": "boolean"
           },
           "data": {
-            "$ref": "#/components/schemas/GetFriendListResponse"
+            "$ref": "#/components/schemas/PageResponseFriendResponse"
           }
         }
       },
