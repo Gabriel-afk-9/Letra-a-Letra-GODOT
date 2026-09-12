@@ -34,7 +34,7 @@ func login(
 
 	if result.success:
 
-		_navigation.go_to(AppRoutes.HOME)
+		_navigation.go_to(AppRoutes.SHELL)
 		return
 
 	_set_error(result.message)

@@ -1,4 +1,4 @@
-extends Control
+extends HubPage
 class_name HomeScreen
 
 const SEG_BRIGHT := {
@@ -56,12 +56,6 @@ const BANNER_COSMETICS := {
 @onready var opt_casual_btn: Button = $ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn
 @onready var opt_bot_btn: Button = $ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn
 @onready var opt_rank_btn: Button = $ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn
-
-@onready var nav_shop_btn: Button = $BottomNav/NavMargin/NavRow/NavShopBtn
-@onready var nav_items_btn: Button = $BottomNav/NavMargin/NavRow/NavItemsBtn
-@onready var nav_play_btn: Button = $BottomNav/NavMargin/NavRow/NavPlayBtn
-@onready var nav_social_btn: Button = $BottomNav/NavMargin/NavRow/NavSocialBtn
-@onready var nav_rooms_btn: Button = $BottomNav/NavMargin/NavRow/NavRoomsBtn
 
 var _view_model: HomeViewModel
 
@@ -144,11 +138,6 @@ func _connect_buttons() -> void:
 	gems_plus_btn.pressed.connect(_on_nav_btn_pressed.bind("Loja"))
 	settings_btn.pressed.connect(_on_nav_btn_pressed.bind("Configurações"))
 	menu_btn.pressed.connect(_on_nav_btn_pressed.bind("Menu"))
-	nav_shop_btn.pressed.connect(_on_nav_btn_pressed.bind("Loja"))
-	nav_items_btn.pressed.connect(_on_nav_btn_pressed.bind("Itens"))
-	nav_play_btn.pressed.connect(_on_nav_btn_pressed.bind("Play"))
-	nav_social_btn.pressed.connect(_on_nav_btn_pressed.bind("Amigos"))
-	nav_rooms_btn.pressed.connect(_on_nav_btn_pressed.bind("Salas Personalizadas"))
 
 
 func _on_user_loaded(user: User) -> void:
@@ -246,9 +235,11 @@ func _on_play_btn_pressed() -> void:
 	_view_model.play()
 
 
+func page_id() -> StringName:
+	return &"play"
+
+
 func _on_nav_btn_pressed(section: String) -> void:
-	if section == "Play":
-		return
 	_view_model.request_coming_soon(section)
 
 

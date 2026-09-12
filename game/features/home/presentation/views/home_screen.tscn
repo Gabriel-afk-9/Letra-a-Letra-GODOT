@@ -7,16 +7,11 @@
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="7"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="8"]
 [ext_resource type="Texture2D" uid="uid://e753xeshtu33" path="res://assets/images/icons/Play.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://buttfrs0e7tfn" path="res://assets/images/icons/navbar-1.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://cwsigw0q1oibh" path="res://assets/images/icons/navbar-2.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://d3p2pnpdorub" path="res://assets/images/icons/navbar-4.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://b7biibru2ssyu" path="res://assets/images/icons/navbar-5.png" id="13"]
 [ext_resource type="Texture2D" uid="uid://c6bifs6l41y1w" path="res://assets/images/icons/config-icon.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="15"]
 [ext_resource type="Texture2D" uid="uid://brrme07786k2s" path="res://assets/images/logo/lal.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://7qca7tdjacgk" path="res://assets/images/art/letraCoin.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://djfl7kt6bm64t" path="res://assets/images/art/letraGem.png" id="18"]
-[ext_resource type="Texture2D" uid="uid://b330j3nqkuq6w" path="res://assets/images/icons/navbar-3.png" id="19"]
 
 [sub_resource type="StyleBoxFlat" id="LevelBadge"]
 bg_color = Color(0.184, 0.608, 0.847, 1)
@@ -157,16 +152,6 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="NavSlate"]
-bg_color = Color(0.227, 0.271, 0.322, 1)
-
-[sub_resource type="StyleBoxFlat" id="PlayTile"]
-bg_color = Color(0.329, 0.388, 0.478, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
 [sub_resource type="StyleBoxFlat" id="ModeCardStyle"]
 bg_color = Color(1, 1, 1, 1)
 border_width_left = 2
@@ -228,7 +213,6 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = -88.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 24
@@ -807,229 +791,6 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="BottomNav" type="PanelContainer" parent="." unique_id=1613608127]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -72.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/panel = SubResource("NavSlate")
-
-[node name="NavMargin" type="MarginContainer" parent="BottomNav" unique_id=433286477]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="NavRow" type="HBoxContainer" parent="BottomNav/NavMargin" unique_id=1262806761]
-layout_mode = 2
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="NavShopBtn" type="Button" parent="BottomNav/NavMargin/NavRow" unique_id=1259293851]
-custom_minimum_size = Vector2(0, 56)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("NavEmpty")
-theme_override_styles/pressed = SubResource("NavEmpty")
-theme_override_styles/hover = SubResource("NavEmpty")
-theme_override_styles/disabled = SubResource("NavEmpty")
-theme_override_styles/focus = SubResource("NavEmpty")
-
-[node name="ShopBox" type="VBoxContainer" parent="BottomNav/NavMargin/NavRow/NavShopBtn" unique_id=1886420246]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 2
-alignment = 1
-
-[node name="ShopIcon" type="TextureRect" parent="BottomNav/NavMargin/NavRow/NavShopBtn/ShopBox" unique_id=1152965777]
-custom_minimum_size = Vector2(34, 34)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("10")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ShopLabel" type="Label" parent="BottomNav/NavMargin/NavRow/NavShopBtn/ShopBox" unique_id=1108407432]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
-theme_override_font_sizes/font_size = 12
-text = "Loja"
-horizontal_alignment = 1
-
-[node name="NavItemsBtn" type="Button" parent="BottomNav/NavMargin/NavRow" unique_id=956759018]
-custom_minimum_size = Vector2(0, 56)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("NavEmpty")
-theme_override_styles/pressed = SubResource("NavEmpty")
-theme_override_styles/hover = SubResource("NavEmpty")
-theme_override_styles/disabled = SubResource("NavEmpty")
-theme_override_styles/focus = SubResource("NavEmpty")
-
-[node name="ItemsBox" type="VBoxContainer" parent="BottomNav/NavMargin/NavRow/NavItemsBtn" unique_id=2023685199]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 2
-alignment = 1
-
-[node name="ItemsIcon" type="TextureRect" parent="BottomNav/NavMargin/NavRow/NavItemsBtn/ItemsBox" unique_id=1932438636]
-custom_minimum_size = Vector2(34, 34)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("11")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ItemsLabel" type="Label" parent="BottomNav/NavMargin/NavRow/NavItemsBtn/ItemsBox" unique_id=1076515099]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
-theme_override_font_sizes/font_size = 12
-text = "Inventário"
-horizontal_alignment = 1
-
-[node name="NavPlayBtn" type="Button" parent="BottomNav/NavMargin/NavRow" unique_id=1771433806]
-custom_minimum_size = Vector2(0, 56)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("NavEmpty")
-theme_override_styles/pressed = SubResource("NavEmpty")
-theme_override_styles/hover = SubResource("NavEmpty")
-theme_override_styles/disabled = SubResource("NavEmpty")
-theme_override_styles/focus = SubResource("NavEmpty")
-
-[node name="PlayTile" type="PanelContainer" parent="BottomNav/NavMargin/NavRow/NavPlayBtn" unique_id=582987446]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -16.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("PlayTile")
-
-[node name="PlayTileMargin" type="MarginContainer" parent="BottomNav/NavMargin/NavRow/NavPlayBtn/PlayTile" unique_id=176460426]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
-
-[node name="PlayBox" type="VBoxContainer" parent="BottomNav/NavMargin/NavRow/NavPlayBtn/PlayTile/PlayTileMargin" unique_id=2127630087]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 2
-alignment = 1
-
-[node name="PlayIcon" type="TextureRect" parent="BottomNav/NavMargin/NavRow/NavPlayBtn/PlayTile/PlayTileMargin/PlayBox" unique_id=1146504850]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("19")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="PlayLabel" type="Label" parent="BottomNav/NavMargin/NavRow/NavPlayBtn/PlayTile/PlayTileMargin/PlayBox" unique_id=1808808741]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 12
-text = "Play"
-horizontal_alignment = 1
-
-[node name="NavSocialBtn" type="Button" parent="BottomNav/NavMargin/NavRow" unique_id=287480259]
-custom_minimum_size = Vector2(0, 56)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("NavEmpty")
-theme_override_styles/pressed = SubResource("NavEmpty")
-theme_override_styles/hover = SubResource("NavEmpty")
-theme_override_styles/disabled = SubResource("NavEmpty")
-theme_override_styles/focus = SubResource("NavEmpty")
-
-[node name="SocialBox" type="VBoxContainer" parent="BottomNav/NavMargin/NavRow/NavSocialBtn" unique_id=1797501753]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 2
-alignment = 1
-
-[node name="SocialIcon" type="TextureRect" parent="BottomNav/NavMargin/NavRow/NavSocialBtn/SocialBox" unique_id=667650735]
-custom_minimum_size = Vector2(34, 34)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("12")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="SocialLabel" type="Label" parent="BottomNav/NavMargin/NavRow/NavSocialBtn/SocialBox" unique_id=935267090]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
-theme_override_font_sizes/font_size = 12
-text = "Amigos"
-horizontal_alignment = 1
-
-[node name="NavRoomsBtn" type="Button" parent="BottomNav/NavMargin/NavRow" unique_id=68822051]
-custom_minimum_size = Vector2(0, 56)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("NavEmpty")
-theme_override_styles/pressed = SubResource("NavEmpty")
-theme_override_styles/hover = SubResource("NavEmpty")
-theme_override_styles/disabled = SubResource("NavEmpty")
-theme_override_styles/focus = SubResource("NavEmpty")
-
-[node name="RoomsBox" type="VBoxContainer" parent="BottomNav/NavMargin/NavRow/NavRoomsBtn" unique_id=1879242361]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 2
-alignment = 1
-
-[node name="RoomsIcon" type="TextureRect" parent="BottomNav/NavMargin/NavRow/NavRoomsBtn/RoomsBox" unique_id=2003039403]
-custom_minimum_size = Vector2(34, 34)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("13")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="RoomsLabel" type="Label" parent="BottomNav/NavMargin/NavRow/NavRoomsBtn/RoomsBox" unique_id=160721718]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.89, 0.94, 1)
-theme_override_font_sizes/font_size = 11
-text = "Personalizadas"
-horizontal_alignment = 1
-autowrap_mode = 2
 
 [node name="ModePopup" type="Control" parent="." unique_id=702259690]
 visible = false

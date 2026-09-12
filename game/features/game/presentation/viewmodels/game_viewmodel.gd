@@ -258,7 +258,7 @@ func leave_game() -> void:
 
 
 func go_to_home() -> void:
-	_navigation.go_to(AppRoutes.HOME)
+	_navigation.go_to(AppRoutes.SHELL)
 
 
 func board() -> GameBoard:

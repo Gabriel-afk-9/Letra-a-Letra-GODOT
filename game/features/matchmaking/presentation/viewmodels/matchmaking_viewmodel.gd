@@ -62,7 +62,7 @@ func force_leave_and_retry() -> void:
 		_set_error("Não foi possível sair da partida. Voltando ao início.")
 		_set_state(MatchmakingState.ERROR)
 		await (Engine.get_main_loop() as SceneTree).create_timer(1.5).timeout
-		_navigation.go_to(AppRoutes.HOME)
+		_navigation.go_to(AppRoutes.SHELL)
 		return
 	await (Engine.get_main_loop() as SceneTree).create_timer(0.8).timeout
 	if ws.is_socket_connected():
@@ -91,7 +91,7 @@ func _on_searching() -> void:
 func _on_search_cancelled() -> void:
 	_ghost_retry_count = 0
 	_set_state(MatchmakingState.IDLE)
-	_navigation.go_to(AppRoutes.HOME)
+	_navigation.go_to(AppRoutes.SHELL)
 
 func _on_error(message: String) -> void:
 	if not message.to_lower().contains("already in a game"):

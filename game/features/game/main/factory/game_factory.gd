@@ -7,7 +7,7 @@ static func bind(view: GameScreen) -> void:
 
 	if not payload is MatchmakingFoundEvent:
 		AppLogger.error("GameFactory: chegou à tela de jogo sem passar pelo matchmaking.")
-		ServiceRegistry.navigation_service().go_to(AppRoutes.HOME)
+		ServiceRegistry.navigation_service().go_to(AppRoutes.SHELL)
 		return
 
 	var event: MatchmakingFoundEvent = payload
