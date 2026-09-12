@@ -2,7 +2,7 @@ extends GutTest
 
 const PAGES := {
 	&"shop": ["res://features/shop/presentation/views/shop_screen.tscn", "Loja"],
-	&"inventory": ["res://features/inventory/presentation/views/inventory_screen.tscn", "Inventário"],
+	&"inventory": ["res://features/inventory/presentation/views/inventory_screen.tscn", ""],
 	&"social": ["res://features/social/presentation/views/social_screen.tscn", "Amigos"],
 	&"rooms": ["res://features/rooms/presentation/views/rooms_screen.tscn", "Salas Personalizadas"],
 }
@@ -28,6 +28,10 @@ func test_select_each_page_shows_identifying_text() -> void:
 		assert_not_null(page, "página %s deve estar instanciada" % page_id)
 		assert_true(page.visible, "página %s deve estar visível" % page_id)
 		assert_eq(page.page_id(), page_id, "page_id deve corresponder")
+		if page_id == &"inventory":
+			assert_not_null(page.get_node("Content/MainVBox/TabsRow/AvatarTab"), "inventário deve ter aba avatar")
+			assert_not_null(page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/ItemGrid"), "inventário deve ter grade")
+			continue
 		var title: Label = page.get_node("Center/VBox/Title")
 		assert_eq(title.text, PAGES[page_id][1], "texto deve identificar a página")
 
