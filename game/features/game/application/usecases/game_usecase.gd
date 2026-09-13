@@ -8,10 +8,12 @@ signal my_inventory_updated(inventory: Array)
 signal opponent_inventory_updated(inventory: Array)
 signal power_granted(power: GamePower)
 signal turn_changed(current_turn_player_id: String, turn_ends_at: String, is_my_turn: bool)
+signal turn_passed
 signal my_cell_revealed
 signal word_found(cells: Array, found_by_player_id: String, is_me: bool)
 signal trap_event(event_name: String, x: int, y: int)
 signal my_effect_event(event_name: String)
+signal my_effects_snapshot(is_frozen: bool, is_blinded: bool, is_immune: bool, freeze_duration: int, blind_duration: int, immune_duration: int)
 signal spy_position_changed(pos: Vector2i, active: bool)
 signal game_over(is_winner: bool, reason: String)
 signal connection_lost(message: String)
@@ -27,6 +29,10 @@ var _my_had_effects: bool = false
 var _my_effects_synced: bool = false
 var _my_spy_pos := Vector2i(-1, -1)
 var _my_spy_active: bool = false
+var _my_snapshot_synced: bool = false
+var _my_last_snapshot_frozen: bool = false
+var _my_last_snapshot_blinded: bool = false
+var _my_last_snapshot_immune: bool = false
 
 
 func _init(repository: GameRepository, current_user_provider: CurrentUserProvider) -> void:
@@ -166,6 +172,27 @@ func _sync_my_effects(effects: Array) -> void:
 			has_spy = true
 			break
 
+	var has_freeze_snapshot: bool = _has_effect_keyword(effects, "FROZ")
+	var has_blind_snapshot: bool = _has_effect_keyword(effects, "BLIND")
+	var has_immune_snapshot: bool = _has_effect_keyword(effects, "IMMUN")
+	var freeze_dur: int = _find_duration_for_keyword(effects, "FROZ")
+	var blind_dur: int = _find_duration_for_keyword(effects, "BLIND")
+	var immune_dur: int = _find_duration_for_keyword(effects, "IMMUN")
+	if not _my_snapshot_synced:
+		_my_last_snapshot_frozen = has_freeze_snapshot
+		_my_last_snapshot_blinded = has_blind_snapshot
+		_my_last_snapshot_immune = has_immune_snapshot
+		_my_snapshot_synced = true
+		my_effects_snapshot.emit(has_freeze_snapshot, has_blind_snapshot, has_immune_snapshot, freeze_dur, blind_dur, immune_dur)
+	else:
+		if has_freeze_snapshot != _my_last_snapshot_frozen or has_blind_snapshot != _my_last_snapshot_blinded or has_immune_snapshot != _my_last_snapshot_immune or freeze_dur != -1 or blind_dur != -1 or immune_dur != -1:
+			_my_last_snapshot_frozen = has_freeze_snapshot
+			_my_last_snapshot_blinded = has_blind_snapshot
+			_my_last_snapshot_immune = has_immune_snapshot
+			my_effects_snapshot.emit(has_freeze_snapshot, has_blind_snapshot, has_immune_snapshot, freeze_dur, blind_dur, immune_dur)
+		elif has_effects:
+			pass
+
 	if not _my_effects_synced:
 		_my_had_effects = has_effects
 		_my_spy_pos = spy_pos
@@ -233,6 +260,8 @@ func _on_internal_event_received(event: GameInternalEvent) -> void:
 			word_found.emit(event.get_founded_cells(), founded_by, is_me)
 		"CELL_REVEALED":
 			_handle_cell_revealed(event)
+		"TURN_PASSED":
+			turn_passed.emit()
 		"PLAYER_BLINDED", "PLAYER_USE_LANTERN", "PLAYER_FROZEN", "PLAYER_UNFREEZE", "PLAYER_USE_IMMUNITY", "IMMUNITY_APPLIED", "IMMUNITY_REMOVED", "TRAPS_DETECTED", "DETECT_TRAPS_REMOVED", "SPY_APPLIED", "SPY_REMOVED", "PLAYER_SPIED":
 			_handle_effect_event(event)
 		_:
@@ -264,3 +293,88 @@ func _handle_effect_event(event: GameInternalEvent) -> void:
 				spy_position_changed.emit(pos, true)
 		elif event.event_name == "SPY_REMOVED":
 			spy_position_changed.emit(Vector2i(-1, -1), false)
+
+
+func _has_effect_keyword(effects: Array, keyword: String) -> bool:
+	var key_upper: String = keyword.to_upper()
+	for entry in effects:
+		if entry is String:
+			if (entry as String).to_upper().contains(key_upper):
+				return true
+		elif entry is Dictionary:
+			if _deep_contains_keyword(entry as Dictionary, key_upper):
+				return true
+		else:
+			var s: String = str(entry).to_upper()
+			if s.contains(key_upper):
+				return true
+	return false
+
+
+func _deep_contains_keyword(node: Variant, keyword_upper: String) -> bool:
+	if node is Dictionary:
+		for v in (node as Dictionary).values():
+			if _deep_contains_keyword(v, keyword_upper):
+				return true
+		for k in (node as Dictionary).keys():
+			if str(k).to_upper().contains(keyword_upper):
+				return true
+		return false
+	if node is Array:
+		for v in (node as Array):
+			if _deep_contains_keyword(v, keyword_upper):
+				return true
+		return false
+	if node is String:
+		return (node as String).to_upper().contains(keyword_upper)
+	var s2: String = str(node).to_upper()
+	return s2.contains(keyword_upper)
+
+
+func _find_duration_for_keyword(effects: Array, keyword: String) -> int:
+	var key_upper: String = keyword.to_upper()
+	for entry in effects:
+		var entry_has: bool = false
+		if entry is String:
+			if (entry as String).to_upper().contains(key_upper):
+				entry_has = true
+		elif entry is Dictionary:
+			if _deep_contains_keyword(entry as Dictionary, key_upper):
+				entry_has = true
+		else:
+			if str(entry).to_upper().contains(key_upper):
+				entry_has = true
+		if not entry_has:
+			continue
+		if entry is Dictionary:
+			var d: Dictionary = entry as Dictionary
+			for k in d.keys():
+				var ks: String = str(k).to_upper()
+				if ks.contains("DURAT") or ks.contains("TURN") or ks.contains("REMAIN") or ks == "DURATION":
+					var v = d.get(k)
+					if v is int or v is float:
+						return int(v)
+			var deep: int = _deep_find_duration(entry as Dictionary)
+			if deep != -1:
+				return deep
+	return -1
+
+
+func _deep_find_duration(node: Variant) -> int:
+	if node is Dictionary:
+		for k in (node as Dictionary).keys():
+			var ks: String = str(k).to_upper()
+			if ks.contains("DURAT") or ks.contains("REMAIN") or ks == "DURATION" or ks == "TURNS" or ks == "TURNS_LEFT":
+				var v = (node as Dictionary).get(k)
+				if v is int or v is float:
+					return int(v)
+		for v in (node as Dictionary).values():
+			var r: int = _deep_find_duration(v)
+			if r != -1:
+				return r
+	elif node is Array:
+		for v in (node as Array):
+			var r2: int = _deep_find_duration(v)
+			if r2 != -1:
+				return r2
+	return -1

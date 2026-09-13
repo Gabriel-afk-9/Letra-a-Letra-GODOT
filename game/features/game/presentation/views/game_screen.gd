@@ -57,7 +57,6 @@ const UNBLOCK_POP_SCALE := Vector2(1.2, 1.2)
 @onready var _main_layout: VBoxContainer = $MarginContainer/MainLayout
 @onready var _inventory_panel: PanelContainer = $MarginContainer/MainLayout/InventoryPanel
 @onready var leave_button: Button = $TopBarLeaveButton
-@onready var status_label: Label = $MarginContainer/MainLayout/StatusLabel
 @onready var inventory_slot_1: TextureButton = $MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot1/Icon
 @onready var inventory_slot_2: TextureButton = $MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot2/Icon
 @onready var inventory_slot_3: TextureButton = $MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot3/Icon
@@ -335,12 +334,10 @@ func _connect_view_model() -> void:
 	_view_model.turn_state_changed.connect(_on_turn_state_changed)
 	_view_model.turn_timer_updated.connect(_on_turn_timer_updated)
 	_view_model.action_lock_changed.connect(_on_action_lock_changed)
-	_view_model.error_changed.connect(_on_error_changed)
 	_view_model.effect_state_changed.connect(_on_effect_state_changed)
 	_view_model.game_ended.connect(_on_game_ended)
 	_view_model.armed_power_changed.connect(_on_armed_power_changed)
 	_view_model.defense_pulse_changed.connect(_on_defense_pulse_changed)
-	_view_model.notification_requested.connect(_on_notification_requested)
 	_view_model.word_found_feedback.connect(_on_word_found_feedback)
 	_view_model.trap_event_feedback.connect(_on_trap_event_feedback)
 	_view_model.trap_animation_requested.connect(_on_trap_animation_requested)
@@ -650,8 +647,9 @@ func _update_inventory_panel() -> void:
 			if frame.get_script():
 				frame.set_script(null)
 
-			slot.texture_normal = _power_icon(power.type)
-			slot.material = _rounded_icon_material()
+			var is_frozen_now: bool = _view_model != null and _view_model.is_frozen()
+			var should_disable: bool = is_frozen_now and not GamePowerCatalog.can_use_while_frozen(power.type)
+			slot.material = _rounded_icon_material(should_disable)
 
 			var icon_style := StyleBoxFlat.new()
 			icon_style.bg_color = Color(0, 0, 0, 0)
@@ -664,11 +662,9 @@ func _update_inventory_panel() -> void:
 			slot.add_theme_stylebox_override("pressed", icon_style)
 			slot.add_theme_stylebox_override("disabled", icon_style)
 			slot.add_theme_stylebox_override("focus", icon_style)
-			var is_frozen_now: bool = _view_model != null and _view_model.is_frozen()
-			var should_disable: bool = is_frozen_now and not GamePowerCatalog.can_use_while_frozen(power.type)
 			slot.disabled = should_disable
 			slot.mouse_filter = Control.MOUSE_FILTER_IGNORE if should_disable else Control.MOUSE_FILTER_STOP
-			slot.modulate = Color(0.45, 0.45, 0.45, 1) if should_disable else Color.WHITE
+			slot.modulate = Color.WHITE
 		else:
 			slot.texture_normal = null
 			slot.material = null
@@ -810,17 +806,41 @@ func _ensure_global_arrow(frame: PanelContainer, show: bool) -> void:
 			(arrow as Label).add_theme_font_size_override("font_size", 18)
 			(arrow as Label).add_theme_color_override("font_color", Color(0.18, 0.80, 0.44, 1))
 			arrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			arrow.position = Vector2(14, -30)
 			arrow.size = Vector2(24, 18)
 			arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			arrow.z_index = 15
+			arrow.top_level = true
 			frame.add_child(arrow)
-			var bounce := create_tween()
-			bounce.set_loops()
-			bounce.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-			bounce.tween_property(arrow, "position:y", -38.0, 0.30)
-			bounce.tween_property(arrow, "position:y", -30.0, 0.30)
-			arrow.set_meta("bounce", bounce)
+			var frame_size := frame.size
+			if frame_size.x < 1.0:
+				frame_size = Vector2(52, 52)
+			var target_global := frame.global_position + Vector2((frame_size.x - 24.0) * 0.5, -30.0)
+			arrow.global_position = target_global + Vector2(0, 12)
+			arrow.modulate.a = 0.0
+			var enter := create_tween()
+			enter.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+			enter.tween_property(arrow, "modulate:a", 1.0, 0.22)
+			enter.parallel().tween_property(arrow, "global_position:y", target_global.y, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			arrow.set_meta("enter", enter)
+			arrow.set_meta("target_global", target_global)
+			var arrow_id_enter := arrow.get_instance_id()
+			enter.finished.connect(func() -> void:
+				var a: Control = instance_from_id(arrow_id_enter) as Control
+				if not is_instance_valid(a):
+					return
+				if a.has_meta("bounce") and a.get_meta("bounce") is Tween and (a.get_meta("bounce") as Tween).is_valid():
+					return
+				var bounce := create_tween()
+				bounce.set_loops()
+				bounce.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+				var tg: Vector2 = a.get_meta("target_global", a.global_position)
+				bounce.tween_property(a, "global_position:y", tg.y - 8.0, 0.30)
+				bounce.tween_property(a, "global_position:y", tg.y, 0.30)
+				a.set_meta("bounce", bounce)
+			)
+		else:
+			arrow.visible = true
+			arrow.modulate.a = 1.0
 		arrow.visible = true
 	else:
 		if arrow != null:
@@ -828,7 +848,20 @@ func _ensure_global_arrow(frame: PanelContainer, show: bool) -> void:
 				var b = arrow.get_meta("bounce")
 				if b is Tween and b.is_valid():
 					b.kill()
-			arrow.queue_free()
+			if arrow.has_meta("enter"):
+				var e = arrow.get_meta("enter")
+				if e is Tween and e.is_valid():
+					e.kill()
+			var fade := create_tween()
+			fade.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+			fade.tween_property(arrow, "modulate:a", 0.0, 0.15)
+			fade.parallel().tween_property(arrow, "global_position:y", arrow.global_position.y + 8.0, 0.15)
+			var arrow_id_fade := arrow.get_instance_id()
+			fade.finished.connect(func() -> void:
+				var a2: Control = instance_from_id(arrow_id_fade) as Control
+				if is_instance_valid(a2):
+					a2.queue_free()
+			)
 
 
 func _animate_slot_lift(slot: TextureButton, frame: PanelContainer, lifted: bool) -> void:
@@ -922,9 +955,23 @@ func _animate_slot_lift(slot: TextureButton, frame: PanelContainer, lifted: bool
 		tween.parallel().tween_property(slot, "modulate", target_modulate, ARMED_SNAP_DURATION)
 		slot.z_index = 0
 		_ensure_global_arrow(frame, false)
+	var slot_id_lift := slot.get_instance_id()
+	var tween_id_lift := tween.get_instance_id()
+	var meta_key_lift := meta_key
 	tween.finished.connect(func() -> void:
-		if slot.has_meta(meta_key) and slot.get_meta(meta_key) == tween:
-			slot.remove_meta(meta_key)
+		var s: Control = instance_from_id(slot_id_lift) as Control
+		if not is_instance_valid(s):
+			return
+		if not s.has_meta(meta_key_lift):
+			return
+		var cur: Variant = s.get_meta(meta_key_lift)
+		if cur == null or not is_instance_valid(cur as Object):
+			s.remove_meta(meta_key_lift)
+			return
+		var cur_id := (cur as Object).get_instance_id()
+		if cur_id != tween_id_lift:
+			return
+		s.remove_meta(meta_key_lift)
 	)
 
 
@@ -1009,7 +1056,11 @@ func _on_inventory_icon_gui_input(event: InputEvent, slot_index: int) -> void:
 			else:
 				_apply_drag_preview(slot, frame, false, false)
 		elif delta > 20.0:
-			_apply_drag_preview(slot, frame, false, true)
+			var is_frozen_defense_preview: bool = _view_model != null and _view_model.is_frozen() and GamePowerCatalog.get_counters_for_debuff("PLAYER_FROZEN").has(power.type)
+			if is_frozen_defense_preview:
+				_apply_drag_preview(slot, frame, false, false)
+			else:
+				_apply_drag_preview(slot, frame, false, true)
 		else:
 			_apply_drag_preview(slot, frame, false, false)
 			slot.position.y = ARMED_LIFT_Y + clamped
@@ -1024,6 +1075,11 @@ func _on_inventory_icon_gui_input(event: InputEvent, slot_index: int) -> void:
 			await (Engine.get_main_loop() as SceneTree).create_timer(0.3).timeout
 			_view_model.confirm_armed_global_power()
 		elif delta > GLOBAL_SWIPE_THRESHOLD_PX:
+			var is_frozen_defense_discard: bool = _view_model != null and _view_model.is_frozen() and GamePowerCatalog.get_counters_for_debuff("PLAYER_FROZEN").has(power.type)
+			if is_frozen_defense_discard:
+				_snap_back_slot(slot)
+				_dragging_slot_index = -1
+				return
 			_dragging_slot_index = -1
 			_animate_discard_slot(slot)
 			await (Engine.get_main_loop() as SceneTree).create_timer(0.3).timeout
@@ -1098,9 +1154,21 @@ func _snap_back_slot(slot: TextureButton) -> void:
 		if fs != null:
 			tween.parallel().tween_property(fs, "border_color", Color.WHITE, 0.16)
 			tween.parallel().tween_property(fs, "shadow_size", 4, 0.22)
+	var slot_id_drag := slot.get_instance_id()
+	var tween_id_drag := tween.get_instance_id()
 	tween.finished.connect(func() -> void:
-		if slot.has_meta("drag_tween") and slot.get_meta("drag_tween") == tween:
-			slot.remove_meta("drag_tween")
+		var s: Control = instance_from_id(slot_id_drag) as Control
+		if not is_instance_valid(s):
+			return
+		if not s.has_meta("drag_tween"):
+			return
+		var cur: Variant = s.get_meta("drag_tween")
+		if cur == null or not is_instance_valid(cur as Object):
+			s.remove_meta("drag_tween")
+			return
+		if (cur as Object).get_instance_id() != tween_id_drag:
+			return
+		s.remove_meta("drag_tween")
 	)
 
 
@@ -1123,14 +1191,21 @@ func _animate_launch_slot(slot: TextureButton) -> void:
 	tween.parallel().tween_property(slot, "rotation", deg_to_rad(8), 0.35)
 	tween.parallel().tween_property(slot, "modulate:a", 0.0, 0.35)
 	slot.z_index = 50
+	var slot_id_launch := slot.get_instance_id()
+	var tween_id_launch := tween.get_instance_id()
 	tween.finished.connect(func() -> void:
-		if slot.has_meta("exit_tween") and slot.get_meta("exit_tween") == tween:
-			slot.remove_meta("exit_tween")
-		slot.position.y = 0
-		slot.scale = Vector2.ONE
-		slot.rotation = 0
-		slot.modulate = Color.WHITE
-		slot.z_index = 0
+		var s: Control = instance_from_id(slot_id_launch) as Control
+		if not is_instance_valid(s):
+			return
+		if s.has_meta("exit_tween"):
+			var cur: Variant = s.get_meta("exit_tween")
+			if cur != null and is_instance_valid(cur as Object) and (cur as Object).get_instance_id() == tween_id_launch:
+				s.remove_meta("exit_tween")
+		(s as TextureButton).position.y = 0
+		(s as TextureButton).scale = Vector2.ONE
+		(s as TextureButton).rotation = 0
+		(s as TextureButton).modulate = Color.WHITE
+		s.z_index = 0
 	)
 
 
@@ -1153,14 +1228,21 @@ func _animate_discard_slot(slot: TextureButton) -> void:
 	tween.parallel().tween_property(slot, "position:y", 80.0, 0.25)
 	tween.parallel().tween_property(slot, "rotation", deg_to_rad(20), 0.25)
 	tween.parallel().tween_property(slot, "modulate:a", 0.0, 0.25)
+	var slot_id_discard := slot.get_instance_id()
+	var tween_id_discard := tween.get_instance_id()
 	tween.finished.connect(func() -> void:
-		if slot.has_meta("exit_tween") and slot.get_meta("exit_tween") == tween:
-			slot.remove_meta("exit_tween")
-		slot.position.y = 0
-		slot.scale = Vector2.ONE
-		slot.rotation = 0
-		slot.modulate = Color.WHITE
-		slot.z_index = 0
+		var s: Control = instance_from_id(slot_id_discard) as Control
+		if not is_instance_valid(s):
+			return
+		if s.has_meta("exit_tween"):
+			var cur: Variant = s.get_meta("exit_tween")
+			if cur != null and is_instance_valid(cur as Object) and (cur as Object).get_instance_id() == tween_id_discard:
+				s.remove_meta("exit_tween")
+		(s as TextureButton).position.y = 0
+		(s as TextureButton).scale = Vector2.ONE
+		(s as TextureButton).rotation = 0
+		(s as TextureButton).modulate = Color.WHITE
+		s.z_index = 0
 	)
 
 
@@ -1287,9 +1369,21 @@ func _pulse_dot(dot: Panel) -> void:
 	tween.tween_property(dot, "scale", Vector2.ONE, 0.22)
 	tween.parallel().tween_property(dot, "modulate", Color(1, 0.9, 0.4, 1), 0.16)
 	tween.parallel().tween_property(dot, "modulate", Color.WHITE, 0.22)
+	var dot_id_pulse := dot.get_instance_id()
+	var tween_id_pulse := tween.get_instance_id()
 	tween.finished.connect(func() -> void:
-		if dot.has_meta("dot_tween") and dot.get_meta("dot_tween") == tween:
-			dot.remove_meta("dot_tween")
+		var d: Control = instance_from_id(dot_id_pulse) as Control
+		if not is_instance_valid(d):
+			return
+		if not d.has_meta("dot_tween"):
+			return
+		var cur: Variant = d.get_meta("dot_tween")
+		if cur == null or not is_instance_valid(cur as Object):
+			d.remove_meta("dot_tween")
+			return
+		if (cur as Object).get_instance_id() != tween_id_pulse:
+			return
+		d.remove_meta("dot_tween")
 	)
 
 
@@ -1318,9 +1412,21 @@ func _fade_dot(dot: Panel) -> void:
 	tween.tween_property(dot, "scale", Vector2(0.85, 0.85), 0.18)
 	tween.tween_property(dot, "scale", Vector2.ONE, 0.12)
 	tween.parallel().tween_property(style, "bg_color", DOT_EMPTY_BG, 0.18)
+	var dot_id_fade := dot.get_instance_id()
+	var tween_id_fade := tween.get_instance_id()
 	tween.finished.connect(func() -> void:
-		if dot.has_meta("dot_tween") and dot.get_meta("dot_tween") == tween:
-			dot.remove_meta("dot_tween")
+		var d: Control = instance_from_id(dot_id_fade) as Control
+		if not is_instance_valid(d):
+			return
+		if not d.has_meta("dot_tween"):
+			return
+		var cur: Variant = d.get_meta("dot_tween")
+		if cur == null or not is_instance_valid(cur as Object):
+			d.remove_meta("dot_tween")
+			return
+		if (cur as Object).get_instance_id() != tween_id_fade:
+			return
+		d.remove_meta("dot_tween")
 	)
 
 
@@ -1339,8 +1445,9 @@ func _power_icon(power_type: String) -> Texture2D:
 	return texture
 
 
-func _rounded_icon_material() -> ShaderMaterial:
-	var cached = _icon_cache.get("__rounded_mat")
+func _rounded_icon_material(is_gray: bool = false) -> ShaderMaterial:
+	var key := "__rounded_gray" if is_gray else "__rounded_mat"
+	var cached = _icon_cache.get(key)
 
 	if cached is ShaderMaterial:
 		return cached
@@ -1349,6 +1456,7 @@ func _rounded_icon_material() -> ShaderMaterial:
 	shader.code = """
 shader_type canvas_item;
 uniform float radius = 12.0;
+uniform float desaturation : hint_range(0.0,1.0) = 0.0;
 void fragment() {
 	vec2 size = vec2(52.0, 52.0);
 	vec2 uv = UV;
@@ -1363,13 +1471,17 @@ void fragment() {
 	} else if (pos.x > size.x - r && pos.y > size.y - r) {
 		if (distance(pos, vec2(size.x - r, size.y - r)) > r) discard;
 	}
-	COLOR = texture(TEXTURE, uv);
+	vec4 c = texture(TEXTURE, uv);
+	float lum = dot(c.rgb, vec3(0.299, 0.587, 0.114));
+	c.rgb = mix(c.rgb, vec3(lum), desaturation);
+	COLOR = c;
 }
 """
 	var mat := ShaderMaterial.new()
 	mat.shader = shader
 	mat.set_shader_parameter("radius", 8.0)
-	_icon_cache["__rounded_mat"] = mat
+	mat.set_shader_parameter("desaturation", 1.0 if is_gray else 0.0)
+	_icon_cache[key] = mat
 
 	return mat
 
@@ -1840,14 +1952,6 @@ func _get_cell_extra(button: Button, layer_name: String) -> Control:
 	return layer
 
 
-func _on_notification_requested(message: String) -> void:
-	if message.is_empty():
-		return
-
-	status_label.text = message
-	status_label.show()
-
-
 func _on_word_found_feedback(cells: Array, _is_me: bool) -> void:
 	for cell_variant in cells:
 		if not cell_variant is Vector2i:
@@ -1957,16 +2061,6 @@ func _update_board_interactivity() -> void:
 		var cell_disabled := board_logical_disabled or cell_revealed
 
 		button.mouse_filter = Control.MOUSE_FILTER_IGNORE if cell_disabled else Control.MOUSE_FILTER_STOP
-
-
-func _on_error_changed(message: String) -> void:
-	if message.is_empty():
-		status_label.hide()
-		status_label.text = ""
-	else:
-		status_label.text = message
-		status_label.show()
-
 
 
 func _notification(what: int) -> void:

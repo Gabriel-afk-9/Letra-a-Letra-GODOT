@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="7"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="8"]
 [ext_resource type="Texture2D" uid="uid://e753xeshtu33" path="res://assets/images/icons/Play.png" id="9"]
+[ext_resource type="StyleBox" uid="uid://bsq0fdwer75jo" path="res://assets/styles/buttons/buton_blue_2d_default.tres" id="9_onqej"]
+[ext_resource type="StyleBox" uid="uid://c4fd5omju31t5" path="res://assets/styles/buttons/buton_blue_2d_pressed.tres" id="10_aky6k"]
 [ext_resource type="Texture2D" uid="uid://c6bifs6l41y1w" path="res://assets/images/icons/config-icon.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="15"]
 [ext_resource type="Texture2D" uid="uid://brrme07786k2s" path="res://assets/images/logo/lal.png" id="16"]
@@ -14,33 +16,39 @@
 
 [sub_resource type="StyleBoxFlat" id="LevelBadge"]
 bg_color = Color(0.184, 0.608, 0.847, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.118, 0.165, 0.267, 1)
-corner_radius_top_left = 22
-corner_radius_top_right = 22
-corner_radius_bottom_right = 22
-corner_radius_bottom_left = 22
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
 
 [sub_resource type="StyleBoxFlat" id="XpPillStyle"]
 bg_color = Color(1, 1, 1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.118, 0.165, 0.267, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_right = 18
 corner_radius_bottom_right = 18
+expand_margin_top = 3.0
+expand_margin_bottom = 3.0
 
 [sub_resource type="StyleBoxFlat" id="CoinPillStyle"]
 bg_color = Color(1, 1, 1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.118, 0.165, 0.267, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
@@ -48,6 +56,11 @@ corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="GreenPlus"]
 bg_color = Color(0.208, 0.78, 0.349, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 7
 corner_radius_top_right = 7
 corner_radius_bottom_right = 7
@@ -57,11 +70,11 @@ corner_radius_bottom_left = 7
 
 [sub_resource type="StyleBoxFlat" id="GemPillStyle"]
 bg_color = Color(1, 1, 1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.118, 0.165, 0.267, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
@@ -69,11 +82,11 @@ corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="BannerStyle"]
 bg_color = Color(0.105882354, 0.6156863, 0.87058824, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.118, 0.165, 0.267, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 18
 corner_radius_top_right = 18
 corner_radius_bottom_right = 18
@@ -86,7 +99,7 @@ border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
-border_color = Color(0.118, 0.165, 0.267, 1)
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -94,44 +107,40 @@ corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StatsPillStyle"]
 bg_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
-
-[sub_resource type="StyleBoxFlat" id="QuickOrange"]
-bg_color = Color(0.961, 0.51, 0.122, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.54, 0.29, 0.05, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
-[sub_resource type="StyleBoxFlat" id="JogarStyle"]
-bg_color = Color(0.353, 0.643, 0.902, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.118, 0.165, 0.267, 1)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
+[sub_resource type="StyleBoxFlat" id="QuickOrange"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="ModeBarFrame"]
-bg_color = Color(0.118, 0.165, 0.267, 1)
+bg_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dkdn4"]
-bg_color = Color(0.24313726, 0.57254905, 0.8392157, 1)
+bg_color = Color(0.105882354, 0.6156863, 0.87058824, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -146,10 +155,10 @@ corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jhbxb"]
 bg_color = Color(0.9607843, 0.50980395, 0.12156863, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="ModeCardStyle"]
 bg_color = Color(1, 1, 1, 1)
@@ -222,7 +231,7 @@ theme_override_constants/separation = -16
 
 [node name="LevelBadge" type="PanelContainer" parent="SafeMargin/RootVBox/ResourceBar/LevelGroup" unique_id=1145443856]
 z_index = 1
-custom_minimum_size = Vector2(44, 44)
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("LevelBadge")
@@ -232,7 +241,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "12"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -278,7 +287,7 @@ theme_override_constants/separation = 6
 alignment = 1
 
 [node name="CoinIcon" type="TextureRect" parent="SafeMargin/RootVBox/ResourceBar/CoinsPill/CoinsMargin/CoinsHBox" unique_id=718787995]
-custom_minimum_size = Vector2(22, 22)
+custom_minimum_size = Vector2(25, 25)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("17")
@@ -306,6 +315,7 @@ theme_override_styles/focus = SubResource("NavEmpty")
 text = "+"
 
 [node name="GemsPill" type="PanelContainer" parent="SafeMargin/RootVBox/ResourceBar" unique_id=1273082981]
+custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("GemPillStyle")
@@ -323,7 +333,7 @@ theme_override_constants/separation = 6
 alignment = 1
 
 [node name="GemIcon" type="TextureRect" parent="SafeMargin/RootVBox/ResourceBar/GemsPill/GemsMargin/GemsHBox" unique_id=1097817845]
-custom_minimum_size = Vector2(22, 22)
+custom_minimum_size = Vector2(25, 25)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("18")
@@ -334,7 +344,7 @@ stretch_mode = 5
 layout_mode = 2
 theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
 theme_override_font_sizes/font_size = 17
-text = "45"
+text = "999"
 vertical_alignment = 1
 
 [node name="GemsPlusBtn" type="Button" parent="SafeMargin/RootVBox/ResourceBar/GemsPill/GemsMargin/GemsHBox" unique_id=453498092]
@@ -394,7 +404,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="AvatarFrame" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox" unique_id=790813429]
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(75, 75)
 clip_contents = true
 layout_mode = 2
 size_flags_vertical = 4
@@ -422,8 +432,7 @@ size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 24
-text = "Jogador"
+theme_override_font_sizes/font_size = 18
 text_overrun_behavior = 3
 
 [node name="StatsPill" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo" unique_id=55535428]
@@ -458,7 +467,7 @@ horizontal_alignment = 1
 
 [node name="WinsCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=1194139755]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 0.7)
+theme_override_colors/font_color = Color(0, 0, 0, 0.9490196)
 theme_override_font_sizes/font_size = 11
 text = "VITÓRIAS"
 horizontal_alignment = 1
@@ -484,7 +493,7 @@ horizontal_alignment = 1
 
 [node name="StreakCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=1659997936]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 0.7)
+theme_override_colors/font_color = Color(0, 0, 0, 0.9490196)
 theme_override_font_sizes/font_size = 11
 text = "STREAK"
 horizontal_alignment = 1
@@ -510,7 +519,7 @@ horizontal_alignment = 1
 
 [node name="MatchesCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=887015844]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 0.7)
+theme_override_colors/font_color = Color(0, 0, 0, 0.9490196)
 theme_override_font_sizes/font_size = 11
 text = "PARTIDAS"
 horizontal_alignment = 1
@@ -527,6 +536,7 @@ theme_override_constants/separation = 8
 alignment = 1
 
 [node name="SettingsBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns" unique_id=1690250201]
+visible = false
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 theme_override_constants/icon_max_width = 28
@@ -541,13 +551,14 @@ expand_icon = true
 script = ExtResource("7")
 
 [node name="MenuBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns" unique_id=410807315]
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(65, 65)
 layout_mode = 2
 theme_override_styles/normal = SubResource("QuickOrange")
 theme_override_styles/pressed = SubResource("QuickOrange")
-theme_override_styles/hover = SubResource("QuickOrange")
 theme_override_styles/disabled = SubResource("QuickOrange")
 theme_override_styles/focus = SubResource("NavEmpty")
+icon_alignment = 1
+vertical_icon_alignment = 2
 script = ExtResource("7")
 
 [node name="MenuBars" type="CenterContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn" unique_id=362046750]
@@ -560,24 +571,29 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="BarsBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn/MenuBars" unique_id=2079813992]
+custom_minimum_size = Vector2(20, 0)
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
 [node name="Bar1" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn/MenuBars/BarsBox" unique_id=1937779952]
-custom_minimum_size = Vector2(22, 3)
+custom_minimum_size = Vector2(30, 5)
 layout_mode = 2
 mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="Bar2" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn/MenuBars/BarsBox" unique_id=528027822]
-custom_minimum_size = Vector2(22, 3)
+custom_minimum_size = Vector2(30, 5)
 layout_mode = 2
+size_flags_stretch_ratio = 0.0
 mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="Bar3" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn/MenuBars/BarsBox" unique_id=1703923316]
-custom_minimum_size = Vector2(22, 3)
+custom_minimum_size = Vector2(22, 5)
 layout_mode = 2
 mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="FeedbackLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox" unique_id=307040945]
 custom_minimum_size = Vector2(0, 22)
@@ -610,13 +626,12 @@ theme_override_constants/separation = 10
 alignment = 1
 
 [node name="PlayBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea" unique_id=1171412795]
-custom_minimum_size = Vector2(260, 68)
+custom_minimum_size = Vector2(220, 73)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_default_cursor_shape = 2
-theme_override_styles/normal = SubResource("JogarStyle")
-theme_override_styles/pressed = SubResource("JogarStyle")
-theme_override_styles/hover = SubResource("JogarStyle")
+theme_override_styles/normal = ExtResource("9_onqej")
+theme_override_styles/pressed = ExtResource("10_aky6k")
 theme_override_styles/disabled = ExtResource("5")
 theme_override_styles/focus = SubResource("NavEmpty")
 script = ExtResource("7")
@@ -630,7 +645,7 @@ grow_horizontal = 2
 grow_vertical = 2
 rotation = 0.0002296703
 mouse_filter = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 9
 alignment = 1
 
 [node name="PlayBtnIcon" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayBtn/PlayBox" unique_id=838800511]
@@ -698,6 +713,7 @@ stretch_mode = 5
 [node name="SegCasualLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Match/SegCasualBox" unique_id=1520682186]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 12
 text = "CASUAL"
 vertical_alignment = 1
@@ -731,6 +747,7 @@ stretch_mode = 5
 [node name="SegBotLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Bot/SegBotBox" unique_id=374058844]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 12
 text = "BOT"
 vertical_alignment = 1
@@ -771,6 +788,7 @@ polygon = PackedVector2Array(0, 14, 0, 4, 5, 8, 10, 0, 15, 8, 20, 4, 20, 14)
 [node name="SegRankLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Rank/SegRankBox" unique_id=494134014]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 12
 text = "RANK"
 vertical_alignment = 1

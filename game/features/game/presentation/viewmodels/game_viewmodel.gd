@@ -98,6 +98,10 @@ func _init(usecase: GameUseCase, navigation: NavigationService) -> void:
 	_usecase.trap_event.connect(_on_trap_event)
 	_usecase.my_effect_event.connect(_on_my_effect_event)
 	_usecase.spy_position_changed.connect(_on_spy_position_changed)
+	if _usecase.has_signal("turn_passed"):
+		_usecase.turn_passed.connect(_on_turn_passed)
+	if _usecase.has_signal("my_effects_snapshot"):
+		_usecase.my_effects_snapshot.connect(_on_my_effects_snapshot)
 	_usecase.game_over.connect(_on_game_over)
 	_usecase.connection_lost.connect(_on_connection_lost)
 	_usecase.action_rejected.connect(_on_action_rejected)
@@ -234,6 +238,11 @@ func clear_selected_power() -> void:
 
 
 func discard_power(power_id: String) -> void:
+	if _is_frozen:
+		for p in _my_inventory:
+			if p is GamePower and p.id == power_id and GamePowerCatalog.get_counters_for_debuff("PLAYER_FROZEN").has(p.type):
+				notification_requested.emit("Defesa não pode ser descartada congelado!")
+				return
 	_usecase.discard_power(power_id)
 
 
@@ -244,7 +253,9 @@ func is_inventory_full() -> bool:
 func discard_armed_power() -> void:
 	if _armed_power_id.is_empty():
 		return
-
+	if _is_frozen and GamePowerCatalog.get_counters_for_debuff("PLAYER_FROZEN").has(_armed_power_type):
+		notification_requested.emit("Defesa não pode ser descartada congelado!")
+		return
 	_usecase.discard_power(_armed_power_id)
 	clear_selected_power()
 
@@ -452,7 +463,7 @@ func _refresh_defense_pulse() -> void:
 			for p in _my_inventory:
 				if p is GamePower and counters.has(p.type):
 					new_ids.append(p.id)
-		if _is_blinded:
+		elif _is_blinded:
 			var counters_blind: Array = GamePowerCatalog.get_counters_for_debuff("PLAYER_BLINDED")
 			for p in _my_inventory:
 				if p is GamePower and counters_blind.has(p.type):
@@ -630,6 +641,8 @@ func _on_turn_changed(current_turn_player_id: String, turn_ends_at: String, is_m
 
 	if current_turn_player_id != _last_turn_player_id:
 		_apply_turn_effect_decrement()
+	elif not is_my_turn and (_is_frozen or _is_blinded or _is_immune):
+		_apply_turn_effect_decrement()
 
 	_last_turn_player_id = current_turn_player_id
 	_is_my_turn = is_my_turn
@@ -736,6 +749,60 @@ func _apply_turn_effect_decrement() -> void:
 		changed = true
 
 	if changed:
+		effect_state_changed.emit()
+		_refresh_defense_pulse()
+
+
+func _on_turn_passed() -> void:
+	if _is_game_over:
+		return
+	AppLogger.debug("GameViewModel: TURN_PASSED decrement freeze=%d blind=%d immune=%d" % [_freeze_turns_left, _blind_turns_left, _immunity_turns_left])
+	_apply_turn_effect_decrement()
+
+
+func _on_my_effects_snapshot(is_frozen: bool, is_blinded: bool, is_immune: bool, freeze_duration: int, blind_duration: int, immune_duration: int) -> void:
+	var changed := false
+	if is_frozen != _is_frozen:
+		_is_frozen = is_frozen
+		if not is_frozen:
+			_freeze_turns_left = 0
+		else:
+			if freeze_duration != -1:
+				_freeze_turns_left = freeze_duration
+			elif _freeze_turns_left <= 0:
+				_freeze_turns_left = FREEZE_TURNS_DEFAULT
+		changed = true
+	elif is_frozen and freeze_duration != -1 and freeze_duration != _freeze_turns_left:
+		_freeze_turns_left = freeze_duration
+		changed = true
+	if is_blinded != _is_blinded:
+		_is_blinded = is_blinded
+		if not is_blinded:
+			_blind_turns_left = 0
+		else:
+			if blind_duration != -1:
+				_blind_turns_left = blind_duration
+			elif _blind_turns_left <= 0:
+				_blind_turns_left = BLIND_TURNS_DEFAULT
+		changed = true
+	elif is_blinded and blind_duration != -1 and blind_duration != _blind_turns_left:
+		_blind_turns_left = blind_duration
+		changed = true
+	if is_immune != _is_immune:
+		_is_immune = is_immune
+		if not is_immune:
+			_immunity_turns_left = 0
+		else:
+			if immune_duration != -1:
+				_immunity_turns_left = immune_duration
+			elif _immunity_turns_left <= 0:
+				_immunity_turns_left = IMMUNITY_TURNS_DEFAULT
+		changed = true
+	elif is_immune and immune_duration != -1 and immune_duration != _immunity_turns_left:
+		_immunity_turns_left = immune_duration
+		changed = true
+	if changed:
+		AppLogger.debug("GameViewModel: snapshot sync frozen=%s blind=%s immune=%s freeze_left=%d" % [str(_is_frozen), str(_is_blinded), str(_is_immune), _freeze_turns_left])
 		effect_state_changed.emit()
 		_refresh_defense_pulse()
 

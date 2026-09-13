@@ -23,15 +23,20 @@ content_margin_top = 12.0
 content_margin_right = 4.0
 content_margin_bottom = 12.0
 bg_color = Color(0.08, 0.08, 0.08, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
 border_color = Color(0.25, 0.25, 0.25, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+corner_detail = 15
+expand_margin_left = 9.0
+expand_margin_top = 5.0
+expand_margin_right = 9.0
+expand_margin_bottom = 5.0
 shadow_color = Color(0, 0, 0, 0)
 
 [node name="GameScreen" type="Control" unique_id=1142999134]
@@ -191,13 +196,6 @@ layout_mode = 2
 [node name="BoardGrid" type="GridContainer" parent="MarginContainer/MainLayout" unique_id=1938968061]
 layout_mode = 2
 
-[node name="StatusLabel" type="Label" parent="MarginContainer/MainLayout" unique_id=2005904587]
-visible = false
-custom_minimum_size = Vector2(0, 18)
-layout_mode = 2
-horizontal_alignment = 1
-autowrap_mode = 3
-
 [node name="InventoryPanel" type="PanelContainer" parent="MarginContainer/MainLayout" unique_id=1784113057]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -205,7 +203,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_inv_panel")
 
 [node name="InventoryContainer" type="HBoxContainer" parent="MarginContainer/MainLayout/InventoryPanel" unique_id=1204559819]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 9
 alignment = 1
 
 [node name="InventorySlot1" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=999503917]
