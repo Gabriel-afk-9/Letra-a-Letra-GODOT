@@ -8,8 +8,34 @@ static func from_response_body(body: Dictionary) -> User:
 	if not user_variant is Dictionary:
 		return null
 
-	var user_data: Dictionary = user_variant
+	return from_dictionary(user_variant)
 
+
+static func users_page_from_body(body: Dictionary) -> Dictionary:
+	var data_variant = body.get("data", {})
+	if not data_variant is Dictionary:
+		return {}
+	var data: Dictionary = data_variant
+	if data.is_empty():
+		return {}
+	var content_variant = data.get("content", [])
+	var content: Array = content_variant if content_variant is Array else []
+	var users: Array = []
+	for item_variant in content:
+		if not item_variant is Dictionary:
+			continue
+		var user := from_dictionary(item_variant)
+		if user != null and not user.id.is_empty():
+			users.append(user)
+	return {
+		"users": users,
+		"page": int(data.get("page", 0)),
+		"total_pages": int(data.get("totalPages", 1)),
+		"total_elements": int(data.get("totalElements", 0)),
+	}
+
+
+static func from_dictionary(user_data: Dictionary) -> User:
 	if user_data.is_empty():
 		return null
 

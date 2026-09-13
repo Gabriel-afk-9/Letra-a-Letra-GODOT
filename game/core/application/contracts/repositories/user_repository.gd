@@ -9,3 +9,33 @@ func fetch_current_user(
 	assert(false, "Must be implemented.")
 
 	return null
+
+
+func find_by_username(
+	username: String
+) -> User:
+
+	assert(false, "Must be implemented.")
+
+	return null
+
+
+func fetch_users(
+	page: int,
+	size: int
+) -> Dictionary:
+
+	assert(false, "Must be implemented.")
+
+	return {}
+
+
+func search_users(
+	username: String,
+	page: int,
+	size: int
+) -> Dictionary:
+
+	assert(false, "Must be implemented.")
+
+	return {}

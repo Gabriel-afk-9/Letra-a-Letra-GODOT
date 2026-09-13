@@ -58,6 +58,19 @@ func http_delete(
 	)
 
 
+func http_patch(
+	endpoint: String,
+	body: Dictionary,
+	access_token: String = ""
+) -> HttpResponse:
+	return await _request(
+		HTTPClient.METHOD_PATCH,
+		endpoint,
+		body,
+		access_token
+	)
+
+
 func _request(
 	method: HTTPClient.Method,
 	endpoint: String,

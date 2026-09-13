@@ -1266,12 +1266,42 @@
         }
       }
     },
-    "/friend/accept": {
+    "/friend/cancel": {
       "patch": {
         "tags": [
           "Friend"
         ],
         "operationId": "handle_36",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelFriendRequestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friend/accept": {
+      "patch": {
+        "tags": [
+          "Friend"
+        ],
+        "operationId": "handle_37",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1301,7 +1331,7 @@
         "tags": [
           "Cosmetics"
         ],
-        "operationId": "handle_37",
+        "operationId": "handle_38",
         "parameters": [
           {
             "name": "cosmeticId",
@@ -1332,7 +1362,7 @@
         "tags": [
           "Cosmetics"
         ],
-        "operationId": "handle_38",
+        "operationId": "handle_39",
         "parameters": [
           {
             "name": "cosmeticId",
@@ -1363,7 +1393,7 @@
         "tags": [
           "Ticket Admin"
         ],
-        "operationId": "handle_39",
+        "operationId": "handle_40",
         "parameters": [
           {
             "name": "ticketId",
@@ -1403,7 +1433,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_40",
+        "operationId": "handle_41",
         "parameters": [
           {
             "name": "token",
@@ -1443,7 +1473,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_41",
+        "operationId": "handle_42",
         "parameters": [
           {
             "name": "userId",
@@ -1482,7 +1512,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_42",
+        "operationId": "handle_43",
         "parameters": [
           {
             "name": "username",
@@ -1492,6 +1522,14 @@
               "type": "string",
               "minLength": 1
             }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
           }
         ],
         "responses": {
@@ -1500,7 +1538,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponseFindUserByUsernameResponse"
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseUserResponse"
                 }
               }
             }
@@ -1513,7 +1551,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_43",
+        "operationId": "handle_44",
         "parameters": [
           {
             "name": "pageable",
@@ -1543,7 +1581,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_44",
+        "operationId": "handle_45",
         "responses": {
           "200": {
             "description": "OK",
@@ -1563,7 +1601,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_45",
+        "operationId": "handle_46",
         "responses": {
           "200": {
             "description": "OK",
@@ -1583,7 +1621,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_46",
+        "operationId": "handle_47",
         "parameters": [
           {
             "name": "pageable",
@@ -1613,7 +1651,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_47",
+        "operationId": "handle_48",
         "parameters": [
           {
             "name": "transactionId",
@@ -1644,7 +1682,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_48",
+        "operationId": "handle_49",
         "parameters": [
           {
             "name": "userId",
@@ -1683,7 +1721,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_49",
+        "operationId": "handle_50",
         "parameters": [
           {
             "name": "username",
@@ -1721,7 +1759,7 @@
         "tags": [
           "Ticket"
         ],
-        "operationId": "handle_50",
+        "operationId": "handle_51",
         "parameters": [
           {
             "name": "ticketId",
@@ -1752,7 +1790,7 @@
         "tags": [
           "Ticket"
         ],
-        "operationId": "handle_51",
+        "operationId": "handle_52",
         "parameters": [
           {
             "name": "pageable",
@@ -1782,7 +1820,7 @@
         "tags": [
           "Shop"
         ],
-        "operationId": "handle_52",
+        "operationId": "handle_53",
         "responses": {
           "200": {
             "description": "OK",
@@ -1802,7 +1840,7 @@
         "tags": [
           "Offer"
         ],
-        "operationId": "handle_53",
+        "operationId": "handle_54",
         "parameters": [
           {
             "name": "offerId",
@@ -1831,7 +1869,7 @@
         "tags": [
           "Offer"
         ],
-        "operationId": "handle_54",
+        "operationId": "handle_55",
         "parameters": [
           {
             "name": "offerId",
@@ -1862,7 +1900,7 @@
         "tags": [
           "Level"
         ],
-        "operationId": "handle_55",
+        "operationId": "handle_56",
         "parameters": [
           {
             "name": "value",
@@ -1893,7 +1931,7 @@
         "tags": [
           "Game"
         ],
-        "operationId": "handle_56",
+        "operationId": "handle_57",
         "parameters": [
           {
             "name": "pageable",
@@ -1984,7 +2022,7 @@
         "tags": [
           "Game"
         ],
-        "operationId": "handle_57",
+        "operationId": "handle_58",
         "parameters": [
           {
             "name": "pageable",
@@ -2014,7 +2052,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_58",
+        "operationId": "handle_59",
         "parameters": [
           {
             "name": "pageable",
@@ -2044,7 +2082,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_59",
+        "operationId": "handle_60",
         "responses": {
           "200": {
             "description": "OK",
@@ -2059,12 +2097,32 @@
         }
       }
     },
+    "/friend/pending/sent": {
+      "get": {
+        "tags": [
+          "Friend"
+        ],
+        "operationId": "handle_61",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseGetSentPendingRequestsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/cosmetic/search": {
       "get": {
         "tags": [
           "Cosmetics"
         ],
-        "operationId": "handle_60",
+        "operationId": "handle_62",
         "parameters": [
           {
             "name": "search",
@@ -2102,7 +2160,7 @@
         "tags": [
           "Cosmetics"
         ],
-        "operationId": "handle_61",
+        "operationId": "handle_63",
         "parameters": [
           {
             "name": "name",
@@ -2133,7 +2191,7 @@
         "tags": [
           "Ticket Admin"
         ],
-        "operationId": "handle_62",
+        "operationId": "handle_64",
         "parameters": [
           {
             "name": "status",
@@ -2198,7 +2256,7 @@
         "tags": [
           "Ticket Admin"
         ],
-        "operationId": "handle_63",
+        "operationId": "handle_65",
         "parameters": [
           {
             "name": "username",
@@ -2236,7 +2294,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_64",
+        "operationId": "handle_66",
         "responses": {
           "200": {
             "description": "OK",
@@ -2516,7 +2574,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_65",
+        "operationId": "handle_67",
         "parameters": [
           {
             "name": "email",
@@ -2547,7 +2605,7 @@
         "tags": [
           "Audit"
         ],
-        "operationId": "handle_66",
+        "operationId": "handle_68",
         "parameters": [
           {
             "name": "targetUserId",
@@ -2748,7 +2806,7 @@
         "tags": [
           "Audit"
         ],
-        "operationId": "handle_67",
+        "operationId": "handle_69",
         "parameters": [
           {
             "name": "userId",
@@ -2858,7 +2916,7 @@
         "tags": [
           "Audit"
         ],
-        "operationId": "handle_68",
+        "operationId": "handle_70",
         "parameters": [
           {
             "name": "type",
@@ -2943,7 +3001,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_69",
+        "operationId": "handle_71",
         "parameters": [
           {
             "name": "userId",
@@ -3964,6 +4022,59 @@
           "friendId"
         ]
       },
+      "BanInfoResponse": {
+        "type": "object",
+        "properties": {
+          "banned": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "PERMANENT",
+              "TEMPORARY"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FriendProfileResponse": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "inGame": {
+            "type": "boolean"
+          },
+          "currentGameId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/UserStats"
+          },
+          "banInfo": {
+            "$ref": "#/components/schemas/BanInfoResponse"
+          },
+          "equipped": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryItemResponse"
+            }
+          }
+        }
+      },
       "FriendResponse": {
         "type": "object",
         "properties": {
@@ -3974,6 +4085,17 @@
           "userId2": {
             "type": "string",
             "format": "uuid"
+          },
+          "friendId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "SENT",
+              "RECEIVED"
+            ]
           },
           "status": {
             "type": "string",
@@ -3986,6 +4108,36 @@
           "requestDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/FriendProfileResponse"
+          }
+        }
+      },
+      "InventoryItemResponse": {
+        "type": "object",
+        "properties": {
+          "cosmeticId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "EMOTE",
+              "FRAME"
+            ]
+          },
+          "equipped": {
+            "type": "boolean"
+          },
+          "assetPath": {
+            "type": "string"
           }
         }
       },
@@ -4005,6 +4157,35 @@
           },
           "data": {
             "$ref": "#/components/schemas/SendFriendRequestResponse"
+          }
+        }
+      },
+      "UserStats": {
+        "type": "object",
+        "properties": {
+          "totalMatches": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalWins": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "winStreak": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "experience": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rankingPoints": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -4300,30 +4481,6 @@
           }
         }
       },
-      "InventoryItemResponse": {
-        "type": "object",
-        "properties": {
-          "cosmeticId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "AVATAR",
-              "BANNER",
-              "EMOTE",
-              "FRAME"
-            ]
-          },
-          "equipped": {
-            "type": "boolean"
-          }
-        }
-      },
       "SuccessResponseChangeCosmeticResponse": {
         "type": "object",
         "properties": {
@@ -4386,6 +4543,18 @@
         ]
       },
       "RejectFriendRequestRequest": {
+        "type": "object",
+        "properties": {
+          "friendId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "friendId"
+        ]
+      },
+      "CancelFriendRequestRequest": {
         "type": "object",
         "properties": {
           "friendId": {
@@ -4505,28 +4674,6 @@
           }
         }
       },
-      "BanInfoResponse": {
-        "type": "object",
-        "properties": {
-          "banned": {
-            "type": "boolean"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "PERMANENT",
-              "TEMPORARY"
-            ]
-          },
-          "reason": {
-            "type": "string"
-          },
-          "expiresAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
       "PageResponseUserResponse": {
         "type": "object",
         "properties": {
@@ -4601,35 +4748,6 @@
           }
         }
       },
-      "UserStats": {
-        "type": "object",
-        "properties": {
-          "totalMatches": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalWins": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "winStreak": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "level": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "experience": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "rankingPoints": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "WalletResponse": {
         "type": "object",
         "properties": {
@@ -4684,25 +4802,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/PageResponseInventoryItemResponse"
-          }
-        }
-      },
-      "FindUserByUsernameResponse": {
-        "type": "object",
-        "properties": {
-          "user": {
-            "$ref": "#/components/schemas/UserResponse"
-          }
-        }
-      },
-      "SuccessResponseFindUserByUsernameResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/FindUserByUsernameResponse"
           }
         }
       },
@@ -5172,6 +5271,9 @@
           "unlockedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "assetPath": {
+            "type": "string"
           }
         }
       },
@@ -5378,6 +5480,28 @@
           },
           "data": {
             "$ref": "#/components/schemas/GetFriendPendingRequestsResponse"
+          }
+        }
+      },
+      "GetSentPendingRequestsResponse": {
+        "type": "object",
+        "properties": {
+          "requests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FriendResponse"
+            }
+          }
+        }
+      },
+      "SuccessResponseGetSentPendingRequestsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetSentPendingRequestsResponse"
           }
         }
       },
