@@ -6,8 +6,7 @@
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="7"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="8"]
 [ext_resource type="Texture2D" uid="uid://e753xeshtu33" path="res://assets/images/icons/Play.png" id="9"]
-[ext_resource type="StyleBox" uid="uid://bsq0fdwer75jo" path="res://assets/styles/buttons/buton_blue_2d_default.tres" id="9_onqej"]
-[ext_resource type="StyleBox" uid="uid://c4fd5omju31t5" path="res://assets/styles/buttons/buton_blue_2d_pressed.tres" id="10_aky6k"]
+[ext_resource type="StyleBox" uid="uid://b13v067ao1u61" path="res://assets/styles/buttons/blue_button_default.tres" id="9_onqej"]
 [ext_resource type="Texture2D" uid="uid://c6bifs6l41y1w" path="res://assets/images/icons/config-icon.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="15"]
 [ext_resource type="Texture2D" uid="uid://brrme07786k2s" path="res://assets/images/logo/lal.png" id="16"]
@@ -631,9 +630,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 mouse_default_cursor_shape = 2
 theme_override_styles/normal = ExtResource("9_onqej")
-theme_override_styles/pressed = ExtResource("10_aky6k")
+theme_override_styles/pressed = ExtResource("9_onqej")
 theme_override_styles/disabled = ExtResource("5")
-theme_override_styles/focus = SubResource("NavEmpty")
 script = ExtResource("7")
 
 [node name="PlayBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayBtn" unique_id=1809348918]
