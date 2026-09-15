@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://c8uq2vg1oy3x0"]
+[gd_scene format=3 uid="uid://binu0bhtinee2"]
 
 [ext_resource type="Script" uid="uid://c3vo6bqteo2d3" path="res://features/register/presentation/views/register_popup.gd" id="1_register_popup"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="2_error"]
@@ -33,6 +33,7 @@ shadow_size = 8
 shadow_offset = Vector2(0, 4)
 
 [node name="RegisterPopup" type="Control" unique_id=1652008973]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

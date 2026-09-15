@@ -111,5 +111,5 @@ layout_mode = 2
 [node name="LoginBtn" parent="ScrollContainer/CenterContainer/VBoxContainer" unique_id=1224227437 instance=ExtResource("5_r6ykx")]
 layout_mode = 2
 
-[connection signal="pressed" from="ScrollContainer/CenterContainer/VBoxContainer/LoginBtn" to="." method="_on_login_btn_pressed"]
 [connection signal="pressed" from="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer/SignUpButton" to="." method="_on_sign_up_button_pressed"]
+[connection signal="pressed" from="ScrollContainer/CenterContainer/VBoxContainer/LoginBtn" to="." method="_on_login_btn_pressed"]

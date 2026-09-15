@@ -6,12 +6,7 @@
 [ext_resource type="Script" uid="uid://038oeino2833" path="res://assets/scripts/custom_input.gd" id="4_password"]
 [ext_resource type="StyleBox" path="res://assets/styles/input/input_popup.tres" id="5_input"]
 [ext_resource type="StyleBox" uid="uid://brk4w17avnm65" path="res://assets/styles/buttons/orange_button_default.tres" id="6_btn"]
-<<<<<<< HEAD
-[ext_resource type="StyleBox" uid="uid://b74bkmcljqghy" path="res://assets/styles/buttons/orange_button_pressed.tres" id="7_btn_pressed"]
-[ext_resource type="StyleBox" uid="uid://cx140uekqx23y" path="res://assets/styles/buttons/orange_button_hover.tres" id="8_btn_hover"]
-=======
 [ext_resource type="StyleBox" uid="uid://b6nvfx34smt17" path="res://assets/styles/buttons/red_button_default.tres" id="7_pyjqn"]
->>>>>>> develop
 [ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="9_btn_disabled"]
 [ext_resource type="Texture2D" uid="uid://bl3n5igylccxd" path="res://assets/images/icons/eye_closed.png" id="10_eye"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="11_btn_fx"]
@@ -34,12 +29,8 @@ corner_radius_bottom_left = 16
 shadow_color = Color(0, 0, 0, 0.35)
 shadow_offset = Vector2(0, 4)
 
-<<<<<<< HEAD
-[node name="LoginPopup" type="Control" unique_id=448701944]
-visible = false
-=======
 [node name="LoginPopup" type="Control" unique_id=339812880]
->>>>>>> develop
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -48,11 +39,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_login_popup")
 
-<<<<<<< HEAD
-[node name="DimBackground" type="ColorRect" parent="." unique_id=1657663155]
-=======
 [node name="DimBackground" type="ColorRect" parent="." unique_id=1429769784]
->>>>>>> develop
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -61,11 +48,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.6)
 
-<<<<<<< HEAD
-[node name="Center" type="CenterContainer" parent="." unique_id=406963676]
-=======
 [node name="Center" type="CenterContainer" parent="." unique_id=525530417]
->>>>>>> develop
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -73,40 +56,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-<<<<<<< HEAD
-[node name="Card" type="PanelContainer" parent="Center" unique_id=1545452805]
-=======
 [node name="Card" type="PanelContainer" parent="Center" unique_id=1446789547]
->>>>>>> develop
 custom_minimum_size = Vector2(300, 0)
 clip_contents = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_login_card")
 
-<<<<<<< HEAD
-[node name="Margin" type="MarginContainer" parent="Center/Card" unique_id=1418434896]
-=======
 [node name="Margin" type="MarginContainer" parent="Center/Card" unique_id=274597634]
->>>>>>> develop
 layout_mode = 2
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 20
 
-<<<<<<< HEAD
-[node name="Form" type="VBoxContainer" parent="Center/Card/Margin" unique_id=395782099]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Title" type="Label" parent="Center/Card/Margin/Form" unique_id=857467451]
-=======
 [node name="Form" type="VBoxContainer" parent="Center/Card/Margin" unique_id=1910396067]
 layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="Center/Card/Margin/Form" unique_id=1573292283]
->>>>>>> develop
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -116,11 +83,7 @@ text = "ENTRAR COM EMAIL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-<<<<<<< HEAD
-[node name="ErrorLabel" type="Label" parent="Center/Card/Margin/Form" unique_id=214893924]
-=======
 [node name="ErrorLabel" type="Label" parent="Center/Card/Margin/Form" unique_id=220112875]
->>>>>>> develop
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -131,11 +94,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 script = ExtResource("2_error")
 
-<<<<<<< HEAD
-[node name="EmailInput" type="LineEdit" parent="Center/Card/Margin/Form" unique_id=1979163372]
-=======
 [node name="EmailInput" type="LineEdit" parent="Center/Card/Margin/Form" unique_id=198519748]
->>>>>>> develop
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -150,11 +109,7 @@ caret_blink = true
 script = ExtResource("3_email")
 force_lowercase = true
 
-<<<<<<< HEAD
-[node name="PasswordInput" type="LineEdit" parent="Center/Card/Margin/Form" unique_id=604605356]
-=======
 [node name="PasswordInput" type="LineEdit" parent="Center/Card/Margin/Form" unique_id=1144680682]
->>>>>>> develop
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -169,11 +124,7 @@ caret_blink = true
 secret = true
 script = ExtResource("4_password")
 
-<<<<<<< HEAD
-[node name="ToggleBtn" type="TextureButton" parent="Center/Card/Margin/Form/PasswordInput" unique_id=894673546]
-=======
 [node name="ToggleBtn" type="TextureButton" parent="Center/Card/Margin/Form/PasswordInput" unique_id=182841981]
->>>>>>> develop
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
@@ -190,34 +141,22 @@ texture_normal = ExtResource("10_eye")
 ignore_texture_size = true
 stretch_mode = 5
 
-<<<<<<< HEAD
-[node name="SwitchRow" type="HBoxContainer" parent="Center/Card/Margin/Form" unique_id=544108902]
-=======
 [node name="Separation1" type="Control" parent="Center/Card/Margin/Form" unique_id=1329620602]
 layout_mode = 2
 
 [node name="SwitchRow" type="HBoxContainer" parent="Center/Card/Margin/Form" unique_id=975457188]
->>>>>>> develop
 layout_mode = 2
 theme_override_constants/separation = 6
 alignment = 1
 
-<<<<<<< HEAD
-[node name="SwitchLabel" type="Label" parent="Center/Card/Margin/Form/SwitchRow" unique_id=1338216934]
-=======
 [node name="SwitchLabel" type="Label" parent="Center/Card/Margin/Form/SwitchRow" unique_id=145472012]
->>>>>>> develop
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 0.6)
 theme_override_font_sizes/font_size = 14
 text = "Não tem conta?"
 vertical_alignment = 1
 
-<<<<<<< HEAD
-[node name="SwitchLink" type="LinkButton" parent="Center/Card/Margin/Form/SwitchRow" unique_id=1318299924]
-=======
 [node name="SwitchLink" type="LinkButton" parent="Center/Card/Margin/Form/SwitchRow" unique_id=268416034]
->>>>>>> develop
 layout_mode = 2
 focus_mode = 0
 theme_override_colors/font_color = Color(1, 0.561, 0.224, 1)
@@ -226,13 +165,6 @@ theme_override_colors/font_hover_color = Color(1, 0.561, 0.224, 1)
 theme_override_font_sizes/font_size = 14
 text = "Cadastre-se"
 
-<<<<<<< HEAD
-[node name="ButtonRow" type="HBoxContainer" parent="Center/Card/Margin/Form" unique_id=1377684427]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="BackButton" type="Button" parent="Center/Card/Margin/Form/ButtonRow" unique_id=1884529091]
-=======
 [node name="Separation2" type="Control" parent="Center/Card/Margin/Form" unique_id=1564275894]
 layout_mode = 2
 
@@ -241,7 +173,6 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="BackButton" type="Button" parent="Center/Card/Margin/Form/ButtonRow" unique_id=128371736]
->>>>>>> develop
 custom_minimum_size = Vector2(0, 48)
 custom_maximum_size = Vector2(-1, 45)
 layout_mode = 2
@@ -256,11 +187,7 @@ theme_override_styles/disabled = ExtResource("9_btn_disabled")
 text = "  VOLTAR  "
 script = ExtResource("11_btn_fx")
 
-<<<<<<< HEAD
-[node name="SubmitButton" type="Button" parent="Center/Card/Margin/Form/ButtonRow" unique_id=631195419]
-=======
 [node name="SubmitButton" type="Button" parent="Center/Card/Margin/Form/ButtonRow" unique_id=611484572]
->>>>>>> develop
 custom_minimum_size = Vector2(0, 48)
 custom_maximum_size = Vector2(-1, 45)
 layout_mode = 2
