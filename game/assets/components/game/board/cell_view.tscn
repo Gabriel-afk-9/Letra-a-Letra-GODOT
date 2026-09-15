@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://322e99665bd3e"]
+
+[ext_resource type="Script" uid="uid://dg2auj0qv6qkv" path="res://assets/components/game/board/cell_view.gd" id="1"]
+
+[node name="CellView" type="Button" unique_id=9200001]
+custom_minimum_size = Vector2(30, 30)
+script = ExtResource("1")
+theme_override_font_sizes/font_size = 12
+
+[node name="InnerBorder" type="Control" parent="." unique_id=9200002]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+visible = false
+
+[node name="DiagonalSplit" type="Control" parent="." unique_id=9200003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+visible = false
+
+[node name="TrapIcon" type="Control" parent="." unique_id=9200004]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+visible = false
+
+[node name="BlockBar" type="Control" parent="." unique_id=9200005]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+visible = false

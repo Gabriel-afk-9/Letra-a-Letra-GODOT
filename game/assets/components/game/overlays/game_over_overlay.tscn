@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://3a03eab57f86"]
+
+[ext_resource type="Script" uid="uid://cxln26pxofcb4" path="res://assets/components/game/overlays/game_over_overlay.gd" id="1"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/green_button_default.tres" id="2_g"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/green_button_hover.tres" id="3_g"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/green_button_pressed.tres" id="4_g"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/red_button_default.tres" id="5_r"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/disabled_button.tres" id="6_d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.1, 0.1, 0.1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7, 0.7, 0.7, 1)
+
+[node name="GameOverOverlay" type="ColorRect" unique_id=9000020]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.85)
+visible = false
+z_index = 100
+script = ExtResource("1")
+
+[node name="Center" type="CenterContainer" parent="." unique_id=9000021]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center" unique_id=9000022]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel" unique_id=9000023]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin" unique_id=9000024]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TitleLabel" type="Label" parent="Center/Panel/Margin/VBox" unique_id=9000025]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="SubtitleLabel" type="Label" parent="Center/Panel/Margin/VBox" unique_id=9000026]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HomeButton" type="Button" parent="Center/Panel/Margin/VBox" unique_id=9000027]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_styles/normal = ExtResource("2_g")
+theme_override_styles/hover = ExtResource("3_g")
+theme_override_styles/pressed = ExtResource("4_g")
+theme_override_styles/disabled = ExtResource("6_d")
+text = "Voltar ao Início"

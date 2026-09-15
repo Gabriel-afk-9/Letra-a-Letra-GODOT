@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://6351b47d8d6ea"]
+
+[ext_resource type="Script" uid="uid://dcwxai285xl5" path="res://assets/components/game/words/word_pill.gd" id="1"]
+
+[node name="WordPill" type="PanelContainer" unique_id=9100001]
+script = ExtResource("1")
+
+[node name="Label" type="Label" parent="." unique_id=9100002]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+horizontal_alignment = 1

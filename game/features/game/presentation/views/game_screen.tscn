@@ -1,43 +1,15 @@
 [gd_scene format=3 uid="uid://baf1iwy43ll3o"]
 
 [ext_resource type="Script" uid="uid://ul113dm7j71v" path="res://features/game/presentation/views/game_screen.gd" id="1_1u5yy"]
-[ext_resource type="PackedScene" uid="uid://bntemtnyff4y2" path="res://assets/components/new/PlayerCard.tscn" id="2_1u5yy"]
 [ext_resource type="Texture2D" uid="uid://hb4b5dimdw5i" path="res://assets/images/backgrounds/vertical_clean.jpg" id="2_fiugi"]
 [ext_resource type="StyleBox" uid="uid://b6nvfx34smt17" path="res://assets/styles/buttons/red_button_default.tres" id="4_fiugi"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dot"]
-bg_color = Color(0.5, 0.5, 0.5, 0.6)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inv_panel"]
-content_margin_left = 4.0
-content_margin_top = 12.0
-content_margin_right = 4.0
-content_margin_bottom = 12.0
-bg_color = Color(0.08, 0.08, 0.08, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.25, 0.25, 0.25, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-corner_detail = 15
-expand_margin_left = 9.0
-expand_margin_top = 5.0
-expand_margin_right = 9.0
-expand_margin_bottom = 5.0
-shadow_color = Color(0, 0, 0, 0)
+[ext_resource type="PackedScene" uid="uid://3137f64a7ed1" path="res://assets/components/game/overlays/effect_overlay.tscn" id="5_overlay"]
+[ext_resource type="PackedScene" uid="uid://392bfbe95390" path="res://assets/components/game/overlays/blind_vignette.tscn" id="6_overlay"]
+[ext_resource type="PackedScene" uid="uid://2903eab57f86" path="res://assets/components/game/overlays/game_over_overlay.tscn" id="7_overlay"]
+[ext_resource type="PackedScene" uid="uid://5c931b964c808" path="res://assets/components/game/words/words_container_view.tscn" id="8_words"]
+[ext_resource type="PackedScene" uid="uid://5e6c14f5791a7" path="res://assets/components/game/board/board_view.tscn" id="9_board"]
+[ext_resource type="PackedScene" uid="uid://c4e8a1b2d6f94573e8a1" path="res://assets/components/game/inventory/inventory_panel.tscn" id="10_inv"]
+[ext_resource type="PackedScene" uid="uid://b8c7d6e5f4a3b2c1d0e9f8a7" path="res://assets/components/game/player/player_info_bar.tscn" id="11_player"]
 
 [node name="GameScreen" type="Control" unique_id=1142999134]
 layout_mode = 3
@@ -76,180 +48,27 @@ layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="TopBar" type="VBoxContainer" parent="MarginContainer/MainLayout" unique_id=2024784364]
-layout_mode = 2
+[node name="PlayerInfoBar" parent="MarginContainer/MainLayout" instance=ExtResource("11_player") unique_id=2024784364]
 
-[node name="CardsCenter" type="CenterContainer" parent="MarginContainer/MainLayout/TopBar" unique_id=1702989824]
-layout_mode = 2
+[node name="WordsContainerView" parent="MarginContainer/MainLayout" instance=ExtResource("8_words") unique_id=9100010]
 
-[node name="MyCardWrapper" type="Control" parent="MarginContainer/MainLayout/TopBar/CardsCenter" unique_id=2088274691]
-custom_minimum_size = Vector2(220, 70)
-layout_mode = 2
+[node name="BoardView" parent="MarginContainer/MainLayout" instance=ExtResource("9_board") unique_id=9200010]
 
-[node name="MyPlayerCard" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper" unique_id=1864201814 instance=ExtResource("2_1u5yy")]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="MyPowerDots" type="HBoxContainer" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper" unique_id=-182516675]
-layout_mode = 0
-offset_top = 50.0
-offset_right = 210.0
-offset_bottom = 66.0
-theme_override_constants/separation = 6
-alignment = 2
-
-[node name="Dot1" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=-1190188844]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
+[node name="BoardInventorySpacer" type="Control" parent="MarginContainer/MainLayout" unique_id=3421098765]
+custom_minimum_size = Vector2(0, 24)
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
+mouse_filter = 2
 
-[node name="Dot2" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=-575520833]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
-
-[node name="Dot3" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=1775362802]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
-
-[node name="Dot4" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=738907175]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
-
-[node name="Dot5" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/MyCardWrapper/MyPowerDots" unique_id=-1727857975]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
-
-[node name="OpponentCardWrapper" type="Control" parent="MarginContainer/MainLayout/TopBar/CardsCenter" unique_id=-795085055]
-custom_minimum_size = Vector2(220, 70)
-layout_mode = 2
-
-[node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper" unique_id=585961095 instance=ExtResource("2_1u5yy")]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="OpponentPowerDots" type="HBoxContainer" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper" unique_id=1198898847]
-layout_mode = 0
-offset_top = 50.0
-offset_right = 210.0
-offset_bottom = 66.0
-theme_override_constants/separation = 6
-alignment = 2
-
-[node name="Dot1" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=-1169063031]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
-
-[node name="Dot2" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=1953396278]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
-
-[node name="Dot3" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=188751706]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
-
-[node name="Dot4" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=1844588448]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
-
-[node name="Dot5" type="Panel" parent="MarginContainer/MainLayout/TopBar/CardsCenter/OpponentCardWrapper/OpponentPowerDots" unique_id=312299825]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_dot")
-
-[node name="TurnLabel" type="Label" parent="MarginContainer/MainLayout/TopBar" unique_id=1595885812]
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="WordsContainer" type="HFlowContainer" parent="MarginContainer/MainLayout" unique_id=380998444]
-layout_mode = 2
-
-[node name="BoardGrid" type="GridContainer" parent="MarginContainer/MainLayout" unique_id=1938968061]
-layout_mode = 2
-
-[node name="InventoryPanel" type="PanelContainer" parent="MarginContainer/MainLayout" unique_id=1784113057]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_inv_panel")
-
-[node name="InventoryContainer" type="HBoxContainer" parent="MarginContainer/MainLayout/InventoryPanel" unique_id=1204559819]
-layout_mode = 2
-theme_override_constants/separation = 9
-alignment = 1
-
-[node name="InventorySlot1" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=999503917]
-custom_minimum_size = Vector2(52, 52)
-layout_mode = 2
-
-[node name="Icon" type="TextureButton" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot1" unique_id=1613913038]
-layout_mode = 2
-stretch_mode = 5
-
-[node name="InventorySlot2" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=-1580476884]
-custom_minimum_size = Vector2(52, 52)
-layout_mode = 2
-
-[node name="Icon" type="TextureButton" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot2" unique_id=524205495]
-layout_mode = 2
-stretch_mode = 5
-
-[node name="InventorySlot3" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=-1801834279]
-custom_minimum_size = Vector2(52, 52)
-layout_mode = 2
-
-[node name="Icon" type="TextureButton" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot3" unique_id=-393139932]
-layout_mode = 2
-stretch_mode = 5
-
-[node name="InventorySlot4" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=-334932771]
-custom_minimum_size = Vector2(52, 52)
-layout_mode = 2
-
-[node name="Icon" type="TextureButton" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot4" unique_id=2056103993]
-layout_mode = 2
-stretch_mode = 5
-
-[node name="InventorySlot5" type="PanelContainer" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer" unique_id=1177332914]
-custom_minimum_size = Vector2(52, 52)
-layout_mode = 2
-
-[node name="Icon" type="TextureButton" parent="MarginContainer/MainLayout/InventoryPanel/InventoryContainer/InventorySlot5" unique_id=463358725]
-layout_mode = 2
-stretch_mode = 5
+[node name="InventoryPanel" parent="MarginContainer/MainLayout" instance=ExtResource("10_inv") unique_id=1784113057]
 
 [node name="BottomBar" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=1690820103]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
+
+[node name="EffectOverlay" parent="." instance=ExtResource("5_overlay") unique_id=9000010]
+[node name="BlindVignette" parent="." instance=ExtResource("6_overlay") unique_id=9000011]
+[node name="GameOverOverlay" parent="." instance=ExtResource("7_overlay") unique_id=9000020]
 
 [node name="TopBarLeaveButton" type="Button" parent="." unique_id=633011318]
 custom_minimum_size = Vector2(20, 16)

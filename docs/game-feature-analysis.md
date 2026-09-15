@@ -81,100 +81,98 @@ WS event → RemoteGameRepository._on_message_received()
 
 ---
 
-## 5. Estado Detalhado da Fase 5C
+## 5. Estado Detalhado da Fase 5C (pós-refatoração GameScreen → orquestrador)
+
+> **Refatoração concluída (Etapas 1–9):** `game/features/game/presentation/views/game_screen.gd` 2176→381 linhas, orquestrador puro. Lógica visual migrada para `assets/components/game/` editável em `.tscn`. `GameViewModel` e `GameFactory.bind()` **permaneceram inalterados** — contratos preservados. Testes atuais: **GUT 197/198 `1568/1569` asserts**, falha única pré-existente `test_inventory_screen.gd:34 [6] vs [7]` (já existia em `develop` antes da refatoração).
 
 | Item | Existe? | Onde | Conectado? | Notas |
 |------|---------|------|------------|-------|
-| **Inventário (modelo)** | ✅ | `GamePlayerState.inventory: Array[GamePower]` (size=5) | Sim | Array com `null` para slots vazios |
-| **5 slots (UI)** | ✅ | `game_screen.tscn`: `InventorySlot1..5` → `Icon` (TextureButton) | Sim | `ignore_texture_size=true`, `STRETCH_KEEP_ASPECT_CENTERED` |
-| **Ícones de poder** | ✅ | `PlayerCard.POWER_ICON_PATHS` (10 paths) + `_power_icon()` com cache | Sim | Carregamento `load()` sob demanda |
-| **Contagem de poderes** | ✅ | `_count_occupied()` usado em `_update_power_dots()` | Sim | Power Dots (TopBar) mostram quantidade |
-| **Power Dots** | ✅ | `MyPowerDots` / `OpponentPowerDots` (5 Panels cada) | Sim | Verde/branco = ocupado, cinza = vazio |
-| **Seleção de poder (armar)** | ✅ | `GameViewModel.on_power_clicked()` + `armed_power_changed` | Sim | Amarelo (`modulate = Color(1,1,0.2,1)`) = armado |
-| **clear_selected_power** | ✅ | `GameViewModel.clear_selected_power()` | Sim | Emite `selected_power_changed("")` + `armed_power_changed("")` |
-| **Uso de poder CELL** | ✅ | `on_cell_clicked()` → `use_power_on_cell()` + desarma | Sim | Payload WS: `{"type": power_type, "actionId": power_id, "position": {"x":x,"y":y}}` |
-| **Uso de poder GLOBAL** | ✅ | `on_power_clicked()` → `use_global_power()` + `_lock_action()` | Sim | `target_id` resolvido no UseCase (oponente se ofensivo, self se defensivo) |
-| **armed_power_id / armed_power_type** | ✅ | `GameViewModel` variáveis privadas | Sim | Expostos via `selected_power_id()` getter |
+| **Inventário (modelo)** | ✅ | `GamePlayerState.inventory: Array[GamePower]` (size=5) | Sim | Array com `null` para slots vazios; ordenação estável por `_power_seen_seq` agora em `InventoryPanel` (apresentação, não ViewModel) |
+| **5 slots (UI)** | ✅ | `assets/components/game/inventory/inventory_panel.tscn` → 5× `inventory_slot.tscn` (`PanelContainer 52` + `TextureButton Icon`) instanciado como `InventoryPanel` em `game_screen.tscn` (`id 10_inv`) | Sim | `InventoryPanel` detém `_power_seen_seq/_power_seq_counter`, `update_inventory(inventory,is_frozen)`, `set_armed()`, `set_defense_pulse()`, `flash_grant()`; `InventorySlot` detém `rounded_icon.gdshader`, `GlobalArrow ▲ top_level/global_position` bounce, drag `±40px` (`slot_drag_launch/discard`) |
+| **Ícones de poder** | ✅ | `PlayerCard.POWER_ICON_PATHS` (10 paths) + `InventorySlot._power_icon()` com `_icon_cache` + `rounded_icon.gdshader` (desaturation quando `is_frozen && !can_use_while_frozen`) | Sim | `load()` sob demanda; shader `radius 8` co-localizado em `inventory/` |
+| **Contagem de poderes** | ✅ | `PlayerInfoBar._count_occupied()` → `_update_power_dots()` | Sim | Power Dots agora em `PlayerInfoBar` (não mais em `GameScreen`) |
+| **Power Dots** | ✅ | `assets/components/game/player/player_info_bar.tscn`: `MyPowerDots` / `OpponentPowerDots` (5 `Panel 16×16` cada, `sep 6`) | Sim | `DOT_FILLED 1,1,1,0.95` / `DOT_EMPTY 0.5,0.5,0.5,0.6`, `pulse 1.45 0.16/0.22` / `fade 0.18/0.12` dentro de `PlayerInfoBar` |
+| **Seleção de poder (armar)** | ✅ | `GameViewModel.on_power_clicked()` / `select_power()` + `armed_power_changed` + `selected_power_changed` → `GameScreen._on_armed_power_changed/_on_selected_power_changed` → `InventoryPanel.set_armed(id,scope,is_frozen,is_blinded)` → `InventorySlot.set_armed()` + `GlobalArrow ▲` (`top_level`) se `SCOPE_GLOBAL` | Sim | Lift `scale ONE`, borda `WHITE 2px` ou `NEON_GREEN 3px` quando defesa (`UNFREEZE/IMMUNITY`/`LANTERN`), `shadow 4` |
+| **clear_selected_power** | ✅ | `GameViewModel.clear_selected_power()` | Sim | Emite `selected_power_changed("")` + `armed_power_changed("", "", "")` → `InventoryPanel` limpa destaque |
+| **Uso de poder CELL** | ✅ | `GameScreen._on_cell_pressed()` → `ViewModel.on_cell_clicked()` → `use_power_on_cell()` + desarma | Sim | `BoardView` emite `cell_pressed(Vector2i)`; `GameScreen` decide `shake` vs `on_cell_clicked`; `BoardView.set_board_pulse(true)` quando `SCOPE_CELL` armado |
+| **Uso de poder GLOBAL** | ✅ | `InventorySlot` drag `delta < -40` → `slot_drag_launch` → `GameScreen` → `ViewModel.confirm_armed_global_power()` → `use_global_power()` + `_lock_action(0.7s)` | Sim | `target_id` resolvido no UseCase (oponente se ofensivo, self se defensivo); anim `scale 1.18→1.5 / -120px / 0.3s` em `InventorySlot._animate_launch_slot()` |
+| **armed_power_id / armed_power_type** | ✅ | `GameViewModel` variáveis privadas | Sim | Expostos via `selected_power_id()`; `GameScreen` cache `_armed_scope/_my_inventory_cache` para `board_interactivity` sem consultar ViewModel desnecessariamente |
 | **Payload PLAYER_ACTION p/ poderes** | ✅ | `RemoteGameRepository._send_action()` | Sim | Wrapper `{"type":"PLAYER_ACTION","gameId":...,"action":{...}}` |
-| **DISCARD_POWER** | ✅ | `GameViewModel.discard_power()` → UseCase → Repository | Sim | WS message type `DISCARD_POWER` com `gameId` + `powerId` |
-| **Efeitos de poder** | 🟡 | `GameViewModel._on_my_effect_event()` mapeia 12 eventos | Parcial | `effect_state_changed` emitido, View **não conecta** |
-| **Notificações** | 🟡 | `GameViewModel.notification_requested` signal | Signal existe | View **não conecta** |
-| **trap_animation_requested** | ✅ | `GameViewModel.trap_animation_requested(x,y)` | Signal existe | View **não conecta** |
-| **game_ended** | ✅ | `GameViewModel.game_ended(is_winner, title, subtitle)` | Sim | View `_on_game_ended` → `_show_game_over_overlay()` |
-| **Overlay fim de jogo** | ✅ | `GameScreen._show_game_over_overlay()` | Sim | ColorRect(0.85) → PanelContainer(320×0, rounded 12, border) → MarginContainer(20) → VBox(sep=20) → Labels(autowrap WORD_SMART) + Button(SHRINK_CENTER) |
-| **Botão/fluxo sair fim de jogo** | ✅ | Button "Voltar ao Início" → `_navigate_home()` | Sim | Flag `_navigation_started` anti-duplo clique |
+| **DISCARD_POWER** | ✅ | `InventorySlot` drag `delta > +40` → `slot_drag_discard` → `GameScreen` → `ViewModel.discard_armed_power()` → UseCase → Repository | Sim | Bloqueado se `is_frozen && counters_for_debuff(PLAYER_FROZEN).has(type)`; anim `scale 0.3 / +80px / 0.3s` em `_animate_discard_slot()`; preview vermelho `#ff4757` vs verde `#2ecc71` |
+| **Efeitos de poder** | ✅ | `GameViewModel._on_my_effect_event()` mapeia 12 eventos → `effect_state_changed` → `GameScreen._on_effect_state_changed` → orquestra `EffectOverlay`/`BlindVignette` + `InventoryPanel.refresh_for_effect()` + `_refresh_all_cell_styles()` + `_update_board_interactivity()` | Sim | **Agora conectado** (antes não). `FREEZE 0.2,0.5,1,0.25` / `IMMUNITY 1,0.55,0.1,0.35` / `BLIND` via `BlindVignette`, `LANTERN flash 1,1,1,0.6 hold0.5` / `UNFREEZE flash 1,0.45,0.15 hold2.0` |
+| **Notificações** | 🟡 | `GameViewModel.notification_requested` signal | Signal existe | View **ainda não conecta** (fora do escopo da refatoração; toast/snackbar pendente) |
+| **trap_animation_requested** | ✅ | `GameViewModel.trap_animation_requested(x,y)` → `GameScreen._on_trap_animation_requested` → `_shake_cell + _pop_trap_cell` → `CellView.shake()/pop_trap()` | Sim | **Agora conectado** |
+| **game_ended** | ✅ | `GameViewModel.game_ended(is_winner, title, subtitle)` → `GameScreen._on_game_ended` → `GameOverOverlay.show_result()` | Sim | `GameOverOverlay` (`ColorRect 0.85 z100 + Panel 320 corner12 Margin20 VBox20 Title24 Subtitle16 Button200×50`) em `assets/components/game/overlays/game_over_overlay.tscn` |
+| **Overlay fim de jogo** | ✅ | `assets/components/game/overlays/game_over_overlay.tscn` (`id 7_overlay`, `uid://2903eab57f86`) + `game_over_overlay.gd` (`signal home_requested`) | Sim | Instanciado em `game_screen.tscn`; `home_requested → _navigate_home()` |
+| **Botão/fluxo sair fim de jogo** | ✅ | `TopBarLeaveButton` (`Button 20×16 max50`) + `GameOverOverlay` Button "Voltar ao Início" → `_navigate_home()` | Sim | Flag `_navigation_started` anti-duplo clique; `GameViewModel.go_to_home() → AppRoutes.SHELL` |
 
 ---
 
-## 6. Game Screen / Layout Atual (game_screen.tscn)
+## 6. Game Screen / Layout Atual (game_screen.tscn) — pós-refatoração (Etapa 9 concluída)
+
+> **GameScreen como orquestrador:** `game/features/game/presentation/views/game_screen.gd` 381 linhas (2176→381). Não contém `StyleBoxFlat.new()`/`Shader.new()` nem lógica visual de célula/slot/dot/pills. Responsabilidades: `setup()` + `GameFactory.bind()`, conexão de 15 sinais do ViewModel, `guard` em `_on_cell_pressed` (hidden/spy/blind/trap/block), `shake` vs `on_cell_clicked`, delegação para componentes, responsividade `board 90%` + `inventory 280-340`, ciclo `leave/navigate`. Contratos `GameViewModel` e `GameFactory.bind()` **inalterados** — ver §5C.
 
 ```
-GameScreen (Control, full-screen, script=game_screen.gd)
+GameScreen (Control, full-screen, script=game_screen.gd 381 linhas)
 ├── BackgroundGame (TextureRect, full-screen, stretch_mode=6)
 ├── MarginContainer (margins 12px)
-│   └── MainLayout (VBoxContainer, alignment=CENTER)
-│       ├── TopBar (VBoxContainer)
-│       │   └── CardsCenter (CenterContainer)
-│       │       ├── MyCardWrapper (Control, 250×80)
-│       │       │   ├── MyPlayerCard (PlayerCard instance)
-│       │       │   └── MyPowerDots (HBoxContainer, 5 Panels 10×10, sep=4, align=CENTER)
-│       │       └── OpponentCardWrapper (Control, 250×80)
-│       │           ├── OpponentPlayerCard (PlayerCard instance)
-│       │           └── OpponentPowerDots (HBoxContainer, 5 Panels 10×10, sep=4, align=CENTER)
-│       ├── TurnLabel (Label, h_align=CENTER)
-│       ├── WordsWrapper (PanelContainer, criado em runtime) — bg Color(0.1,0.1,0.1), rounded 8, margins 12, SIZE_SHRINK_CENTER
-│       │   └── WordsContainer (HFlowContainer) — alignment=CENTER setado em _ready()
-│       ├── BoardWrapper (PanelContainer, criado em runtime) — bg COLOR_WHITE, borda preta 4px, rounded 12, margins 8, SIZE_SHRINK_CENTER
-│       │   └── BoardGrid (GridContainer, 10 cols, h/v_sep=1)
-│       │       └── 100 Buttons criados em runtime (_build_board_buttons)
-│       ├── InventoryPanel (PanelContainer, StyleBoxFlat_inv_panel: bg #0000004D, rounded 12, margins 8)
-│       │   └── InventoryContainer (HBoxContainer, sep=6, align=CENTER)
-│       │       ├── InventorySlot1 (PanelContainer, 24×24, StyleBoxFlat_slot)
-│       │       │   └── Icon (TextureButton, stretch_mode=5)
-│       │       ├── InventorySlot2..5 (estrutura idêntica)
-│       └── BottomBar (HBoxContainer)
-           ├── LeaveButton (Button)
-           └── StatusLabel (Label)
+│   └── MainLayout (VBoxContainer, alignment=CENTER, sep 12)
+│       ├── PlayerInfoBar (instance 11_player) — assets/components/game/player/player_info_bar.tscn
+│       │   ├── CardsCenter (CenterContainer)
+│       │   │   ├── MyCardWrapper (Control 220×70) → MyPlayerCard (PlayerCard) + MyPowerDots (5× Panel 16×16 sep6)
+│       │   │   └── OpponentCardWrapper (Control 220×70) → OpponentPlayerCard + OpponentPowerDots
+│       │   └── TurnLabel (Label, center) — "Sua vez — %ds" / "Vez do oponente — %ds"
+│       ├── WordsContainerView (instance 8_words) — PanelContainer bg 0.1,0.1,0.1 corner8 border2 + HFlowContainer (WordPill)
+│       ├── BoardView (instance 9_board) — PanelContainer WHITE border4 corner12 + BoardGrid (GridContainer 10 cols h/v 1) → 100× CellView
+│       ├── BoardInventorySpacer (Control 0×24, SHRINK_CENTER, IGNORE) — estático no .tscn (antes criado em _ready)
+│       ├── InventoryPanel (instance 10_inv) — PanelContainer bg 0.08,0.08,0.08 corner15 + HBox sep9 → 5× InventorySlot (Panel 52 + Icon + GlobalArrow ▲ top_level)
+│       └── BottomBar (HBoxContainer, visible=false)
+├── EffectOverlay (instance 5_overlay, z50) — ColorRect freeze/immunity/lantern/unfreeze flash
+├── BlindVignette (instance 6_overlay, z51) — Control + TextureRect radial gradient
+├── GameOverOverlay (instance 7_overlay, z100) — ColorRect 0.85 + Panel 320 corner12
+└── TopBarLeaveButton (Button 20×16 max50, red_button_default.tres)
 ```
 
-### Elementos fixos na cena (.tscn):
-- Background, MarginContainer, MainLayout, TopBar, CardsCenter, Wrappers, PlayerCards, Power Dots, TurnLabel, WordsContainer, BoardGrid (container vazio), InventoryPanel+Container+5 Slots+Icons, BottomBar, LeaveButton, StatusLabel
+### Árvore de componentes (`assets/components/game/` — editáveis em .tscn)
 
-### Criados em runtime:
-- 100 Botões do tabuleiro (`_build_board_buttons`)
-- Pills das palavras (`_rebuild_words` → `PanelContainer` + `Label`)
-- Wrapper preto do WordsContainer (`_wrap_words_container` → PanelContainer bg Color(0.1,0.1,0.1), rounded 8, margins 12)
-- Wrapper branco do BoardGrid (`_wrap_board_grid` → PanelContainer bg COLOR_WHITE, borda preta 4px, rounded 12, margins 8)
-- Game Over overlay (`_show_game_over_overlay` → ColorRect + PanelContainer + MarginContainer + VBoxContainer + Labels + Button)
+```
+assets/components/game/
+├── board/
+│   ├── board_view.tscn/.gd (BoardView) — Grid 10×10, 100 CellView, apply_responsive(90% chrome 16+8+9 clamp 30-96 font cell*0.42), set_board_pulse, set_interactivity, play_word_pulse_sequence
+│   ├── cell_view.tscn/.gd (CellView extends Button 30×30) — apply_state 14 estados, inner_border/diagonal/trap/block_bar, shake/animate_reveal/pulse_word/pop_trap/break_block
+│   └── cell_diagonal.gdshader — diagonal split rounded 5
+├── inventory/
+│   ├── inventory_panel.tscn/.gd (InventoryPanel) — 5 slots, _power_seen_seq, update_inventory/set_armed/set_defense_pulse/flash_grant/apply_responsive/refresh_for_effect/get_power_id_at
+│   ├── inventory_slot.tscn/.gd (InventorySlot) — Icon, rounded_icon.gdshader desaturation, drag ±40px previews #2ecc71/#ff4757, launch/discard, GlobalArrow ▲ top_level bounce
+│   └── rounded_icon.gdshader — corner 8 desaturation
+├── words/
+│   ├── words_container_view.tscn/.gd — Panel 72 clip SHRINK_CENTER, HFlow h12 v10, cache signature, update_words(Array{text,owner})
+│   └── word_pill.tscn/.gd — Panel corner10 padding 8/2, BLUE/ORANGE/#333 Label14
+├── player/
+│   └── player_info_bar.tscn/.gd (PlayerInfoBar) — VBox, 2× PlayerCard 220×70 avatar60, dots 16×16 sep6 pulse 1.45/fade, TurnLabel, setup_players/set_turn/set_turn_seconds/set_my/opponent_inventory
+└── overlays/
+    ├── effect_overlay.tscn/.gd (z50) — show(color)/hide/flash(hold lantern 0.5 unfreeze 2.0) fade 0.3
+    ├── blind_vignette.tscn/.gd (z51) — GradientTexture2D radial 0.12/0.32/0.62/0.9 show/hide fade 0.3
+    └── game_over_overlay.tscn/.gd (z100) — show_result(is_winner,title,subtitle), signal home_requested
+```
 
-### Wrappers visuais (reparenting em `_ready()`):
-- `_wrap_words_container()` e `_wrap_board_grid()`: removem o nó original do pai, inserem o wrapper na **posição original** e recolocam o nó dentro do wrapper
-- Posição original obtida com `var idx: int = parent.get_children().find(node)` — API real do Godot 4; **`get_child_index` não existe** em `Node`/`Container` (causava runtime error `Nonexistent function 'get_child_index' in base 'VBoxContainer'`)
-- Sequência: `remove_child(no)` → `add_child(wrapper)` → `move_child(wrapper, idx)` → `wrapper.add_child(no)`
-- Wrappers com `set_anchors_preset(PRESET_FULL_RECT)` + `SIZE_SHRINK_CENTER`; StyleBox via `add_theme_stylebox_override("panel", style)`
+### Elementos fixos na cena (.tscn) — pós-refatoração
+- `game_screen.tscn` 88 linhas: Background, MarginContainer, MainLayout, `PlayerInfoBar` instance, `WordsContainerView` instance, `BoardView` instance, `BoardInventorySpacer` Control estático 24px, `InventoryPanel` instance, `BottomBar` (hidden), `EffectOverlay`/`BlindVignette`/`GameOverOverlay` instances, `TopBarLeaveButton`. Sem `StyleBoxFlat_inv_panel` inline (movido para `inventory_panel.tscn`) nem `StyleBoxFlat_dot` inline (movido para `player_info_bar.tscn`).
 
-### Alternância de PlayerCards:
-- `_on_turn_state_changed()` → `_update_player_cards()`:
-  - Minha vez: `MyPlayerCard.show_local(nickname)`, `MyPowerDots.show()`, `OpponentPlayerCard.clear()`, `OpponentPowerDots.hide()`
-  - Vez do oponente: inverso
+### Criados em runtime — pós-refatoração
+- **BoardView** cria 100 `CellView` em `_build_cells()` (não mais `GameScreen._build_board_buttons`).
+- **WordsContainerView** cria `WordPill` em `update_words()` com cache `_last_signature` (antes `_rebuild_words` em GameScreen).
+- **InventoryPanel** gerencia 5 `InventorySlot` + `_power_seen_seq` (antes em GameScreen).
+- **PlayerInfoBar** gerencia `PlayerCard` sizing + dots pulse/fade (antes `GameScreen._shrink_game_cards/_update_power_dots`).
+- Wrappers e shaders (`board_wrapper.tres`/`words_wrapper.tres` se existentes, `cell_diagonal.gdshader`/`rounded_icon.gdshader`) são estáticos nos `.tscn` dos componentes, não mais via `_wrap_*` reparenting em `_ready()`.
 
-### Atualização de inventário:
-- `_on_my_inventory_changed()` → `_update_inventory_panel()`:
-  - Para cada slot (0..4): `TextureButton.texture_normal = _power_icon(type)` se `GamePower`, senão `null`
-  - StyleBoxes normal/hover/pressed via `_make_slot_stylebox(border_color)`
-  - Frame (PanelContainer pai) recebe StyleBoxFlat bg #00000033 rounded 6
-  - `_update_armed_power_highlight()` → `modulate` amarelo se armado
-  - `_update_power_dots(_my_dots, _cached_my_inventory)`
+### Separação de responsabilidades (orquestrador vs componentes)
+- **GameScreen (orquestrador):** `setup`/`bind`, conecta 15 sinais ViewModel (`board_changed/words_changed/my_inventory/opponent_inventory/power_granted/turn_state/turn_timer/action_lock/effect_state/game_ended/armed_power/defense_pulse/word_found/trap_event/trap_animation/selected_power`), decide `shake` vs `on_cell_clicked`, calcula `revealed_states` para `board_view.set_interactivity`, delega `apply_responsive` e `set_board_pulse`, orquestra `EffectOverlay`/`BlindVignette` por `is_frozen/is_immune/is_blinded`, mantém `BoardInventorySpacer` estático. **Não contém** `StyleBoxFlat.new`/`Shader.new` nem aparência de célula/slot/dot.
 
-### Power Dots:
-- 5 Panels fixos no .tscn (Dot1..Dot5) com StyleBoxFlat_dot (cinza 0.6)
-- `_update_power_dots()` conta ocupados → primeiros N ficam brancos (0.95), resto cinza (0.6)
+- **Componentes visuais:** não conhecem `GameViewModel`/`UseCase`/`Repository`; recebem dados prontos e emitem sinais UI (`BoardView.cell_pressed`, `InventoryPanel.slot_pressed/drag_launch/discard`, `GameOverOverlay.home_requested`).
 
-### Mobile:
-- Viewport 360×640, `stretch_mode="canvas_items"`, `orientation=portrait`
-- Board 10×10 com `CELL_SIZE=30` → 300px + gaps ≈ 310px; wrapper branco adiciona borda+margens (~24px) → ~334px (cabe em 360)
-- WordsWrapper adiciona margens 12px de cada lado ao WordsContainer
-- Inventory slots 24×24 + gaps ≈ 150px
+### Mobile / Responsividade
+- Viewport `480×854` `canvas_items/expand` portrait (`game/project.godot:32`), `game_screen.gd:73 _apply_board_90_percent` `avail=layout*0.90 chrome=33 cell=floor((avail-chrome)/10) clamp 30-96 font cell*0.42 wrapper_w=10*cell+chrome SHRINK_CENTER`; `InventoryPanel.apply_responsive` `panel_w=clamp(layout*0.68,280,340)`; spacer 24px. Timings preservados: `action_lock 0.7s`, `word pulse 0.18s`, `reveal 0.075s`, `lantern 0.5s`, `unfreeze 2.0s`.
 
 ---
 

@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://c4e8a1b2d6f94573e8a1"]
+
+[ext_resource type="Script" uid="uid://h9k2m4p7q1r8t5w3e6y0" path="res://assets/components/game/inventory/inventory_panel.gd" id="1_panel"]
+[ext_resource type="PackedScene" uid="uid://a8f3b2c1d4e5f6a7b8c9" path="res://assets/components/game/inventory/inventory_slot.tscn" id="2_slot"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inv_panel"]
+content_margin_left = 4.0
+content_margin_top = 12.0
+content_margin_right = 4.0
+content_margin_bottom = 12.0
+bg_color = Color(0.08, 0.08, 0.08, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.25, 0.25, 0.25, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+corner_detail = 15
+expand_margin_left = 9.0
+expand_margin_top = 5.0
+expand_margin_right = 9.0
+expand_margin_bottom = 5.0
+shadow_color = Color(0, 0, 0, 0)
+
+[node name="InventoryPanel" type="PanelContainer" unique_id=1784113057]
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_inv_panel")
+script = ExtResource("1_panel")
+
+[node name="InventoryContainer" type="HBoxContainer" parent="." unique_id=1204559819]
+layout_mode = 2
+theme_override_constants/separation = 9
+alignment = 1
+
+[node name="InventorySlot1" parent="InventoryContainer" instance=ExtResource("2_slot") unique_id=999503917]
+
+[node name="InventorySlot2" parent="InventoryContainer" instance=ExtResource("2_slot") unique_id=842001501]
+
+[node name="InventorySlot3" parent="InventoryContainer" instance=ExtResource("2_slot") unique_id=842001502]
+
+[node name="InventorySlot4" parent="InventoryContainer" instance=ExtResource("2_slot") unique_id=842001503]
+
+[node name="InventorySlot5" parent="InventoryContainer" instance=ExtResource("2_slot") unique_id=842001504]
