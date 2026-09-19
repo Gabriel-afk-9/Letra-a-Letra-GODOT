@@ -38,7 +38,6 @@ signal effect_state_changed
 signal word_found_feedback(cells: Array, is_me: bool)
 signal trap_event_feedback(event_name: String, x: int, y: int)
 signal trap_animation_requested(x: int, y: int)
-signal notification_requested(message: String)
 signal selected_power_changed(power_id: String)
 signal armed_power_changed(power_id: String, power_type: String, scope: String)
 signal defense_pulse_changed(pulse_ids: Array)
@@ -241,7 +240,6 @@ func discard_power(power_id: String) -> void:
 	if _is_frozen:
 		for p in _my_inventory:
 			if p is GamePower and p.id == power_id and GamePowerCatalog.get_counters_for_debuff("PLAYER_FROZEN").has(p.type):
-				notification_requested.emit("Defesa não pode ser descartada congelado!")
 				return
 	_usecase.discard_power(power_id)
 
@@ -254,7 +252,6 @@ func discard_armed_power() -> void:
 	if _armed_power_id.is_empty():
 		return
 	if _is_frozen and GamePowerCatalog.get_counters_for_debuff("PLAYER_FROZEN").has(_armed_power_type):
-		notification_requested.emit("Defesa não pode ser descartada congelado!")
 		return
 	_usecase.discard_power(_armed_power_id)
 	clear_selected_power()
@@ -862,19 +859,18 @@ func _on_action_rejected(error_code: String, cell_x: int, cell_y: int) -> void:
 	if code == "stepped_on_trap" or code.contains("trap"):
 		trap_animation_requested.emit(cell_x, cell_y)
 	elif code == "player_are_immune" or code.contains("imune") or code.contains("immune"):
-		notification_requested.emit("Ataque bloqueado! O oponente está imune 🛡️")
+		pass
 	elif code == "player_not_in_game" or code.contains("not currently in a game"):
 		_show_game_over(true, REASON_OPPONENT_LEFT)
 	elif code == "the selected cell has already been revealed" or code.contains("already been revealed") or code.contains("already_revealed"):
 		pass
 	elif code.contains("frozen") or code.contains("frozen_cannot_act"):
-		notification_requested.emit("Congelado! Use DESCONGELAR ❄️")
+		pass
 	elif code.contains("not_your_turn") or code.contains("not your turn"):
-		notification_requested.emit("Aguarde sua vez ⏳")
+		pass
 	elif code.contains("invalid_player_action") or code.contains("requested player action is invalid"):
-		notification_requested.emit("Ação inválida.")
+		pass
 	else:
-		notification_requested.emit("Ação inválida.")
 		AppLogger.debug("GameViewModel: código de erro desconhecido: %s" % error_code)
 
 

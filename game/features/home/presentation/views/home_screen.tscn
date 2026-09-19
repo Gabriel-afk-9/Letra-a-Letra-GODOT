@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ddw4mt7rfhvhp" path="res://assets/cosmetics/avatar/logo.png" id="3_cosmetic_avatar_default"]
 [ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="5"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="7"]
+[ext_resource type="StyleBox" uid="uid://bovag1plxp43w" path="res://assets/styles/buttons/white_button_menu.tres" id="7_aky6k"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="8"]
 [ext_resource type="Texture2D" uid="uid://e753xeshtu33" path="res://assets/images/icons/Play.png" id="9"]
 [ext_resource type="StyleBox" uid="uid://b13v067ao1u61" path="res://assets/styles/buttons/blue_button_default.tres" id="9_onqej"]
@@ -552,10 +553,10 @@ script = ExtResource("7")
 [node name="MenuBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns" unique_id=410807315]
 custom_minimum_size = Vector2(65, 65)
 layout_mode = 2
-theme_override_styles/normal = SubResource("QuickOrange")
-theme_override_styles/pressed = SubResource("QuickOrange")
+theme_override_styles/normal = ExtResource("7_aky6k")
+theme_override_styles/pressed = ExtResource("7_aky6k")
+theme_override_styles/hover = ExtResource("7_aky6k")
 theme_override_styles/disabled = SubResource("QuickOrange")
-theme_override_styles/focus = SubResource("NavEmpty")
 icon_alignment = 1
 vertical_icon_alignment = 2
 script = ExtResource("7")
@@ -631,6 +632,7 @@ size_flags_horizontal = 4
 mouse_default_cursor_shape = 2
 theme_override_styles/normal = ExtResource("9_onqej")
 theme_override_styles/pressed = ExtResource("9_onqej")
+theme_override_styles/hover = ExtResource("9_onqej")
 theme_override_styles/disabled = ExtResource("5")
 script = ExtResource("7")
 

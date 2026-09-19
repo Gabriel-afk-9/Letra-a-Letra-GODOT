@@ -314,6 +314,7 @@ func _clear_all_layers() -> void:
 		for child in layer.get_children():
 			child.queue_free()
 		layer.visible = false
+		layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		if layer_name == "InnerBorder":
 			continue
 		if layer_name == "DiagonalSplit":

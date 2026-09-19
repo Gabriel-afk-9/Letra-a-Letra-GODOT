@@ -11,6 +11,7 @@
 load_path = "res://.godot/imported/lal.png-da2ffcf1a11c2456d04a7e63f1f1bab1.ctex"
 
 [node name="LoginScreen" type="Control" unique_id=1884107508]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

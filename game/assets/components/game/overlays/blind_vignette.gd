@@ -8,8 +8,13 @@ var _blind_tween: Tween
 
 
 func _ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
 	modulate.a = 0.0
+	if has_node("Vignette"):
+		var v := get_node("Vignette") as Control
+		if v != null:
+			v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 func show_vignette() -> void:

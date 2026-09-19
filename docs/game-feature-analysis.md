@@ -61,7 +61,7 @@ WS event → RemoteGameRepository._on_message_received()
   → _handle_turn_update / _handle_state_sync / _handle_internal_events
   → emite sinais do contrato (turn_updated, board_updated, words_updated, players_updated, internal_event_received, game_over, opponent_disconnected, removed_for_inactivity, connection_lost, error)
   → GameUseCase recebe e traduz para sinais de domínio (turn_changed, board_updated, words_updated, my_inventory_updated, opponent_inventory_updated, word_found, trap_event, my_effect_event, game_over, connection_lost, action_rejected)
-  → GameViewModel recebe, atualiza estado interno, emite sinais de UI (board_changed, words_changed, my_inventory_changed, opponent_inventory_changed, turn_state_changed, turn_timer_updated, action_lock_changed, effect_state_changed, word_found_feedback, trap_event_feedback, trap_animation_requested, notification_requested, selected_power_changed, armed_power_changed, game_ended)
+  → GameViewModel recebe, atualiza estado interno, emite sinais de UI (board_changed, words_changed, my_inventory_changed, opponent_inventory_changed, turn_state_changed, turn_timer_updated, action_lock_changed, effect_state_changed, word_found_feedback, trap_event_feedback, trap_animation_requested, selected_power_changed, armed_power_changed, game_ended) — `notification_requested` removido
   → GameScreen conecta e reage (atualiza células, palavras, inventário, timer, PlayerCards, Power Dots, overlay Game Over)
 ```
 
@@ -100,7 +100,7 @@ WS event → RemoteGameRepository._on_message_received()
 | **Payload PLAYER_ACTION p/ poderes** | ✅ | `RemoteGameRepository._send_action()` | Sim | Wrapper `{"type":"PLAYER_ACTION","gameId":...,"action":{...}}` |
 | **DISCARD_POWER** | ✅ | `InventorySlot` drag `delta > +40` → `slot_drag_discard` → `GameScreen` → `ViewModel.discard_armed_power()` → UseCase → Repository | Sim | Bloqueado se `is_frozen && counters_for_debuff(PLAYER_FROZEN).has(type)`; anim `scale 0.3 / +80px / 0.3s` em `_animate_discard_slot()`; preview vermelho `#ff4757` vs verde `#2ecc71` |
 | **Efeitos de poder** | ✅ | `GameViewModel._on_my_effect_event()` mapeia 12 eventos → `effect_state_changed` → `GameScreen._on_effect_state_changed` → orquestra `EffectOverlay`/`BlindVignette` + `InventoryPanel.refresh_for_effect()` + `_refresh_all_cell_styles()` + `_update_board_interactivity()` | Sim | **Agora conectado** (antes não). `FREEZE 0.2,0.5,1,0.25` / `IMMUNITY 1,0.55,0.1,0.35` / `BLIND` via `BlindVignette`, `LANTERN flash 1,1,1,0.6 hold0.5` / `UNFREEZE flash 1,0.45,0.15 hold2.0` |
-| **Notificações** | 🟡 | `GameViewModel.notification_requested` signal | Signal existe | View **ainda não conecta** (fora do escopo da refatoração; toast/snackbar pendente) |
+| **Notificações** | ❌ | `notification_requested` removido | Removido | Signal deletado em `game_viewmodel.gd:41`; `_on_action_rejected` agora silencioso (`pass`) exceto `trap`/`player_not_in_game`; mantém `AppLogger.debug` no `else`; descarte de defesa congelado mantém `return` silencioso |
 | **trap_animation_requested** | ✅ | `GameViewModel.trap_animation_requested(x,y)` → `GameScreen._on_trap_animation_requested` → `_shake_cell + _pop_trap_cell` → `CellView.shake()/pop_trap()` | Sim | **Agora conectado** |
 | **game_ended** | ✅ | `GameViewModel.game_ended(is_winner, title, subtitle)` → `GameScreen._on_game_ended` → `GameOverOverlay.show_result()` | Sim | `GameOverOverlay` (`ColorRect 0.85 z100 + Panel 320 corner12 Margin20 VBox20 Title24 Subtitle16 Button200×50`) em `assets/components/game/overlays/game_over_overlay.tscn` |
 | **Overlay fim de jogo** | ✅ | `assets/components/game/overlays/game_over_overlay.tscn` (`id 7_overlay`, `uid://2903eab57f86`) + `game_over_overlay.gd` (`signal home_requested`) | Sim | Instanciado em `game_screen.tscn`; `home_requested → _navigate_home()` |
@@ -319,9 +319,9 @@ assets/components/game/
 
 | Item | Status | Detalhes |
 |------|--------|----------|
-| **Efeitos visuais de poderes** | ❌ | `effect_state_changed` emitido, mas `GameScreen` **não conecta** |
-| **Notificações (toast/snackbar)** | ❌ | `notification_requested` signal existe, View **não conecta** |
-| **Animação de trap** | ❌ | `trap_animation_requested(x,y)` signal existe, View **não conecta** |
+| **Efeitos visuais de poderes** | ✅ | `effect_state_changed` → `GameScreen._on_effect_state_changed` conectado (EffectOverlay/BlindVignette) |
+| **Notificações (toast/snackbar)** | ❌ Removido | `notification_requested` deletado em `game_viewmodel.gd:41`; `_on_action_rejected` silencioso |
+| **Animação de trap** | ✅ | `trap_animation_requested(x,y)` → `GameScreen._on_trap_animation_requested` conectado (`shake+pop_trap`) |
 | **Descarte de poder (UI)** | 🟡 | `discard_power()` existe no ViewModel/UseCase/Repository, mas **nenhum botão/gesto na UI** |
 | **Validação backend real** | 🟡 | Pareamento BLIND/LANTERN, shape exato de `data.board/words/players`, códigos de erro, duração de efeitos — **não confirmados** |
 | **Limpeza de logs/debug** | 🟡 | Remover `🕵️ RAW PLAYERS...` e comentário `# <--- ADICIONE O EVENTO AQUI` |
@@ -333,11 +333,11 @@ assets/components/game/
 
 ## 13. Próximo Passo Único Recomendado
 
-**Conectar os sinais de feedback visual já existentes no ViewModel à GameScreen:**
+**Conectar os sinais de feedback visual já existentes no ViewModel à GameScreen (atualizado pós-remoção `notification_requested`):**
 
-1. `GameViewModel.effect_state_changed` → `GameScreen` para atualizar UI de efeitos ativos (freeze, blind, immunity, spy, detect_traps)
-2. `GameViewModel.notification_requested` → `GameScreen` para mostrar toast/snackbar temporário
-3. `GameViewModel.trap_animation_requested(x,y)` → `GameScreen` para animar célula (shake, flash, partículas)
+1. `GameViewModel.effect_state_changed` → `GameScreen` para atualizar UI de efeitos ativos (freeze, blind, immunity, spy, detect_traps) — ✅ já conectado
+2. `GameViewModel.trap_animation_requested(x,y)` → `GameScreen` para animar célula (shake, flash, partículas) — ✅ já conectado
+3. `notification_requested` — ❌ removido; ramo silencioso (`pass`) mantém `AppLogger.debug` no `else`
 
 **Justificativa:**
 - Toda a infraestrutura (signals, mapeamento de eventos WS → ViewModel) **já existe e está conectada**

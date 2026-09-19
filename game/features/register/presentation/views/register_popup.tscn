@@ -6,9 +6,7 @@
 [ext_resource type="Script" uid="uid://038oeino2833" path="res://assets/scripts/custom_input.gd" id="4_password"]
 [ext_resource type="StyleBox" path="res://assets/styles/input/input_popup.tres" id="5_input"]
 [ext_resource type="StyleBox" uid="uid://b13v067ao1u61" path="res://assets/styles/buttons/blue_button_default.tres" id="6_btn"]
-[ext_resource type="StyleBox" uid="uid://cxd05n5v24ui3" path="res://assets/styles/buttons/blue_button_pressed.tres" id="7_btn_pressed"]
 [ext_resource type="StyleBox" uid="uid://b6nvfx34smt17" path="res://assets/styles/buttons/red_button_default.tres" id="7_uwnvs"]
-[ext_resource type="StyleBox" uid="uid://d0pic7fl8tl7d" path="res://assets/styles/buttons/blue_button_hover.tres" id="8_btn_hover"]
 [ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="9_btn_disabled"]
 [ext_resource type="Texture2D" uid="uid://bl3n5igylccxd" path="res://assets/images/icons/eye_closed.png" id="10_eye"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="11_btn_fx"]
@@ -29,6 +27,7 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 8
 shadow_offset = Vector2(0, 4)
 
 [node name="RegisterPopup" type="Control" unique_id=1652008973]
@@ -229,8 +228,8 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = ExtResource("6_btn")
-theme_override_styles/pressed = ExtResource("7_btn_pressed")
-theme_override_styles/hover = ExtResource("8_btn_hover")
+theme_override_styles/pressed = ExtResource("6_btn")
+theme_override_styles/hover = ExtResource("6_btn")
 theme_override_styles/disabled = ExtResource("9_btn_disabled")
 text = "CADASTRAR"
 script = ExtResource("11_btn_fx")

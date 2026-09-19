@@ -9,6 +9,7 @@ var _flash_tween: Tween
 
 
 func _ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
 	modulate.a = 0.0
 

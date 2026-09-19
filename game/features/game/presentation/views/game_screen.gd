@@ -282,6 +282,7 @@ func _on_effect_state_changed() -> void:
 	_refresh_all_cell_styles()
 	if is_instance_valid(_inventory_panel) and _view_model != null:
 		_inventory_panel.refresh_for_effect(_view_model.is_frozen(), _view_model.is_blinded())
+		_inventory_panel.set_defense_pulse(_view_model.get_defense_pulse_ids())
 
 	if _view_model == null:
 		return
@@ -413,6 +414,8 @@ func _update_board_interactivity() -> void:
 		var cell_revealed := vs == GameViewModel.CELL_STATE_REVEALED_ME or vs == GameViewModel.CELL_STATE_REVEALED_OPPONENT or vs == GameViewModel.CELL_STATE_CLAIMED_ME or vs == GameViewModel.CELL_STATE_CLAIMED_OPPONENT or vs == GameViewModel.CELL_STATE_CLAIMED_BOTH
 		revealed_states[cell_position] = cell_revealed
 	board_view.set_interactivity(board_logical_disabled, revealed_states)
+	if is_instance_valid(board_view):
+		board_view.modulate = Color(1, 1, 1, 0.6) if board_visual_dimmed else Color.WHITE
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:

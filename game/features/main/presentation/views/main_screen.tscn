@@ -10,60 +10,14 @@
 [ext_resource type="Texture2D" uid="uid://c2jgqct6t1mv5" path="res://assets/images/cells/l-cell-right.png" id="5_u32c6"]
 [ext_resource type="Texture2D" uid="uid://cjno28oi572by" path="res://features/main/assets/icons/envelope.svg" id="6_mail"]
 [ext_resource type="Texture2D" uid="uid://c6sukmshy45c0" path="res://features/main/assets/icons/person.svg" id="7_person"]
-[ext_resource type="PackedScene" path="res://features/login/presentation/views/login_popup.tscn" id="8_login_popup"]
-[ext_resource type="PackedScene" path="res://features/register/presentation/views/register_popup.tscn" id="9_register_popup"]
+[ext_resource type="StyleBox" uid="uid://ckahkare1u8lm" path="res://assets/styles/buttons/white_button_hover.tres" id="7_u32c6"]
+[ext_resource type="PackedScene" uid="uid://chni8j183uee8" path="res://features/login/presentation/views/login_popup.tscn" id="8_login_popup"]
+[ext_resource type="PackedScene" uid="uid://binu0bhtinee2" path="res://features/register/presentation/views/register_popup.tscn" id="9_register_popup"]
+[ext_resource type="StyleBox" uid="uid://b13v067ao1u61" path="res://assets/styles/buttons/blue_button_default.tres" id="9_yo8vn"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_logo"]
 atlas = ExtResource("3_logo")
 region = Rect2(52, 140, 398, 226)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_google"]
-content_margin_left = 20.0
-content_margin_top = 10.0
-content_margin_right = 20.0
-content_margin_bottom = 10.0
-bg_color = Color(1, 1, 1, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 5
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 26
-corner_radius_top_right = 26
-corner_radius_bottom_right = 26
-corner_radius_bottom_left = 26
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_google_pressed"]
-content_margin_left = 20.0
-content_margin_top = 10.0
-content_margin_right = 20.0
-content_margin_bottom = 10.0
-bg_color = Color(0.847, 0.851, 0.878, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 5
-border_color = Color(0.102, 0.137, 0.251, 1)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_google_hover"]
-content_margin_left = 20.0
-content_margin_top = 10.0
-content_margin_right = 20.0
-content_margin_bottom = 10.0
-bg_color = Color(0.929, 0.929, 0.949, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 5
-border_color = Color(0.102, 0.137, 0.251, 1)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_disabled"]
 content_margin_left = 20.0
@@ -81,101 +35,27 @@ corner_radius_top_right = 24
 corner_radius_bottom_right = 24
 corner_radius_bottom_left = 24
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_email"]
-content_margin_left = 20.0
-content_margin_top = 10.0
-content_margin_right = 20.0
-content_margin_bottom = 10.0
-bg_color = Color(1, 0.545, 0, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 5
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 26
-corner_radius_top_right = 26
-corner_radius_bottom_right = 26
-corner_radius_bottom_left = 26
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_email_pressed"]
-content_margin_left = 20.0
-content_margin_top = 10.0
-content_margin_right = 20.0
-content_margin_bottom = 10.0
-bg_color = Color(0.851, 0.455, 0, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 5
-border_color = Color(0.102, 0.137, 0.251, 1)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_email_hover"]
-content_margin_left = 20.0
-content_margin_top = 10.0
-content_margin_right = 20.0
-content_margin_bottom = 10.0
-bg_color = Color(0.91, 0.494, 0, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 5
-border_color = Color(0.102, 0.137, 0.251, 1)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_guest"]
-content_margin_left = 20.0
-content_margin_top = 10.0
-content_margin_right = 20.0
-content_margin_bottom = 10.0
-bg_color = Color(0.251, 0.651, 0.902, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 5
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 26
-corner_radius_top_right = 26
-corner_radius_bottom_right = 26
-corner_radius_bottom_left = 26
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_guest_pressed"]
-content_margin_left = 20.0
-content_margin_top = 10.0
-content_margin_right = 20.0
-content_margin_bottom = 10.0
-bg_color = Color(0.184, 0.529, 0.776, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 5
-border_color = Color(0.102, 0.137, 0.251, 1)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_guest_hover"]
-content_margin_left = 20.0
-content_margin_top = 10.0
-content_margin_right = 20.0
-content_margin_bottom = 10.0
-bg_color = Color(0.216, 0.588, 0.843, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 5
-border_color = Color(0.102, 0.137, 0.251, 1)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u32c6"]
+content_margin_left = 35.0
+content_margin_top = 15.0
+content_margin_right = 35.0
+content_margin_bottom = 15.0
+bg_color = Color(1, 0.54509807, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.71515906, 0.3578057, 1.92523e-07, 1)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+shadow_color = Color(0, 0, 0, 1)
+shadow_size = 1
+shadow_offset = Vector2(0, 5)
+anti_aliasing_size = 0.01
 
 [node name="MainScreen" type="Control" unique_id=586970613]
 layout_mode = 3
@@ -309,9 +189,9 @@ theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.7)
 theme_override_constants/h_separation = 12
 theme_override_constants/icon_max_width = 28
 theme_override_font_sizes/font_size = 16
-theme_override_styles/normal = SubResource("StyleBoxFlat_google")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_google_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_google_hover")
+theme_override_styles/normal = ExtResource("7_u32c6")
+theme_override_styles/pressed = ExtResource("7_u32c6")
+theme_override_styles/hover = ExtResource("7_u32c6")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
 text = "GOOGLE"
 icon = ExtResource("5_google")
@@ -326,9 +206,9 @@ theme_override_constants/outline_size = 4
 theme_override_constants/h_separation = 12
 theme_override_constants/icon_max_width = 28
 theme_override_font_sizes/font_size = 16
-theme_override_styles/normal = SubResource("StyleBoxFlat_email")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_email_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_email_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_u32c6")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_u32c6")
+theme_override_styles/hover = SubResource("StyleBoxFlat_u32c6")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
 text = "EMAIL"
 icon = ExtResource("6_mail")
@@ -346,9 +226,9 @@ theme_override_constants/outline_size = 4
 theme_override_constants/h_separation = 12
 theme_override_constants/icon_max_width = 28
 theme_override_font_sizes/font_size = 16
-theme_override_styles/normal = SubResource("StyleBoxFlat_guest")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_guest_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_guest_hover")
+theme_override_styles/normal = ExtResource("9_yo8vn")
+theme_override_styles/pressed = ExtResource("9_yo8vn")
+theme_override_styles/hover = ExtResource("9_yo8vn")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
 text = "CONVIDADO"
 icon = ExtResource("7_person")
