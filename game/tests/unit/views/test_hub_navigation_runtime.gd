@@ -29,7 +29,7 @@ func test_select_each_page_shows_identifying_text() -> void:
 		assert_true(page.visible, "página %s deve estar visível" % page_id)
 		assert_eq(page.page_id(), page_id, "page_id deve corresponder")
 		if page_id == &"inventory":
-			assert_not_null(page.get_node("Content/MainVBox/TabsRow/AvatarTab"), "inventário deve ter aba avatar")
+			assert_not_null(page.get_node("Content/MainVBox/TabScroll/TabsRow/AVATARTab"), "inventário deve ter aba avatar")
 			assert_not_null(page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/ItemGrid"), "inventário deve ter grade")
 			continue
 		var title: Label = page.get_node("Center/VBox/Title")

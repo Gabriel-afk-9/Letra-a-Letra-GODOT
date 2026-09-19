@@ -86,7 +86,7 @@ func _grid() -> GridContainer:
 
 
 func _tabs_row() -> HBoxContainer:
-	return _page.get_node("Content/MainVBox/TabsRow") as HBoxContainer
+	return _page.get_node("Content/MainVBox/TabScroll/TabsRow") as HBoxContainer
 
 
 func _download_button(card: Button) -> Button:
@@ -105,7 +105,7 @@ func _stage_user_asset(asset_path: String) -> void:
 
 func test_inventory_page_id_and_layout() -> void:
 	assert_eq(_page.page_id(), &"inventory", "page_id deve ser inventory")
-	assert_not_null(_page.get_node("Content/MainVBox/TabsRow"), "linha de abas deve existir")
+	assert_not_null(_page.get_node("Content/MainVBox/TabScroll/TabsRow"), "linha de abas deve existir")
 	assert_not_null(_page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/StatusLabel"), "rótulo de status deve existir")
 	assert_eq(_grid().columns, 3, "grade deve ter 3 colunas")
 	assert_eq(String((_page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow/PagePill/PageMargin/PageLabel") as Label).text), "Pág 1", "deve iniciar na página 1")
@@ -119,13 +119,38 @@ func test_inventory_loads_real_items_and_builds_tabs() -> void:
 	]
 	await _bind_items(items)
 
-	assert_eq(_page._tabs, ["AVATAR", "BANNER", "CONSUMABLE"], "abas derivadas dos dados na ordem preferencial")
+	assert_eq(_page._tabs, ["AVATAR", "BANNER", "FRAME", "EMOTE", "BOARD", "CELL", "CONSUMABLE"], "todas as seções sempre visíveis")
 	assert_eq(_page._tab, "AVATAR", "primeira aba selecionada por padrão")
-	assert_eq(_tabs_row().get_child_count(), 3, "três botões de aba")
+	assert_eq(_tabs_row().get_child_count(), 7, "sete botões de aba")
 	assert_eq(_grid().get_child_count(), 1, "aba AVATAR exibe 1 item")
 	_page._on_tab_pressed("CONSUMABLE")
 	await get_tree().process_frame
 	assert_eq(_grid().get_child_count(), 1, "aba CONSUMÍVEIS exibe 1 item")
+	_page._on_tab_pressed("BANNER")
+	await get_tree().process_frame
+	assert_eq(_grid().get_child_count(), 1, "aba BANNER exibe 1 item")
+
+
+func test_inventory_empty_sections_stay_visible() -> void:
+	await _bind_items([])
+
+	assert_eq(_tabs_row().get_child_count(), 7, "seções visíveis mesmo sem itens")
+	assert_eq(_grid().get_child_count(), 0, "grade vazia")
+	assert_eq((_page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/StatusLabel") as Label).text, "Nenhum item por aqui ainda.", "status de inventário vazio")
+	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
+	_page._on_tab_pressed("FRAME")
+	await get_tree().process_frame
+	assert_eq(_grid().get_child_count(), 0, "seção vazia sem cards")
+	assert_eq((_page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/StatusLabel") as Label).text, "Nada nesta aba.", "status de seção vazia")
+
+
+func test_inventory_cards_keep_constant_size() -> void:
+	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
+
+	assert_eq(_grid().get_child_count(), 1, "um único item")
+	var card := _grid().get_child(0) as Button
+	assert_eq(card.custom_minimum_size, Vector2(96, 122), "tamanho mínimo constante")
+	assert_eq(card.size_flags_vertical, Control.SIZE_FILL, "card não estica na vertical")
 
 
 func test_inventory_missing_asset_shows_download_button() -> void:

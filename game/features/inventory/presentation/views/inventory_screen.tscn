@@ -92,9 +92,14 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="TabsRow" type="HBoxContainer" parent="Content/MainVBox"]
+[node name="TabScroll" type="ScrollContainer" parent="Content/MainVBox"]
 layout_mode = 2
-size_flags_vertical = 0
+horizontal_scroll_mode = 1
+vertical_scroll_mode = 0
+
+[node name="TabsRow" type="HBoxContainer" parent="Content/MainVBox/TabScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 6
 alignment = 1
 

@@ -71,12 +71,11 @@ func load_failed() -> bool:
 	return has_error() and _items.is_empty()
 
 
-# Abas derivadas dos dados: uma por categoria equipável presente,
-# na ordem preferencial e depois em ordem alfabética, mais a aba
-# de consumíveis quando houver itens não equipáveis.
+# Todas as seções são sempre exibidas, mesmo vazias: uma aba por
+# categoria equipável conhecida, seguida de categorias extras presentes
+# nos dados (ordem alfabética) e da aba de consumíveis por último.
 func categories() -> Array:
 	var found: Array = []
-	var has_consumable := false
 	for item_variant in _items:
 		var item := item_variant as InventoryItem
 		if item == null:
@@ -85,12 +84,9 @@ func categories() -> Array:
 			var category := EquippableAssetPaths.tab_of(item)
 			if not found.has(category):
 				found.append(category)
-		else:
-			has_consumable = true
 	var ordered: Array = []
 	for preferred in TAB_ORDER:
-		if found.has(preferred):
-			ordered.append(preferred)
+		ordered.append(preferred)
 	var extra: Array = []
 	for category_variant in found:
 		var category := str(category_variant)
@@ -98,8 +94,7 @@ func categories() -> Array:
 			extra.append(category)
 	extra.sort()
 	ordered.append_array(extra)
-	if has_consumable:
-		ordered.append(TAB_CONSUMABLE)
+	ordered.append(TAB_CONSUMABLE)
 	return ordered
 
 

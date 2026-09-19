@@ -83,7 +83,7 @@ func test_load_initial_seeds_from_store_then_refreshes() -> void:
 	assert_eq(seeded_vm.items().size(), 2, "itens finais vêm da API")
 
 
-func test_categories_follow_preferred_order_with_consumables_last() -> void:
+func test_categories_always_show_all_sections() -> void:
 	_repo.inventory_result = {
 		"items": [
 			_consumable("c-1"),
@@ -95,11 +95,21 @@ func test_categories_follow_preferred_order_with_consumables_last() -> void:
 
 	await _vm.refresh()
 
-	assert_eq(_vm.categories(), ["AVATAR", "BOARD", "CONSUMABLE"], "ordem preferencial com consumíveis por último")
+	assert_eq(_vm.categories(), ["AVATAR", "BANNER", "FRAME", "EMOTE", "BOARD", "CELL", "CONSUMABLE"], "todas as seções sempre visíveis, consumíveis por último")
 	assert_eq(_vm.items_for("AVATAR").size(), 1, "filtro por categoria")
+	assert_eq(_vm.items_for("BANNER").size(), 0, "seção vazia retorna lista vazia")
 	assert_eq(_vm.items_for("CONSUMABLE").size(), 1, "não equipáveis na aba de consumíveis")
 	assert_true(_vm.is_consumable_tab("CONSUMABLE"), "identifica aba de consumíveis")
 	assert_false(_vm.is_consumable_tab("AVATAR"), "categoria não é consumível")
+
+
+func test_categories_full_without_items() -> void:
+	_repo.inventory_result = {"items": [], "status_code": 200}
+
+	await _vm.refresh()
+
+	assert_eq(_vm.categories(), ["AVATAR", "BANNER", "FRAME", "EMOTE", "BOARD", "CELL", "CONSUMABLE"], "seções visíveis mesmo sem itens")
+	assert_false(_vm.has_items(), "sem itens")
 
 
 func test_download_guards_without_network() -> void:

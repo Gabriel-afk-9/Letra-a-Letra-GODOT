@@ -37,7 +37,7 @@ const PALETTE: Array = [
 	Color(0.9, 0.5, 0.2),
 ]
 
-@onready var _tabs_row: HBoxContainer = $Content/MainVBox/TabsRow
+@onready var _tabs_row: HBoxContainer = $Content/MainVBox/TabScroll/TabsRow
 @onready var _grid: GridContainer = $Content/MainVBox/Panel/PanelMargin/PanelVBox/ItemGrid
 @onready var _status_label: Label = $Content/MainVBox/Panel/PanelMargin/PanelVBox/StatusLabel
 @onready var _page_label: Label = $Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow/PagePill/PageMargin/PageLabel
@@ -188,6 +188,7 @@ func _make_tab(tab_id: String) -> Button:
 	var label := Label.new()
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.clip_text = true
 	label.text = str(TAB_TITLES.get(tab_id, tab_id))
 	label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
@@ -268,7 +269,6 @@ func _make_card(item: InventoryItem) -> Button:
 	var btn := Button.new()
 	btn.custom_minimum_size = Vector2(96, 122)
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = _card_color(item)
