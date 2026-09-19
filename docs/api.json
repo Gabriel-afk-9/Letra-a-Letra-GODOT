@@ -29,8 +29,8 @@
       "description": "Rotas relacionadas a funcionalidade de salas"
     },
     {
-      "name": "Cosmetics",
-      "description": "Rotas relacionadas ao gerenciamento de cosméticos"
+      "name": "Items",
+      "description": "Rotas do catǭlogo de itens"
     },
     {
       "name": "Ticket",
@@ -63,6 +63,14 @@
     {
       "name": "Admin",
       "description": "Logs das partidas"
+    },
+    {
+      "name": "Inventory",
+      "description": "Rotas do inventário genérico de itens do usuário"
+    },
+    {
+      "name": "Items",
+      "description": "Rotas do catálogo de itens"
     },
     {
       "name": "Admin",
@@ -140,80 +148,12 @@
         }
       }
     },
-    "/cosmetic/{cosmeticId}": {
-      "put": {
-        "tags": [
-          "Cosmetics"
-        ],
-        "operationId": "handle_2",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/UpdateCosmeticRequest"
-            }
-          },
-          {
-            "name": "cosmeticId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponseUpdateCosmeticResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Cosmetics"
-        ],
-        "operationId": "handle_3",
-        "parameters": [
-          {
-            "name": "cosmeticId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponseDeleteCosmeticResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/admin/{adminId}": {
       "put": {
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_4",
+        "operationId": "handle_2",
         "parameters": [
           {
             "name": "adminId",
@@ -252,7 +192,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_5",
+        "operationId": "handle_3",
         "parameters": [
           {
             "name": "adminId",
@@ -278,12 +218,110 @@
         }
       }
     },
+    "/admin/items/{itemId}": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "operationId": "handle_4",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Items"
+        ],
+        "operationId": "handle_5",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateItemRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Items"
+        ],
+        "operationId": "handle_6",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseItemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user": {
       "get": {
         "tags": [
           "User"
         ],
-        "operationId": "handle_6",
+        "operationId": "handle_7",
         "parameters": [
           {
             "name": "pageable",
@@ -311,7 +349,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_7",
+        "operationId": "handle_8",
         "requestBody": {
           "content": {
             "application/json": {
@@ -336,12 +374,94 @@
         }
       }
     },
+    "/user/items/{itemId}/equip": {
+      "post": {
+        "tags": [
+          "Inventory"
+        ],
+        "operationId": "handle_9",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EquipItemRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseInventoryMovementsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/items/{itemId}/consume": {
+      "post": {
+        "tags": [
+          "Inventory"
+        ],
+        "operationId": "handle_10",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsumeItemRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseInventoryMovementsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user/auth": {
       "post": {
         "tags": [
           "User"
         ],
-        "operationId": "handle_8",
+        "operationId": "handle_11",
         "requestBody": {
           "content": {
             "application/json": {
@@ -371,7 +491,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_9",
+        "operationId": "handle_12",
         "requestBody": {
           "content": {
             "application/json": {
@@ -401,7 +521,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_10",
+        "operationId": "handle_13",
         "requestBody": {
           "content": {
             "application/json": {
@@ -431,7 +551,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_11",
+        "operationId": "handle_14",
         "requestBody": {
           "content": {
             "application/json": {
@@ -461,7 +581,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_12",
+        "operationId": "handle_15",
         "requestBody": {
           "content": {
             "application/json": {
@@ -491,7 +611,7 @@
         "tags": [
           "Ticket"
         ],
-        "operationId": "handle_13",
+        "operationId": "handle_16",
         "requestBody": {
           "content": {
             "application/json": {
@@ -521,7 +641,7 @@
         "tags": [
           "Shop"
         ],
-        "operationId": "handle_14",
+        "operationId": "handle_17",
         "parameters": [
           {
             "name": "offerId",
@@ -552,7 +672,7 @@
         "tags": [
           "Offer"
         ],
-        "operationId": "handle_15",
+        "operationId": "handle_18",
         "parameters": [
           {
             "name": "pageable",
@@ -610,7 +730,7 @@
         "tags": [
           "Level"
         ],
-        "operationId": "handle_16",
+        "operationId": "handle_19",
         "parameters": [
           {
             "name": "pageable",
@@ -638,7 +758,7 @@
         "tags": [
           "Level"
         ],
-        "operationId": "handle_17",
+        "operationId": "handle_20",
         "requestBody": {
           "content": {
             "application/json": {
@@ -668,7 +788,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_18",
+        "operationId": "handle_21",
         "requestBody": {
           "content": {
             "application/json": {
@@ -693,70 +813,12 @@
         }
       }
     },
-    "/cosmetic": {
-      "get": {
-        "tags": [
-          "Cosmetics"
-        ],
-        "operationId": "handle_19",
-        "parameters": [
-          {
-            "name": "pageable",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Pageable"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponsePageResponseCosmeticResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Cosmetics"
-        ],
-        "operationId": "handle_20",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/RegisterCosmeticRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponseRegisterCosmeticResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/admin": {
       "get": {
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_21",
+        "operationId": "handle_22",
         "parameters": [
           {
             "name": "pageable",
@@ -784,7 +846,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_22",
+        "operationId": "handle_23",
         "requestBody": {
           "content": {
             "application/json": {
@@ -809,12 +871,93 @@
         }
       }
     },
+    "/admin/items": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "operationId": "handle_24",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "available",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Items"
+        ],
+        "operationId": "handle_25",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateItemRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseItemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/auth": {
       "post": {
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_23",
+        "operationId": "handle_26",
         "requestBody": {
           "content": {
             "application/json": {
@@ -844,7 +987,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_24",
+        "operationId": "handle_27",
         "requestBody": {
           "content": {
             "application/json": {
@@ -874,7 +1017,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_25",
+        "operationId": "handle_28",
         "requestBody": {
           "content": {
             "application/json": {
@@ -904,7 +1047,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_26",
+        "operationId": "handle_29",
         "requestBody": {
           "content": {
             "application/json": {
@@ -934,7 +1077,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_27",
+        "operationId": "handle_30",
         "parameters": [
           {
             "name": "userId",
@@ -975,7 +1118,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_28",
+        "operationId": "handle_31",
         "parameters": [
           {
             "name": "userId",
@@ -1006,7 +1149,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_29",
+        "operationId": "handle_32",
         "parameters": [
           {
             "name": "userId",
@@ -1047,7 +1190,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_30",
+        "operationId": "handle_33",
         "parameters": [
           {
             "name": "userId",
@@ -1088,7 +1231,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_31",
+        "operationId": "handle_34",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1113,43 +1256,12 @@
         }
       }
     },
-    "/user/cosmetic/{cosmeticId}": {
-      "patch": {
-        "tags": [
-          "User"
-        ],
-        "operationId": "handle_32",
-        "parameters": [
-          {
-            "name": "cosmeticId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponseChangeCosmeticResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/offer/enable/{offerId}": {
       "patch": {
         "tags": [
           "Offer"
         ],
-        "operationId": "handle_33",
+        "operationId": "handle_35",
         "parameters": [
           {
             "name": "offerId",
@@ -1211,7 +1323,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_34",
+        "operationId": "handle_36",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1241,7 +1353,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_35",
+        "operationId": "handle_37",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1271,7 +1383,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_36",
+        "operationId": "handle_38",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1301,7 +1413,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_37",
+        "operationId": "handle_39",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1319,68 +1431,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponseVoid"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cosmetic/enable/{cosmeticId}": {
-      "patch": {
-        "tags": [
-          "Cosmetics"
-        ],
-        "operationId": "handle_38",
-        "parameters": [
-          {
-            "name": "cosmeticId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponseEnableCosmeticResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cosmetic/disable/{cosmeticId}": {
-      "patch": {
-        "tags": [
-          "Cosmetics"
-        ],
-        "operationId": "handle_39",
-        "parameters": [
-          {
-            "name": "cosmeticId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponseDisableCosmeticResponse"
                 }
               }
             }
@@ -1428,12 +1478,74 @@
         }
       }
     },
+    "/admin/items/{itemId}/enable": {
+      "patch": {
+        "tags": [
+          "Items"
+        ],
+        "operationId": "handle_41",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseItemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/items/{itemId}/disable": {
+      "patch": {
+        "tags": [
+          "Items"
+        ],
+        "operationId": "handle_42",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseItemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/activate": {
       "patch": {
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_41",
+        "operationId": "handle_43",
         "parameters": [
           {
             "name": "token",
@@ -1468,12 +1580,12 @@
         }
       }
     },
-    "/user/{userId}/inventory": {
+    "/user/{userId}/items": {
       "get": {
         "tags": [
-          "User"
+          "Inventory"
         ],
-        "operationId": "handle_42",
+        "operationId": "handle_44",
         "parameters": [
           {
             "name": "userId",
@@ -1485,11 +1597,35 @@
             }
           },
           {
-            "name": "pageable",
+            "name": "kind",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/Pageable"
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "equipped",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -1499,7 +1635,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponsePageResponseInventoryItemResponse"
+                  "$ref": "#/components/schemas/SuccessResponseGetUserItemsResponse"
                 }
               }
             }
@@ -1512,7 +1648,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_43",
+        "operationId": "handle_45",
         "parameters": [
           {
             "name": "username",
@@ -1551,7 +1687,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_44",
+        "operationId": "handle_46",
         "parameters": [
           {
             "name": "pageable",
@@ -1581,7 +1717,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_45",
+        "operationId": "handle_47",
         "responses": {
           "200": {
             "description": "OK",
@@ -1596,19 +1732,53 @@
         }
       }
     },
-    "/user/inventory": {
+    "/user/items": {
       "get": {
         "tags": [
-          "User"
+          "Inventory"
         ],
-        "operationId": "handle_46",
+        "operationId": "handle_48",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "context",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "equipped",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponseGetMyInventoryResponse"
+                  "$ref": "#/components/schemas/SuccessResponseGetUserItemsResponse"
                 }
               }
             }
@@ -1621,7 +1791,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_47",
+        "operationId": "handle_49",
         "parameters": [
           {
             "name": "pageable",
@@ -1651,7 +1821,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_48",
+        "operationId": "handle_50",
         "parameters": [
           {
             "name": "transactionId",
@@ -1682,7 +1852,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_49",
+        "operationId": "handle_51",
         "parameters": [
           {
             "name": "userId",
@@ -1721,7 +1891,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_50",
+        "operationId": "handle_52",
         "parameters": [
           {
             "name": "username",
@@ -1759,7 +1929,7 @@
         "tags": [
           "Ticket"
         ],
-        "operationId": "handle_51",
+        "operationId": "handle_53",
         "parameters": [
           {
             "name": "ticketId",
@@ -1790,7 +1960,7 @@
         "tags": [
           "Ticket"
         ],
-        "operationId": "handle_52",
+        "operationId": "handle_54",
         "parameters": [
           {
             "name": "pageable",
@@ -1820,7 +1990,7 @@
         "tags": [
           "Shop"
         ],
-        "operationId": "handle_53",
+        "operationId": "handle_55",
         "responses": {
           "200": {
             "description": "OK",
@@ -1840,7 +2010,7 @@
         "tags": [
           "Offer"
         ],
-        "operationId": "handle_54",
+        "operationId": "handle_56",
         "parameters": [
           {
             "name": "offerId",
@@ -1869,7 +2039,7 @@
         "tags": [
           "Offer"
         ],
-        "operationId": "handle_55",
+        "operationId": "handle_57",
         "parameters": [
           {
             "name": "offerId",
@@ -1900,7 +2070,7 @@
         "tags": [
           "Level"
         ],
-        "operationId": "handle_56",
+        "operationId": "handle_58",
         "parameters": [
           {
             "name": "value",
@@ -1931,7 +2101,7 @@
         "tags": [
           "Game"
         ],
-        "operationId": "handle_57",
+        "operationId": "handle_59",
         "parameters": [
           {
             "name": "pageable",
@@ -2022,7 +2192,7 @@
         "tags": [
           "Game"
         ],
-        "operationId": "handle_58",
+        "operationId": "handle_60",
         "parameters": [
           {
             "name": "pageable",
@@ -2052,7 +2222,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_59",
+        "operationId": "handle_61",
         "parameters": [
           {
             "name": "pageable",
@@ -2082,7 +2252,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_60",
+        "operationId": "handle_62",
         "responses": {
           "200": {
             "description": "OK",
@@ -2102,7 +2272,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_61",
+        "operationId": "handle_63",
         "responses": {
           "200": {
             "description": "OK",
@@ -2110,75 +2280,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponseGetSentPendingRequestsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cosmetic/search": {
-      "get": {
-        "tags": [
-          "Cosmetics"
-        ],
-        "operationId": "handle_62",
-        "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "pageable",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/Pageable"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponsePageResponseCosmeticResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/cosmetic/name/{name}": {
-      "get": {
-        "tags": [
-          "Cosmetics"
-        ],
-        "operationId": "handle_63",
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minLength": 1
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponseFindCosmeticByNameResponse"
                 }
               }
             }
@@ -2638,6 +2739,12 @@
                 "COSMETIC_REVOKED",
                 "COSMETIC_EQUIPPED",
                 "COSMETIC_UNEQUIPPED",
+                "ITEM_ACQUIRED",
+                "ITEM_REMOVED",
+                "ITEM_EQUIPPED",
+                "ITEM_UNEQUIPPED",
+                "ITEM_CONSUMED",
+                "ITEM_QUANTITY_CHANGED",
                 "MATCH_STARTED",
                 "MATCH_ENDED",
                 "ROOM_CLOSED_INACTIVITY",
@@ -2830,6 +2937,12 @@
                 "COSMETIC_REVOKED",
                 "COSMETIC_EQUIPPED",
                 "COSMETIC_UNEQUIPPED",
+                "ITEM_ACQUIRED",
+                "ITEM_REMOVED",
+                "ITEM_EQUIPPED",
+                "ITEM_UNEQUIPPED",
+                "ITEM_CONSUMED",
+                "ITEM_QUANTITY_CHANGED",
                 "MATCH_STARTED",
                 "MATCH_ENDED",
                 "ROOM_CLOSED_INACTIVITY",
@@ -2996,24 +3109,15 @@
         }
       }
     },
-    "/user/{userId}/inventory/{cosmeticId}": {
+    "/user/items/{itemId}": {
       "delete": {
         "tags": [
-          "User"
+          "Inventory"
         ],
         "operationId": "handle_71",
         "parameters": [
           {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "cosmeticId",
+            "name": "itemId",
             "in": "path",
             "required": true,
             "schema": {
@@ -3066,7 +3170,7 @@
             "enum": [
               "COIN",
               "GEMS",
-              "COSMETIC"
+              "ITEM"
             ],
             "minLength": 1
           },
@@ -3085,32 +3189,6 @@
           "rewardReference",
           "rewardType"
         ]
-      },
-      "CosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "AVATAR",
-              "BANNER",
-              "EMOTE",
-              "FRAME"
-            ]
-          },
-          "assetPath": {
-            "type": "string"
-          },
-          "available": {
-            "type": "boolean"
-          }
-        }
       },
       "LevelResponse": {
         "type": "object",
@@ -3151,15 +3229,12 @@
             "enum": [
               "COIN",
               "GEMS",
-              "COSMETIC"
+              "ITEM"
             ]
           },
           "amount": {
             "type": "integer",
             "format": "int32"
-          },
-          "cosmetic": {
-            "$ref": "#/components/schemas/CosmeticResponse"
           }
         }
       },
@@ -3182,86 +3257,6 @@
           }
         }
       },
-      "UpdateCosmeticRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 1
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "AVATAR",
-              "BANNER",
-              "EMOTE",
-              "FRAME"
-            ]
-          },
-          "asset": {
-            "type": "string",
-            "format": "binary"
-          },
-          "isNewAsset": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "isNewAsset",
-          "name",
-          "type"
-        ]
-      },
-      "Cosmetic": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "AVATAR",
-              "BANNER",
-              "EMOTE",
-              "FRAME"
-            ]
-          },
-          "assetPath": {
-            "type": "string"
-          },
-          "version": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "available": {
-            "type": "boolean"
-          }
-        }
-      },
-      "SuccessResponseUpdateCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/UpdateCosmeticResponse"
-          }
-        }
-      },
-      "UpdateCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "cosmetic": {
-            "$ref": "#/components/schemas/Cosmetic"
-          }
-        }
-      },
       "Permission": {
         "type": "object",
         "properties": {
@@ -3271,7 +3266,7 @@
               "USER",
               "LOGS",
               "ADMIN",
-              "COSMETIC",
+              "ITEMS",
               "GAME",
               "LEVELS",
               "OFFERS",
@@ -3338,6 +3333,9 @@
           "email": {
             "type": "string"
           },
+          "isSuper": {
+            "type": "boolean"
+          },
           "permissions": {
             "type": "array",
             "items": {
@@ -3356,7 +3354,7 @@
               "USER",
               "LOGS",
               "ADMIN",
-              "COSMETIC",
+              "ITEMS",
               "GAME",
               "LEVELS",
               "OFFERS",
@@ -3400,6 +3398,191 @@
           }
         }
       },
+      "UpdateItemRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "available": {
+            "type": "boolean"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "FRAME",
+              "EMOTE",
+              "BOARD",
+              "CELL"
+            ]
+          },
+          "context": {
+            "type": "string",
+            "enum": [
+              "PROFILE",
+              "MATCH"
+            ]
+          },
+          "effectKind": {
+            "type": "string"
+          },
+          "effectType": {
+            "type": "string",
+            "enum": [
+              "XP_BOOST_PCT",
+              "RANKING_POINTS_BOOST_PCT",
+              "COIN_BOOST_PCT",
+              "RANKING_POINTS_SHIELD",
+              "NICKNAME_CHANGE_GRANT"
+            ]
+          },
+          "magnitude": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "durationMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "asset": {
+            "type": "string",
+            "format": "binary"
+          },
+          "isNewAsset": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ItemEffectResponse": {
+        "discriminator": {
+          "propertyName": "kind"
+        },
+        "properties": {
+          "kind": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "ItemResponse": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "EQUIPPABLE",
+              "CONSUMABLE"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "FRAME",
+              "EMOTE",
+              "BOARD",
+              "CELL"
+            ]
+          },
+          "context": {
+            "type": "string",
+            "enum": [
+              "PROFILE",
+              "MATCH"
+            ]
+          },
+          "stackable": {
+            "type": "boolean"
+          },
+          "maxStack": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "consumable": {
+            "type": "boolean"
+          },
+          "effect": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NicknameChangeEffectResponse"
+              },
+              {
+                "$ref": "#/components/schemas/PercentageTimedEffectResponse"
+              }
+            ]
+          },
+          "assetPath": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "available": {
+            "type": "boolean"
+          }
+        }
+      },
+      "NicknameChangeEffectResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ItemEffectResponse"
+          }
+        ]
+      },
+      "PercentageTimedEffectResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ItemEffectResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "XP_BOOST_PCT",
+                  "RANKING_POINTS_BOOST_PCT",
+                  "COIN_BOOST_PCT",
+                  "RANKING_POINTS_SHIELD",
+                  "NICKNAME_CHANGE_GRANT"
+                ]
+              },
+              "magnitude": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "durationMinutes": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        ]
+      },
+      "SuccessResponseItemResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ItemResponse"
+          }
+        }
+      },
       "CreateUserRequest": {
         "type": "object",
         "properties": {
@@ -3440,6 +3623,90 @@
             "$ref": "#/components/schemas/CreateUserResponse"
           }
         }
+      },
+      "EquipItemRequest": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "string",
+            "enum": [
+              "PROFILE",
+              "MATCH"
+            ]
+          }
+        },
+        "required": [
+          "context"
+        ]
+      },
+      "InventoryMovementsResponse": {
+        "type": "object",
+        "properties": {
+          "movements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemMovementResponse"
+            }
+          }
+        }
+      },
+      "ItemMovementResponse": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "change": {
+            "type": "string",
+            "enum": [
+              "ACQUIRED",
+              "REMOVED",
+              "EQUIPPED",
+              "UNEQUIPPED",
+              "CONSUMED",
+              "QUANTITY_CHANGED"
+            ]
+          },
+          "equippedBefore": {
+            "type": "boolean"
+          },
+          "equippedAfter": {
+            "type": "boolean"
+          },
+          "quantityBefore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quantityAfter": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SuccessResponseInventoryMovementsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/InventoryMovementsResponse"
+          }
+        }
+      },
+      "ConsumeItemRequest": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "quantity"
+        ]
       },
       "AuthUserRequest": {
         "type": "object",
@@ -3674,21 +3941,6 @@
           }
         }
       },
-      "CosmeticReward": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Reward"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "cosmetic": {
-                "$ref": "#/components/schemas/Cosmetic"
-              }
-            }
-          }
-        ]
-      },
       "HardGemsReward": {
         "allOf": [
           {
@@ -3698,6 +3950,26 @@
             "type": "object",
             "properties": {
               "amount": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        ]
+      },
+      "ItemGrantReward": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Reward"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "definitionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "quantity": {
                 "type": "integer",
                 "format": "int32"
               }
@@ -3761,10 +4033,10 @@
           "reward": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/CosmeticReward"
+                "$ref": "#/components/schemas/HardGemsReward"
               },
               {
-                "$ref": "#/components/schemas/HardGemsReward"
+                "$ref": "#/components/schemas/ItemGrantReward"
               },
               {
                 "$ref": "#/components/schemas/SoftCoinsReward"
@@ -3855,7 +4127,7 @@
             "enum": [
               "COIN",
               "GEMS",
-              "COSMETIC"
+              "ITEM"
             ]
           },
           "rewardReference": {
@@ -3971,7 +4243,7 @@
             "enum": [
               "COIN",
               "GEMS",
-              "COSMETIC"
+              "ITEM"
             ],
             "minLength": 1
           },
@@ -4117,21 +4389,41 @@
       "InventoryItemResponse": {
         "type": "object",
         "properties": {
-          "cosmeticId": {
+          "itemId": {
             "type": "string",
             "format": "uuid"
           },
           "name": {
             "type": "string"
           },
-          "type": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "EQUIPPABLE",
+              "CONSUMABLE"
+            ]
+          },
+          "category": {
             "type": "string",
             "enum": [
               "AVATAR",
               "BANNER",
+              "FRAME",
               "EMOTE",
-              "FRAME"
+              "BOARD",
+              "CELL"
             ]
+          },
+          "context": {
+            "type": "string",
+            "enum": [
+              "PROFILE",
+              "MATCH"
+            ]
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
           },
           "equipped": {
             "type": "boolean"
@@ -4189,52 +4481,6 @@
           }
         }
       },
-      "RegisterCosmeticRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "minLength": 1
-          },
-          "cosmeticType": {
-            "type": "string",
-            "enum": [
-              "AVATAR",
-              "BANNER",
-              "EMOTE",
-              "FRAME"
-            ]
-          },
-          "asset": {
-            "type": "string",
-            "format": "binary"
-          }
-        },
-        "required": [
-          "asset",
-          "cosmeticType",
-          "name"
-        ]
-      },
-      "RegisterCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "cosmetic": {
-            "$ref": "#/components/schemas/Cosmetic"
-          }
-        }
-      },
-      "SuccessResponseRegisterCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/RegisterCosmeticResponse"
-          }
-        }
-      },
       "RegisterAdminRequest": {
         "type": "object",
         "properties": {
@@ -4271,6 +4517,71 @@
             "$ref": "#/components/schemas/RegisterAdminResponse"
           }
         }
+      },
+      "CreateItemRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "EQUIPPABLE",
+              "CONSUMABLE"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "FRAME",
+              "EMOTE",
+              "BOARD",
+              "CELL"
+            ]
+          },
+          "context": {
+            "type": "string",
+            "enum": [
+              "PROFILE",
+              "MATCH"
+            ]
+          },
+          "effectKind": {
+            "type": "string"
+          },
+          "effectType": {
+            "type": "string",
+            "enum": [
+              "XP_BOOST_PCT",
+              "RANKING_POINTS_BOOST_PCT",
+              "COIN_BOOST_PCT",
+              "RANKING_POINTS_SHIELD",
+              "NICKNAME_CHANGE_GRANT"
+            ]
+          },
+          "magnitude": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          },
+          "durationMinutes": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          },
+          "asset": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "kind",
+          "name"
+        ]
       },
       "AuthAdminRequest": {
         "type": "object",
@@ -4397,7 +4708,7 @@
             "enum": [
               "COIN",
               "GEMS",
-              "COSMETIC"
+              "ITEM"
             ]
           },
           "quantity": {
@@ -4445,9 +4756,14 @@
             "type": "string",
             "maxLength": 16,
             "minLength": 3
+          },
+          "itemId": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "required": [
+          "itemId",
           "nickname"
         ]
       },
@@ -4467,28 +4783,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/ChangeNicknameResponse"
-          }
-        }
-      },
-      "ChangeCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "inventoryItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/InventoryItemResponse"
-            }
-          }
-        }
-      },
-      "SuccessResponseChangeCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/ChangeCosmeticResponse"
           }
         }
       },
@@ -4577,44 +4871,6 @@
         "required": [
           "friendId"
         ]
-      },
-      "EnableCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "cosmetic": {
-            "$ref": "#/components/schemas/CosmeticResponse"
-          }
-        }
-      },
-      "SuccessResponseEnableCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/EnableCosmeticResponse"
-          }
-        }
-      },
-      "DisableCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "cosmetic": {
-            "$ref": "#/components/schemas/CosmeticResponse"
-          }
-        }
-      },
-      "SuccessResponseDisableCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/DisableCosmeticResponse"
-          }
-        }
       },
       "ResolveTicketRequest": {
         "type": "object",
@@ -4761,47 +5017,80 @@
           }
         }
       },
-      "PageResponseInventoryItemResponse": {
+      "GetUserItemsResponse": {
         "type": "object",
         "properties": {
-          "content": {
+          "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/InventoryItemResponse"
+              "$ref": "#/components/schemas/UserItemResponse"
             }
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
           }
         }
       },
-      "SuccessResponsePageResponseInventoryItemResponse": {
+      "SuccessResponseGetUserItemsResponse": {
         "type": "object",
         "properties": {
           "success": {
             "type": "boolean"
           },
           "data": {
-            "$ref": "#/components/schemas/PageResponseInventoryItemResponse"
+            "$ref": "#/components/schemas/GetUserItemsResponse"
+          }
+        }
+      },
+      "UserItemResponse": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "EQUIPPABLE",
+              "CONSUMABLE"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "FRAME",
+              "EMOTE",
+              "BOARD",
+              "CELL"
+            ]
+          },
+          "context": {
+            "type": "string",
+            "enum": [
+              "PROFILE",
+              "MATCH"
+            ]
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "equipped": {
+            "type": "boolean"
+          },
+          "acquiredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "assetPath": {
+            "type": "string"
           }
         }
       },
@@ -4934,28 +5223,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/GetMyProfileResponse"
-          }
-        }
-      },
-      "GetMyInventoryResponse": {
-        "type": "object",
-        "properties": {
-          "inventory": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/InventoryItemResponse"
-            }
-          }
-        }
-      },
-      "SuccessResponseGetMyInventoryResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/GetMyInventoryResponse"
           }
         }
       },
@@ -5200,6 +5467,35 @@
           }
         }
       },
+      "EquippedCosmetic": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "AVATAR",
+              "BANNER",
+              "FRAME",
+              "EMOTE",
+              "BOARD",
+              "CELL"
+            ]
+          },
+          "equipped": {
+            "type": "boolean"
+          },
+          "assetPath": {
+            "type": "string"
+          }
+        }
+      },
       "GameResponse": {
         "type": "object",
         "properties": {
@@ -5243,37 +5539,6 @@
             "items": {
               "$ref": "#/components/schemas/MatchHistoryResponse"
             }
-          }
-        }
-      },
-      "InventoryItem": {
-        "type": "object",
-        "properties": {
-          "cosmeticId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "AVATAR",
-              "BANNER",
-              "EMOTE",
-              "FRAME"
-            ]
-          },
-          "equipped": {
-            "type": "boolean"
-          },
-          "unlockedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "assetPath": {
-            "type": "string"
           }
         }
       },
@@ -5343,7 +5608,7 @@
           "cosmeticsEquipped": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/InventoryItem"
+              "$ref": "#/components/schemas/EquippedCosmetic"
             }
           },
           "role": {
@@ -5505,69 +5770,6 @@
           }
         }
       },
-      "PageResponseCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CosmeticResponse"
-            }
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          }
-        }
-      },
-      "SuccessResponsePageResponseCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/PageResponseCosmeticResponse"
-          }
-        }
-      },
-      "FindCosmeticByNameResponse": {
-        "type": "object",
-        "properties": {
-          "cosmetic": {
-            "$ref": "#/components/schemas/CosmeticResponse"
-          }
-        }
-      },
-      "SuccessResponseFindCosmeticByNameResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/FindCosmeticByNameResponse"
-          }
-        }
-      },
       "PageResponseAdminResponse": {
         "type": "object",
         "properties": {
@@ -5628,6 +5830,50 @@
           },
           "data": {
             "$ref": "#/components/schemas/GetMyAdminProfileResponse"
+          }
+        }
+      },
+      "PageResponseItemResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemResponse"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuccessResponsePageResponseItemResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PageResponseItemResponse"
           }
         }
       },
@@ -5805,25 +6051,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/DeleteOfferResponse"
-          }
-        }
-      },
-      "DeleteCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "cosmetic": {
-            "$ref": "#/components/schemas/CosmeticResponse"
-          }
-        }
-      },
-      "SuccessResponseDeleteCosmeticResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "$ref": "#/components/schemas/DeleteCosmeticResponse"
           }
         }
       },

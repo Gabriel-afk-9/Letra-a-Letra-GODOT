@@ -4,6 +4,7 @@ class_name AppRoutes
 const LOGIN := "res://features/login/presentation/views/login_screen.tscn"
 const REGISTER := "res://features/register/presentation/views/register_screen.tscn"
 const HOME := "res://features/home/presentation/views/home_screen.tscn"
+const LOADING := "res://features/loading/presentation/views/loading_screen.tscn"
 const SHELL := "res://features/shell/presentation/views/shell_screen.tscn"
 const SHOP := "res://features/shop/presentation/views/shop_screen.tscn"
 const INVENTORY := "res://features/inventory/presentation/views/inventory_screen.tscn"

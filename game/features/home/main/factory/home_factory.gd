@@ -11,5 +11,6 @@ static func create() -> HomeViewModel:
 
 	return HomeViewModel.new(
 		get_current_user_usecase,
-		services.navigation_service()
+		services.navigation_service(),
+		services.initial_data_store()
 	)

@@ -49,11 +49,13 @@ func test_home_is_play_page_without_navbar() -> void:
 	var tscn := FileAccess.get_file_as_string("res://features/home/presentation/views/home_screen.tscn")
 	assert_false(tscn.contains("BottomNav"), "cena home não contém BottomNav")
 
-func test_auth_redirects_to_shell() -> void:
+func test_auth_redirects_to_loading() -> void:
 	var login := FileAccess.get_file_as_string("res://features/login/presentation/viewmodels/login_viewmodel.gd")
-	assert_true(login.contains("AppRoutes.SHELL"), "login vai para o shell")
+	assert_true(login.contains("AppRoutes.LOADING"), "login vai para o loading")
 	var register := FileAccess.get_file_as_string("res://features/register/presentation/viewmodels/register_viewmodel.gd")
-	assert_true(register.contains("AppRoutes.SHELL"), "registro vai para o shell")
+	assert_true(register.contains("AppRoutes.LOADING"), "registro vai para o loading")
+	var loading := FileAccess.get_file_as_string("res://features/loading/presentation/viewmodels/loading_viewmodel.gd")
+	assert_true(loading.contains("AppRoutes.SHELL"), "loading vai para o shell no sucesso")
 
 func test_navbar_selected_state_is_dynamic() -> void:
 	var gd := FileAccess.get_file_as_string("res://shared/components/navbar/navbar.gd")

@@ -11,6 +11,7 @@ var _matchmaking_repository: RemoteMatchmakingRepository
 var _game_repository: RemoteGameRepository
 var _user_repository: RemoteUserRepository
 var _current_user_provider: CurrentUserProvider
+var _initial_data_store: InitialDataStore
 
 func _enter_tree() -> void:
 	if _initialized: return
@@ -35,6 +36,8 @@ func _enter_tree() -> void:
 	_current_user_provider = SessionStoreCurrentUserProvider.new(SessionStore)
 	_matchmaking_repository = RemoteMatchmakingRepository.new(_websocket_client, _current_user_provider)
 	_game_repository = RemoteGameRepository.new(_websocket_client, _current_user_provider)
+
+	_initial_data_store = InitialDataStore.new()
 
 func session_persistence() -> SessionPersistence:
 	return _session_persistence
@@ -63,3 +66,6 @@ func game_repository() -> GameRepository:
 
 func current_user_provider() -> CurrentUserProvider:
 	return _current_user_provider
+
+func initial_data_store() -> InitialDataStore:
+	return _initial_data_store

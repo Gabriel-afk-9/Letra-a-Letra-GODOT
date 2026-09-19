@@ -12,4 +12,4 @@ static func create() -> SocialViewModel:
 		SessionStore
 	)
 
-	return SocialViewModel.new(usecase)
+	return SocialViewModel.new(usecase, services.initial_data_store())

@@ -11,6 +11,15 @@ func fetch_current_user(
 	return null
 
 
+func fetch_current_user_result(
+	access_token: String
+) -> Dictionary:
+
+	assert(false, "Must be implemented.")
+
+	return {}
+
+
 func find_by_username(
 	username: String
 ) -> User:

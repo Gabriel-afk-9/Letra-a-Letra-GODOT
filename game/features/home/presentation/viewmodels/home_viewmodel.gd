@@ -7,16 +7,26 @@ signal game_mode_changed(mode: int)
 
 var _get_current_user_usecase: GetCurrentUserUseCase
 var _navigation: NavigationService
+var _data_store: InitialDataStore
 var _profile: HomePlayerProfile = null
 var _game_mode: int = HomeGameMode.Mode.NORMAL
 
 
 func _init(
 	get_current_user_usecase: GetCurrentUserUseCase,
-	navigation: NavigationService
+	navigation: NavigationService,
+	data_store: InitialDataStore = null
 ) -> void:
 	_get_current_user_usecase = get_current_user_usecase
 	_navigation = navigation
+	_data_store = data_store
+
+
+func load_initial() -> void:
+	if _data_store != null and _data_store.has_user():
+		_apply_user(_data_store.get_user())
+		return
+	load_user()
 
 
 func load_user() -> void:
@@ -28,6 +38,10 @@ func load_user() -> void:
 		_set_error("Usuário não encontrado.")
 		return
 
+	_apply_user(user)
+
+
+func _apply_user(user: User) -> void:
 	_profile = HomePlayerProfile.from_user(user)
 	user_loaded.emit(user)
 	profile_changed.emit(_profile)

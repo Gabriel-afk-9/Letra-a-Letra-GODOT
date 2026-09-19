@@ -23,6 +23,8 @@ const ERROR_FRIEND_NOT_FOUND := "the friend was not found"
 const ERROR_STILL_PENDING := "the friend request is still pending"
 
 var _usecase: FriendsUseCase
+var _data_store: InitialDataStore
+var _seeded_from_store: bool = false
 
 var _friends: Array = []
 var _pending: Array = []
@@ -55,8 +57,27 @@ var _discover_busy: bool = false
 var _action_id: String = ""
 
 
-func _init(usecase: FriendsUseCase) -> void:
+func _init(usecase: FriendsUseCase, data_store: InitialDataStore = null) -> void:
 	_usecase = usecase
+	_data_store = data_store
+
+
+func load_initial() -> void:
+	if not _seeded_from_store and _data_store != null and _data_store.is_friends_loaded():
+		_seeded_from_store = true
+		_friends = _data_store.get_friends()
+		_page = _data_store.get_friends_page()
+		_total_pages = _data_store.get_friends_total_pages()
+		_pending = _data_store.get_pending()
+		_sent_requests = _data_store.get_sent()
+		_friends_failed = false
+		_pending_failed = false
+		_sent_failed = false
+		friends_changed.emit()
+		pending_changed.emit()
+		sent_changed.emit()
+		return
+	await load_all()
 
 
 func setup_page_size(size: int) -> void:

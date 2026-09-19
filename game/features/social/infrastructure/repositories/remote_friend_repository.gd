@@ -15,25 +15,26 @@ func fetch_friends(page: int, size: int) -> Dictionary:
 		"/friend?page=%d&size=%d&sort=%s" % [page, size, FRIENDS_PAGE_SORT]
 	)
 	if not response.success:
-		return {"error": _message_or_default(response)}
+		return {"error": _message_or_default(response), "status_code": response.status_code}
 	var result := FriendMapper.page_from_body(response.body)
 	if result.is_empty():
-		return {"error": "Resposta inválida do servidor."}
+		return {"error": "Resposta inválida do servidor.", "status_code": response.status_code}
+	result["status_code"] = response.status_code
 	return result
 
 
 func fetch_pending() -> Dictionary:
 	var response: HttpResponse = await _http_client.http_get("/friend/pending")
 	if not response.success:
-		return {"error": _message_or_default(response)}
-	return {"requests": FriendMapper.pending_from_body(response.body)}
+		return {"error": _message_or_default(response), "status_code": response.status_code}
+	return {"requests": FriendMapper.pending_from_body(response.body), "status_code": response.status_code}
 
 
 func fetch_sent() -> Dictionary:
 	var response: HttpResponse = await _http_client.http_get("/friend/pending/sent")
 	if not response.success:
-		return {"error": _message_or_default(response)}
-	return {"requests": FriendMapper.pending_from_body(response.body)}
+		return {"error": _message_or_default(response), "status_code": response.status_code}
+	return {"requests": FriendMapper.pending_from_body(response.body), "status_code": response.status_code}
 
 
 func send_request(friend_id: String) -> Dictionary:

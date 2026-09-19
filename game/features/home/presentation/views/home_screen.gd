@@ -65,7 +65,7 @@ func _ready() -> void:
 	_connect_view_model()
 	_connect_buttons()
 	_refresh_game_mode(_view_model.selected_game_mode())
-	_view_model.load_user()
+	_view_model.load_initial()
 	_setup_avatar_shader()
 
 

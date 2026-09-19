@@ -33,7 +33,7 @@ func register(
 	_set_loading(false)
 
 	if result.success:
-		_navigation.go_to(AppRoutes.SHELL)
+		_navigation.go_to(AppRoutes.LOADING)
 		return
 
 	_set_error(result.message)

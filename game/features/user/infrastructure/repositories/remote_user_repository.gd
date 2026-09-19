@@ -7,13 +7,18 @@ func _init(http_client: HttpClient) -> void:
 	_http_client = http_client
 
 func fetch_current_user(access_token: String) -> User:
+	var result := await fetch_current_user_result(access_token)
+	return result.get("user") as User
+
+
+func fetch_current_user_result(access_token: String) -> Dictionary:
 	var response := await _http_client.http_get(
 		"/user/me",
 		access_token
 	)
 	if not response.success:
-		return null
-	return UserMapper.from_response_body(response.body)
+		return {"user": null, "status_code": response.status_code, "error": _message_or_default(response)}
+	return {"user": UserMapper.from_response_body(response.body), "status_code": response.status_code}
 
 
 func find_by_username(username: String) -> User:

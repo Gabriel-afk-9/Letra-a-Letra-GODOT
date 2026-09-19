@@ -1,0 +1,194 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://features/loading/presentation/views/loading_screen.gd" id="1_loading"]
+[ext_resource type="Texture2D" uid="uid://hb4b5dimdw5i" path="res://assets/images/backgrounds/vertical_clean.jpg" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://dffl7ur3vpb6p" path="res://assets/images/cells/l-cell.png" id="3_am426"]
+[ext_resource type="Texture2D" uid="uid://brrme07786k2s" path="res://assets/images/logo/lal.png" id="3_logo"]
+[ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="4_error"]
+[ext_resource type="Texture2D" uid="uid://cfaxrdbtgo6w2" path="res://assets/images/cells/a-cell.png" id="4_yo8vn"]
+[ext_resource type="Texture2D" uid="uid://c2jgqct6t1mv5" path="res://assets/images/cells/l-cell-right.png" id="5_u32c6"]
+[ext_resource type="StyleBox" path="res://features/loading/assets/styles/loading_bar_bg.tres" id="6_bar_bg"]
+[ext_resource type="StyleBox" path="res://features/loading/assets/styles/loading_bar_fill.tres" id="7_bar_fill"]
+[ext_resource type="StyleBox" uid="uid://brk4w17avnm65" path="res://assets/styles/buttons/orange_button_default.tres" id="8_orange"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_logo"]
+atlas = ExtResource("3_logo")
+region = Rect2(52, 140, 398, 226)
+
+[node name="LoadingScreen" type="Control" unique_id=586970614]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+script = ExtResource("1_loading")
+
+[node name="Background" type="TextureRect" parent="." unique_id=845082277]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Main" type="Control" parent="." unique_id=538419621]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Main" unique_id=450925811]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -214.5
+offset_bottom = -114.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="CellSlot1" type="Control" parent="Main/HBoxContainer" unique_id=810111]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="Cell1" type="TextureRect" parent="Main/HBoxContainer/CellSlot1" unique_id=810112]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_am426")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CellSlot2" type="Control" parent="Main/HBoxContainer" unique_id=810113]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="Cell2" type="TextureRect" parent="Main/HBoxContainer/CellSlot2" unique_id=810114]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_yo8vn")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CellSlot3" type="Control" parent="Main/HBoxContainer" unique_id=810115]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="Cell3" type="TextureRect" parent="Main/HBoxContainer/CellSlot3" unique_id=810116]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_u32c6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Logo" type="TextureRect" parent="Main" unique_id=2142097415]
+z_index = 2
+custom_minimum_size = Vector2(320, 181)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -90.5
+offset_right = 160.0
+offset_bottom = 90.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LoadingBox" type="VBoxContainer" parent="Main" unique_id=503083195]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -278.0
+offset_bottom = -66.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 16
+alignment = 2
+
+[node name="StatusLabel" type="Label" parent="Main/LoadingBox" unique_id=1852516626]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "Carregando dados..."
+
+[node name="LoadingBar" type="ProgressBar" parent="Main/LoadingBox" unique_id=1852516627]
+custom_minimum_size = Vector2(280, 22)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/background = ExtResource("6_bar_bg")
+theme_override_styles/fill = ExtResource("7_bar_fill")
+max_value = 100.0
+value = 0.0
+show_percentage = false
+
+[node name="RetryBtn" type="Button" parent="Main/LoadingBox" unique_id=242232263]
+visible = false
+custom_minimum_size = Vector2(180, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.7)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = ExtResource("8_orange")
+theme_override_styles/pressed = ExtResource("8_orange")
+theme_override_styles/hover = ExtResource("8_orange")
+text = "TENTAR NOVAMENTE"
+
+[node name="BackBtn" type="LinkButton" parent="Main/LoadingBox" unique_id=242232264]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 0.8)
+theme_override_font_sizes/font_size = 14
+text = "Voltar ao login"
+
+[node name="ErrorLabel" type="Label" parent="Main/LoadingBox" unique_id=1852516628]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0.3019608, 0.3019608, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+text_overrun_behavior = 3
+script = ExtResource("4_error")
+
+[connection signal="pressed" from="Main/LoadingBox/RetryBtn" to="." method="_on_retry_btn_pressed"]
+[connection signal="pressed" from="Main/LoadingBox/BackBtn" to="." method="_on_back_btn_pressed"]

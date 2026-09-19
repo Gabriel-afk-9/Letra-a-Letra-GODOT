@@ -55,7 +55,7 @@ func page_id() -> StringName:
 func enter(_params: Dictionary) -> void:
 	if not is_node_ready() or _view_model == null:
 		return
-	_view_model.load_all()
+	_view_model.load_initial()
 
 
 func _ready() -> void:
