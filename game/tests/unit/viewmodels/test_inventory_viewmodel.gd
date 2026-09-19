@@ -83,7 +83,7 @@ func test_load_initial_seeds_from_store_then_refreshes() -> void:
 	assert_eq(seeded_vm.items().size(), 2, "itens finais vêm da API")
 
 
-func test_categories_always_show_all_sections() -> void:
+func test_sections_and_cosmetic_categories_always_visible() -> void:
 	_repo.inventory_result = {
 		"items": [
 			_consumable("c-1"),
@@ -95,20 +95,22 @@ func test_categories_always_show_all_sections() -> void:
 
 	await _vm.refresh()
 
-	assert_eq(_vm.categories(), ["AVATAR", "BANNER", "FRAME", "EMOTE", "BOARD", "CELL", "CONSUMABLE"], "todas as seções sempre visíveis, consumíveis por último")
-	assert_eq(_vm.items_for("AVATAR").size(), 1, "filtro por categoria")
-	assert_eq(_vm.items_for("BANNER").size(), 0, "seção vazia retorna lista vazia")
-	assert_eq(_vm.items_for("CONSUMABLE").size(), 1, "não equipáveis na aba de consumíveis")
-	assert_true(_vm.is_consumable_tab("CONSUMABLE"), "identifica aba de consumíveis")
-	assert_false(_vm.is_consumable_tab("AVATAR"), "categoria não é consumível")
+	assert_eq(_vm.sections(), ["COSMETICS", "OTHERS"], "duas seções fixas")
+	assert_eq(_vm.cosmetic_categories(), ["AVATAR", "BANNER", "FRAME", "EMOTE", "BOARD", "CELL"], "sub-seletor completo")
+	assert_eq(_vm.cosmetic_items("AVATAR").size(), 1, "filtro por categoria")
+	assert_eq(_vm.cosmetic_items("BANNER").size(), 0, "categoria vazia retorna lista vazia")
+	assert_eq(_vm.other_items().size(), 1, "não equipáveis na seção outros")
+	assert_true(_vm.is_cosmetics_section("COSMETICS"), "identifica seção de cosméticos")
+	assert_false(_vm.is_cosmetics_section("OTHERS"), "outros não é cosméticos")
 
 
-func test_categories_full_without_items() -> void:
+func test_sections_full_without_items() -> void:
 	_repo.inventory_result = {"items": [], "status_code": 200}
 
 	await _vm.refresh()
 
-	assert_eq(_vm.categories(), ["AVATAR", "BANNER", "FRAME", "EMOTE", "BOARD", "CELL", "CONSUMABLE"], "seções visíveis mesmo sem itens")
+	assert_eq(_vm.sections(), ["COSMETICS", "OTHERS"], "seções visíveis mesmo sem itens")
+	assert_eq(_vm.cosmetic_categories(), ["AVATAR", "BANNER", "FRAME", "EMOTE", "BOARD", "CELL"], "categorias visíveis mesmo sem itens")
 	assert_false(_vm.has_items(), "sem itens")
 
 

@@ -89,6 +89,10 @@ func _tabs_row() -> HBoxContainer:
 	return _page.get_node("Content/MainVBox/TabScroll/TabsRow") as HBoxContainer
 
 
+func _sub_tabs_row() -> HBoxContainer:
+	return _page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/SubTabsRow") as HBoxContainer
+
+
 func _download_button(card: Button) -> Button:
 	return card.get_node_or_null("DownloadBtn") as Button
 
@@ -111,7 +115,7 @@ func test_inventory_page_id_and_layout() -> void:
 	assert_eq(String((_page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow/PagePill/PageMargin/PageLabel") as Label).text), "Pág 1", "deve iniciar na página 1")
 
 
-func test_inventory_loads_real_items_and_builds_tabs() -> void:
+func test_inventory_sections_with_cosmetic_selector() -> void:
 	var items := [
 		_item(_avatar_dict("av-1", "AVATAR/ceo.webp", true)),
 		_item(_banner_dict("bn-1")),
@@ -119,29 +123,39 @@ func test_inventory_loads_real_items_and_builds_tabs() -> void:
 	]
 	await _bind_items(items)
 
-	assert_eq(_page._tabs, ["AVATAR", "BANNER", "FRAME", "EMOTE", "BOARD", "CELL", "CONSUMABLE"], "todas as seções sempre visíveis")
-	assert_eq(_page._tab, "AVATAR", "primeira aba selecionada por padrão")
-	assert_eq(_tabs_row().get_child_count(), 7, "sete botões de aba")
+	assert_eq(_page._section, "COSMETICS", "seção cosméticos por padrão")
+	assert_eq(_page._category, "AVATAR", "categoria avatar por padrão")
+	assert_eq(_tabs_row().get_child_count(), 2, "duas seções no topo")
+	assert_not_null(_tabs_row().get_node("COSMETICSTab"), "seção cosméticos")
+	assert_not_null(_tabs_row().get_node("OTHERSTab"), "seção outros")
+	assert_true(_sub_tabs_row().visible, "subseletor visível em cosméticos")
+	assert_eq(_sub_tabs_row().get_child_count(), 6, "seis categorias de cosméticos")
 	assert_eq(_grid().get_child_count(), 1, "aba AVATAR exibe 1 item")
-	_page._on_tab_pressed("CONSUMABLE")
+	_page._on_category_pressed("BANNER")
 	await get_tree().process_frame
-	assert_eq(_grid().get_child_count(), 1, "aba CONSUMÍVEIS exibe 1 item")
-	_page._on_tab_pressed("BANNER")
+	assert_eq(_grid().get_child_count(), 1, "categoria BANNER exibe 1 item")
+	_page._on_category_pressed("FRAME")
 	await get_tree().process_frame
-	assert_eq(_grid().get_child_count(), 1, "aba BANNER exibe 1 item")
+	assert_eq(_grid().get_child_count(), 0, "categoria vazia sem cards")
+	assert_eq((_page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/StatusLabel") as Label).text, "Nada nesta seção.", "status de categoria vazia")
+	_page._on_section_pressed("OTHERS")
+	await get_tree().process_frame
+	assert_false(_sub_tabs_row().visible, "subseletor oculto em outros")
+	assert_eq(_grid().get_child_count(), 1, "seção outros exibe o consumível")
 
 
 func test_inventory_empty_sections_stay_visible() -> void:
 	await _bind_items([])
 
-	assert_eq(_tabs_row().get_child_count(), 7, "seções visíveis mesmo sem itens")
+	assert_eq(_tabs_row().get_child_count(), 2, "seções visíveis mesmo sem itens")
+	assert_eq(_sub_tabs_row().get_child_count(), 6, "categorias visíveis mesmo sem itens")
 	assert_eq(_grid().get_child_count(), 0, "grade vazia")
 	assert_eq((_page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/StatusLabel") as Label).text, "Nenhum item por aqui ainda.", "status de inventário vazio")
 	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
-	_page._on_tab_pressed("FRAME")
+	_page._on_category_pressed("FRAME")
 	await get_tree().process_frame
-	assert_eq(_grid().get_child_count(), 0, "seção vazia sem cards")
-	assert_eq((_page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/StatusLabel") as Label).text, "Nada nesta aba.", "status de seção vazia")
+	assert_eq(_grid().get_child_count(), 0, "categoria vazia sem cards")
+	assert_eq((_page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/StatusLabel") as Label).text, "Nada nesta seção.", "status de categoria vazia")
 
 
 func test_inventory_cards_keep_constant_size() -> void:
@@ -172,7 +186,7 @@ func test_inventory_existing_local_asset_hides_download_button() -> void:
 
 func test_inventory_consumable_has_no_download_button() -> void:
 	await _bind_items([_item(_consumable_dict("co-1"))])
-	_page._on_tab_pressed("CONSUMABLE")
+	_page._on_section_pressed("OTHERS")
 	await get_tree().process_frame
 
 	var card := _grid().get_child(0) as Button

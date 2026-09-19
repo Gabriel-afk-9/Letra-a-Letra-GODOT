@@ -14,7 +14,16 @@ const TAB_TITLES := {
 	"EMOTE": "EMOTE",
 	"BOARD": "TABULEIRO",
 	"CELL": "CÉLULA",
-	"CONSUMABLE": "CONSUMÍVEIS",
+}
+
+const SECTION_TITLES := {
+	"COSMETICS": "COSMÉTICOS",
+	"OTHERS": "OUTROS",
+}
+
+const SECTION_ICONS := {
+	"COSMETICS": preload("res://assets/images/icons/room-icon.png"),
+	"OTHERS": preload("res://assets/images/icons/navbar-2.png"),
 }
 
 const TAB_ICONS := {
@@ -38,6 +47,7 @@ const PALETTE: Array = [
 ]
 
 @onready var _tabs_row: HBoxContainer = $Content/MainVBox/TabScroll/TabsRow
+@onready var _sub_tabs_row: HBoxContainer = $Content/MainVBox/Panel/PanelMargin/PanelVBox/SubTabsRow
 @onready var _grid: GridContainer = $Content/MainVBox/Panel/PanelMargin/PanelVBox/ItemGrid
 @onready var _status_label: Label = $Content/MainVBox/Panel/PanelMargin/PanelVBox/StatusLabel
 @onready var _page_label: Label = $Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow/PagePill/PageMargin/PageLabel
@@ -46,8 +56,8 @@ const PALETTE: Array = [
 
 var _view_model: InventoryViewModel
 var _assets_node: Node
-var _tabs: Array = []
-var _tab: String = ""
+var _section: String = ""
+var _category: String = ""
 var _page: int = 0
 var _selected: Dictionary = {}
 
@@ -75,7 +85,8 @@ func bind_view_model(vm: InventoryViewModel) -> void:
 	_assets_node = _view_model.asset_service()
 	if _assets_node != null and is_node_ready():
 		add_child(_assets_node)
-	_tab = ""
+	_section = ""
+	_category = ""
 	_page = 0
 	_selected.clear()
 	if not is_node_ready():
@@ -129,29 +140,100 @@ func _disconnect_view_model() -> void:
 func _refresh_all() -> void:
 	if _view_model == null:
 		return
-	_tabs = _view_model.categories()
-	if _tab.is_empty() or not _tabs.has(_tab):
-		if _tabs.is_empty():
-			_tab = ""
-		else:
-			_tab = str(_tabs[0])
+	var sections: Array = _view_model.sections()
+	if _section.is_empty() or not sections.has(_section):
+		_section = str(sections[0])
 		_page = 0
-	_refresh_tabs()
+	var categories: Array = _view_model.cosmetic_categories()
+	if _category.is_empty() or not categories.has(_category):
+		_category = str(categories[0])
+		_page = 0
+	_refresh_sections()
+	_refresh_sub_tabs()
 	_refresh_grid()
 	_refresh_pager()
 	_refresh_status()
 
 
-func _refresh_tabs() -> void:
+func _is_cosmetics() -> bool:
+	return _view_model != null and _view_model.is_cosmetics_section(_section)
+
+
+func _filter_id() -> String:
+	if _is_cosmetics():
+		return _category
+	return _section
+
+
+func _current_items() -> Array:
+	if _view_model == null:
+		return []
+	if _is_cosmetics():
+		return _view_model.cosmetic_items(_category)
+	return _view_model.other_items()
+
+
+func _refresh_sections() -> void:
 	for child in _tabs_row.get_children():
 		_tabs_row.remove_child(child)
 		child.queue_free()
-	for tab_id_variant in _tabs:
-		_tabs_row.add_child(_make_tab(str(tab_id_variant)))
+	for section_variant in _view_model.sections():
+		_tabs_row.add_child(_make_section_tab(str(section_variant)))
 
 
-func _make_tab(tab_id: String) -> Button:
-	var active: bool = tab_id == _tab
+func _refresh_sub_tabs() -> void:
+	for child in _sub_tabs_row.get_children():
+		_sub_tabs_row.remove_child(child)
+		child.queue_free()
+	_sub_tabs_row.visible = _is_cosmetics()
+	if not _is_cosmetics():
+		return
+	for category_variant in _view_model.cosmetic_categories():
+		_sub_tabs_row.add_child(_make_category_tab(str(category_variant)))
+
+
+func _make_section_tab(section_id: String) -> Button:
+	var active: bool = section_id == _section
+	var btn := _build_tab_button(
+		section_id,
+		str(SECTION_TITLES.get(section_id, section_id)),
+		SECTION_ICONS.get(section_id, TAB_ICON_FALLBACK),
+		active,
+		Vector2(150, 56),
+		Vector2(130, 48),
+		18,
+		14
+	)
+	btn.pressed.connect(_on_section_pressed.bind(section_id))
+	return btn
+
+
+func _make_category_tab(category_id: String) -> Button:
+	var active: bool = category_id == _category
+	var btn := _build_tab_button(
+		category_id,
+		str(TAB_TITLES.get(category_id, category_id)),
+		TAB_ICONS.get(category_id, TAB_ICON_FALLBACK),
+		active,
+		Vector2(72, 48),
+		Vector2(58, 42),
+		14,
+		11
+	)
+	btn.pressed.connect(_on_category_pressed.bind(category_id))
+	return btn
+
+
+func _build_tab_button(
+	tab_id: String,
+	title: String,
+	icon_texture: Texture2D,
+	active: bool,
+	min_active: Vector2,
+	min_inactive: Vector2,
+	font_active: int,
+	font_inactive: int
+) -> Button:
 	var btn := Button.new()
 	btn.name = "%sTab" % tab_id
 	btn.set_meta("tab_id", tab_id)
@@ -171,7 +253,7 @@ func _make_tab(tab_id: String) -> Button:
 	btn.add_theme_stylebox_override("hover", sb)
 	btn.add_theme_stylebox_override("pressed", sb)
 	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	btn.custom_minimum_size = Vector2(104, 52) if active else Vector2(88, 44)
+	btn.custom_minimum_size = min_active if active else min_inactive
 	var box := VBoxContainer.new()
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -181,7 +263,7 @@ func _make_tab(tab_id: String) -> Button:
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon.custom_minimum_size = Vector2(28, 28) if active else Vector2(22, 22)
 	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	icon.texture = TAB_ICONS.get(tab_id, TAB_ICON_FALLBACK)
+	icon.texture = icon_texture
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	box.add_child(icon)
@@ -189,13 +271,12 @@ func _make_tab(tab_id: String) -> Button:
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.clip_text = true
-	label.text = str(TAB_TITLES.get(tab_id, tab_id))
+	label.text = title
 	label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
 	label.add_theme_constant_override("outline_size", 3)
-	label.add_theme_font_size_override("font_size", 16 if active else 11)
+	label.add_theme_font_size_override("font_size", font_active if active else font_inactive)
 	box.add_child(label)
-	btn.pressed.connect(_on_tab_pressed.bind(tab_id))
 	return btn
 
 
@@ -203,7 +284,7 @@ func _refresh_grid() -> void:
 	for child in _grid.get_children():
 		_grid.remove_child(child)
 		child.queue_free()
-	if _tab.is_empty() or _view_model == null:
+	if _view_model == null:
 		return
 	for item_variant in _page_items():
 		var item := item_variant as InventoryItem
@@ -238,23 +319,22 @@ func _refresh_status() -> void:
 	elif not _view_model.has_items():
 		_status_label.text = "Nenhum item por aqui ainda."
 	elif _page_items().is_empty():
-		_status_label.text = "Nada nesta aba."
+		_status_label.text = "Nada nesta seção."
 	else:
 		_status_label.text = ""
 
 
 func _page_count() -> int:
-	if _view_model == null or _tab.is_empty():
+	if _view_model == null:
 		return 1
-	var total: int = _view_model.items_for(_tab).size()
+	var total: int = _current_items().size()
 	return maxi(1, int(ceil(float(total) / float(PAGE_SIZE))))
 
 
 func _page_items() -> Array:
-	if _view_model == null or _tab.is_empty():
+	if _view_model == null:
 		return []
-	var items: Array = _view_model.items_for(_tab)
-	return items.slice(_page * PAGE_SIZE, _page * PAGE_SIZE + PAGE_SIZE)
+	return _current_items().slice(_page * PAGE_SIZE, _page * PAGE_SIZE + PAGE_SIZE)
 
 
 func _card_color(item: InventoryItem) -> Color:
@@ -265,7 +345,7 @@ func _card_color(item: InventoryItem) -> Color:
 
 
 func _make_card(item: InventoryItem) -> Button:
-	var is_selected: bool = str(_selected.get(_tab, "")) == item.item_id
+	var is_selected: bool = str(_selected.get(_filter_id(), "")) == item.item_id
 	var btn := Button.new()
 	btn.custom_minimum_size = Vector2(96, 122)
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -346,7 +426,7 @@ func _make_card(item: InventoryItem) -> Button:
 	name_label.offset_right = -2
 	name_label.offset_bottom = -4
 	btn.add_child(name_label)
-	if _view_model.is_consumable_tab(_tab) and item.quantity > 0:
+	if not _is_cosmetics() and item.quantity > 0:
 		btn.add_child(_make_badge("x%d" % item.quantity))
 	if _view_model.needs_download(item):
 		btn.add_child(_make_download_button(item))
@@ -445,8 +525,14 @@ func _find_item(item_id: String) -> InventoryItem:
 	return null
 
 
-func _on_tab_pressed(tab_id: String) -> void:
-	_tab = tab_id
+func _on_section_pressed(section_id: String) -> void:
+	_section = section_id
+	_page = 0
+	_refresh_all()
+
+
+func _on_category_pressed(category_id: String) -> void:
+	_category = category_id
 	_page = 0
 	_refresh_all()
 
@@ -464,9 +550,7 @@ func _on_next_pressed() -> void:
 
 
 func _on_item_pressed(item_id: String) -> void:
-	if _tab.is_empty():
-		return
-	_selected[_tab] = item_id
+	_selected[_filter_id()] = item_id
 	_refresh_grid()
 
 

@@ -9,8 +9,8 @@ signal asset_changed(item_id: String)
 signal download_changed(item_id: String)
 
 const TAB_ORDER: Array = ["AVATAR", "BANNER", "FRAME", "EMOTE", "BOARD", "CELL"]
-const TAB_CONSUMABLE := "CONSUMABLE"
-const TAB_OTHERS := "OUTROS"
+const SECTION_COSMETICS := "COSMETICS"
+const SECTION_OTHERS := "OTHERS"
 
 var _usecase: InventoryUseCase
 var _assets: EquippableAssetService
@@ -71,10 +71,18 @@ func load_failed() -> bool:
 	return has_error() and _items.is_empty()
 
 
-# Todas as seções são sempre exibidas, mesmo vazias: uma aba por
-# categoria equipável conhecida, seguida de categorias extras presentes
-# nos dados (ordem alfabética) e da aba de consumíveis por último.
-func categories() -> Array:
+# A tela possui duas seções fixas: cosméticos (equipáveis) e outros.
+# Dentro de cosméticos há um sub-seletor por categoria, sempre exibido
+# na ordem preferencial, com extras presentes nos dados em seguida.
+func sections() -> Array:
+	return [SECTION_COSMETICS, SECTION_OTHERS]
+
+
+func is_cosmetics_section(section: String) -> bool:
+	return section == SECTION_COSMETICS
+
+
+func cosmetic_categories() -> Array:
 	var found: Array = []
 	for item_variant in _items:
 		var item := item_variant as InventoryItem
@@ -94,26 +102,29 @@ func categories() -> Array:
 			extra.append(category)
 	extra.sort()
 	ordered.append_array(extra)
-	ordered.append(TAB_CONSUMABLE)
 	return ordered
 
 
-func items_for(tab: String) -> Array:
+func cosmetic_items(category: String) -> Array:
 	var result: Array = []
 	for item_variant in _items:
 		var item := item_variant as InventoryItem
 		if item == null:
 			continue
-		if tab == TAB_CONSUMABLE:
-			if not EquippableAssetPaths.is_equippable(item):
-				result.append(item)
-		elif EquippableAssetPaths.is_equippable(item) and EquippableAssetPaths.tab_of(item) == tab:
+		if EquippableAssetPaths.is_equippable(item) and EquippableAssetPaths.tab_of(item) == category:
 			result.append(item)
 	return result
 
 
-func is_consumable_tab(tab: String) -> bool:
-	return tab == TAB_CONSUMABLE
+func other_items() -> Array:
+	var result: Array = []
+	for item_variant in _items:
+		var item := item_variant as InventoryItem
+		if item == null:
+			continue
+		if not EquippableAssetPaths.is_equippable(item):
+			result.append(item)
+	return result
 
 
 func texture_for(item: InventoryItem) -> Texture2D:
