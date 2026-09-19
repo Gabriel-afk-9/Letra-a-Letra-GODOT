@@ -1,10 +1,6 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://features/inventory/presentation/views/inventory_screen.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://8qd34wfwm1fp" path="res://assets/images/icons/icon-user.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://qy6k3fcwndys" path="res://assets/images/icons/room-icon.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://cwsigw0q1oibh" path="res://assets/images/icons/navbar-2.png" id="5"]
 
 [sub_resource type="StyleBoxFlat" id="TabGreen"]
 bg_color = Color(0.2, 0.72, 0.42, 1)
@@ -102,163 +98,6 @@ size_flags_vertical = 0
 theme_override_constants/separation = 6
 alignment = 1
 
-[node name="AvatarTab" type="Button" parent="Content/MainVBox/TabsRow"]
-custom_minimum_size = Vector2(116, 56)
-layout_mode = 2
-theme_override_styles/normal = SubResource("TabGreen")
-theme_override_styles/hover = SubResource("TabGreen")
-theme_override_styles/pressed = SubResource("TabGreen")
-theme_override_styles/disabled = SubResource("TabGreen")
-theme_override_styles/focus = SubResource("NavEmpty")
-
-[node name="TabBox" type="VBoxContainer" parent="Content/MainVBox/TabsRow/AvatarTab"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="TabIcon" type="TextureRect" parent="Content/MainVBox/TabsRow/AvatarTab/TabBox"]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("2")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TabLabel" type="Label" parent="Content/MainVBox/TabsRow/AvatarTab/TabBox"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 20
-text = "AVATAR"
-horizontal_alignment = 1
-
-[node name="FrameTab" type="Button" parent="Content/MainVBox/TabsRow"]
-custom_minimum_size = Vector2(96, 46)
-layout_mode = 2
-theme_override_styles/normal = SubResource("TabGreen")
-theme_override_styles/hover = SubResource("TabGreen")
-theme_override_styles/pressed = SubResource("TabGreen")
-theme_override_styles/disabled = SubResource("TabGreen")
-theme_override_styles/focus = SubResource("NavEmpty")
-
-[node name="TabBox" type="VBoxContainer" parent="Content/MainVBox/TabsRow/FrameTab"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="TabIcon" type="TextureRect" parent="Content/MainVBox/TabsRow/FrameTab/TabBox"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("3")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TabLabel" type="Label" parent="Content/MainVBox/TabsRow/FrameTab/TabBox"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 12
-text = "MOLDURA"
-horizontal_alignment = 1
-
-[node name="EmoteTab" type="Button" parent="Content/MainVBox/TabsRow"]
-custom_minimum_size = Vector2(96, 46)
-layout_mode = 2
-theme_override_styles/normal = SubResource("TabGreen")
-theme_override_styles/hover = SubResource("TabGreen")
-theme_override_styles/pressed = SubResource("TabGreen")
-theme_override_styles/disabled = SubResource("TabGreen")
-theme_override_styles/focus = SubResource("NavEmpty")
-
-[node name="TabBox" type="VBoxContainer" parent="Content/MainVBox/TabsRow/EmoteTab"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="TabIcon" type="TextureRect" parent="Content/MainVBox/TabsRow/EmoteTab/TabBox"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("4")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TabLabel" type="Label" parent="Content/MainVBox/TabsRow/EmoteTab/TabBox"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 12
-text = "EMOTE"
-horizontal_alignment = 1
-
-[node name="ConsumableTab" type="Button" parent="Content/MainVBox/TabsRow"]
-custom_minimum_size = Vector2(96, 46)
-layout_mode = 2
-theme_override_styles/normal = SubResource("TabGreen")
-theme_override_styles/hover = SubResource("TabGreen")
-theme_override_styles/pressed = SubResource("TabGreen")
-theme_override_styles/disabled = SubResource("TabGreen")
-theme_override_styles/focus = SubResource("NavEmpty")
-
-[node name="TabBox" type="VBoxContainer" parent="Content/MainVBox/TabsRow/ConsumableTab"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="TabIcon" type="TextureRect" parent="Content/MainVBox/TabsRow/ConsumableTab/TabBox"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_filter = 2
-texture = ExtResource("5")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TabLabel" type="Label" parent="Content/MainVBox/TabsRow/ConsumableTab/TabBox"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 12
-text = "CONSUMÍVEIS"
-horizontal_alignment = 1
-autowrap_mode = 2
-
 [node name="Panel" type="PanelContainer" parent="Content/MainVBox"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -274,6 +113,14 @@ theme_override_constants/margin_bottom = 10
 [node name="PanelVBox" type="VBoxContainer" parent="Content/MainVBox/Panel/PanelMargin"]
 layout_mode = 2
 theme_override_constants/separation = 8
+
+[node name="StatusLabel" type="Label" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.118, 0.165, 0.267, 1)
+theme_override_font_sizes/font_size = 16
+text = "Carregando inventário..."
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="ItemGrid" type="GridContainer" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox"]
 layout_mode = 2

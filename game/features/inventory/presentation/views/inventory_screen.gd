@@ -1,49 +1,54 @@
 extends HubPage
 class_name InventoryScreen
 
-enum Category { AVATAR, FRAME, EMOTE, CONSUMABLE }
-
 const PAGE_SIZE := 12
 const NAVY := Color(0.118, 0.165, 0.267)
 const TAB_BLUE := Color(0.16, 0.6, 0.85)
 const TAB_GREEN := Color(0.2, 0.72, 0.42)
 const SELECT_ORANGE := Color(0.96, 0.51, 0.12)
 
-const ART_AVATAR_1 := preload("res://assets/images/avatars/avatar-1.png")
-const ART_AVATAR_2 := preload("res://assets/images/avatars/avatar-2.png")
-const ART_AVATAR_3 := preload("res://assets/images/avatars/avatar-3.png")
-const ART_GIRL := preload("res://assets/images/avatars/little_girl_transparent.png")
-const ART_OLD_MAN := preload("res://assets/images/avatars/old_man_avatar_tranparent.png")
-const ART_LOGO := preload("res://assets/cosmetics/avatar/logo.png")
-const ART_STUPID := preload("res://assets/cosmetics/avatar/stupid.png")
-const ART_PIE := preload("res://assets/cosmetics/avatar/pie.png")
-const ART_EVIL := preload("res://assets/cosmetics/avatar/evil.png")
-const ART_ARVENIS := preload("res://assets/cosmetics/avatar/arvenis.png")
-const ART_FRAME := preload("res://assets/cosmetics/frame/test.png")
-const ART_FREEZE := preload("res://assets/images/powers/freeze.png")
-const ART_TRAP := preload("res://assets/images/powers/trap.png")
-const ART_IMUNITY := preload("res://assets/images/powers/imunity.png")
-const ART_LANTERN := preload("res://assets/images/powers/lantern.png")
-const ART_BLIND := preload("res://assets/images/powers/blind.png")
-const ART_SPY := preload("res://assets/images/powers/spy.png")
-const ART_DETECT := preload("res://assets/images/powers/detecttraps.png")
-const ART_BLOCK := preload("res://assets/images/powers/block.png")
+const TAB_TITLES := {
+	"AVATAR": "AVATAR",
+	"BANNER": "BANNER",
+	"FRAME": "MOLDURA",
+	"EMOTE": "EMOTE",
+	"BOARD": "TABULEIRO",
+	"CELL": "CÉLULA",
+	"CONSUMABLE": "CONSUMÍVEIS",
+}
 
+const TAB_ICONS := {
+	"AVATAR": preload("res://assets/images/icons/icon-user.png"),
+	"BANNER": preload("res://assets/images/icons/room-icon.png"),
+	"FRAME": preload("res://assets/images/icons/room-icon.png"),
+	"EMOTE": preload("res://assets/images/icons/bot-icon.png"),
+	"CONSUMABLE": preload("res://assets/images/icons/navbar-2.png"),
+}
+const TAB_ICON_FALLBACK := preload("res://assets/images/icons/navbar-2.png")
+
+const PALETTE: Array = [
+	Color(0.42, 0.23, 0.55),
+	Color(0.45, 0.68, 0.16),
+	Color(0.36, 0.68, 0.88),
+	Color(0.55, 0.6, 0.68),
+	Color(0.5, 0.28, 0.62),
+	Color(0.62, 0.84, 0.84),
+	Color(0.85, 0.62, 0.42),
+	Color(0.9, 0.5, 0.2),
+]
+
+@onready var _tabs_row: HBoxContainer = $Content/MainVBox/TabsRow
 @onready var _grid: GridContainer = $Content/MainVBox/Panel/PanelMargin/PanelVBox/ItemGrid
+@onready var _status_label: Label = $Content/MainVBox/Panel/PanelMargin/PanelVBox/StatusLabel
 @onready var _page_label: Label = $Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow/PagePill/PageMargin/PageLabel
 @onready var _prev_btn: Button = $Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow/PrevBtn
 @onready var _next_btn: Button = $Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow/NextBtn
-@onready var _tab_buttons: Array = [
-	$Content/MainVBox/TabsRow/AvatarTab,
-	$Content/MainVBox/TabsRow/FrameTab,
-	$Content/MainVBox/TabsRow/EmoteTab,
-	$Content/MainVBox/TabsRow/ConsumableTab,
-]
 
-var _category: int = Category.AVATAR
+var _view_model: InventoryViewModel
+var _assets_node: Node
+var _tabs: Array = []
+var _tab: String = ""
 var _page: int = 0
-var _catalog: Dictionary = {}
-var _equipped: Dictionary = {}
 var _selected: Dictionary = {}
 
 
@@ -52,158 +57,228 @@ func page_id() -> StringName:
 
 
 func enter(_params: Dictionary) -> void:
+	if not is_node_ready() or _view_model == null:
+		return
+	_view_model.load_initial()
+
+
+func bind_view_model(vm: InventoryViewModel) -> void:
+	if vm == null or vm == _view_model:
+		return
+	_disconnect_view_model()
+	if _assets_node != null and is_instance_valid(_assets_node):
+		if _assets_node.is_inside_tree():
+			remove_child(_assets_node)
+		_assets_node.queue_free()
+	_assets_node = null
+	_view_model = vm
+	_assets_node = _view_model.asset_service()
+	if _assets_node != null and is_node_ready():
+		add_child(_assets_node)
+	_tab = ""
+	_page = 0
+	_selected.clear()
 	if not is_node_ready():
 		return
-	_refresh()
+	_connect_view_model()
+	_refresh_all()
 
 
 func _ready() -> void:
-	_build_catalog()
-	for i in _tab_buttons.size():
-		(_tab_buttons[i] as Button).pressed.connect(_on_tab_pressed.bind(i))
+	if _view_model == null:
+		_view_model = InventoryFactory.create()
+	_assets_node = _view_model.asset_service()
+	if _assets_node != null and not _assets_node.is_inside_tree():
+		add_child(_assets_node)
+	_connect_view_model()
 	_prev_btn.pressed.connect(_on_prev_pressed)
 	_next_btn.pressed.connect(_on_next_pressed)
-	_refresh()
+	_refresh_all()
 
 
-func _build_catalog() -> void:
-	_catalog[Category.AVATAR] = [
-		{"id": "avatar_1", "name": "AVATAR 1", "art": ART_STUPID, "bg": Color(0.42, 0.23, 0.55), "qty": 0, "locked": false},
-		{"id": "avatar_2", "name": "BANNER 1", "art": ART_LANTERN, "bg": Color(0.45, 0.68, 0.16), "qty": 0, "locked": false},
-		{"id": "avatar_3", "name": "AVATAR 3", "art": ART_ARVENIS, "bg": Color(0.36, 0.68, 0.88), "qty": 0, "locked": false},
-		{"id": "avatar_4", "name": "AVATAR 4", "art": ART_STUPID, "bg": Color(0.42, 0.23, 0.55), "qty": 0, "locked": false},
-		{"id": "avatar_5", "name": "AVATAR 5", "art": ART_EVIL, "bg": Color(0.55, 0.6, 0.68), "qty": 0, "locked": false},
-		{"id": "avatar_6", "name": "AVATAR 6", "art": ART_PIE, "bg": Color(0.5, 0.28, 0.62), "qty": 0, "locked": false},
-		{"id": "avatar_7", "name": "AVATAR 7", "art": ART_OLD_MAN, "bg": Color(0.62, 0.84, 0.84), "qty": 0, "locked": false},
-		{"id": "avatar_8", "name": "AVATAR 8", "art": ART_AVATAR_1, "bg": Color(0.85, 0.62, 0.42), "qty": 0, "locked": false},
-		{"id": "avatar_9", "name": "AVATAR 9", "art": ART_AVATAR_2, "bg": Color(0.62, 0.56, 0.4), "qty": 0, "locked": false},
-		{"id": "avatar_10", "name": "AVATAR 10", "art": ART_AVATAR_3, "bg": Color(0.56, 0.42, 0.28), "qty": 0, "locked": false},
-		{"id": "avatar_11", "name": "AVATAR 11", "art": ART_LOGO, "bg": Color(0.16, 0.36, 0.42), "qty": 0, "locked": false},
-		{"id": "avatar_12", "name": "AVATAR 12", "art": ART_GIRL, "bg": Color(0.56, 0.84, 0.74), "qty": 0, "locked": false},
-		{"id": "avatar_13", "name": "AVATAR 13", "art": ART_TRAP, "bg": Color(0.9, 0.5, 0.2), "qty": 0, "locked": false},
-		{"id": "avatar_14", "name": "AVATAR 14", "art": ART_ARVENIS, "bg": Color(0.3, 0.5, 0.7), "qty": 0, "locked": false},
-		{"id": "avatar_15", "name": "AVATAR 15", "art": ART_PIE, "bg": Color(0.7, 0.45, 0.3), "qty": 0, "locked": false},
-		{"id": "avatar_16", "name": "AVATAR 16", "art": ART_EVIL, "bg": Color(0.35, 0.35, 0.45), "qty": 0, "locked": false},
-		{"id": "avatar_17", "name": "AVATAR 17", "art": ART_AVATAR_1, "bg": Color(0.5, 0.7, 0.5), "qty": 0, "locked": false},
-		{"id": "avatar_18", "name": "AVATAR 18", "art": ART_AVATAR_2, "bg": Color(0.5, 0.5, 0.55), "qty": 0, "locked": true},
-		{"id": "avatar_19", "name": "AVATAR 19", "art": ART_GIRL, "bg": Color(0.8, 0.7, 0.55), "qty": 0, "locked": false},
-	]
-	_catalog[Category.FRAME] = [
-		{"id": "frame_1", "name": "MOLDURA 1", "art": ART_FRAME, "bg": Color(0.36, 0.68, 0.88), "qty": 0, "locked": false},
-		{"id": "frame_2", "name": "MOLDURA 2", "art": ART_LOGO, "bg": Color(0.5, 0.28, 0.62), "qty": 0, "locked": false},
-		{"id": "frame_3", "name": "MOLDURA 3", "art": ART_FRAME, "bg": Color(0.45, 0.68, 0.16), "qty": 0, "locked": false},
-		{"id": "frame_4", "name": "MOLDURA 4", "art": ART_PIE, "bg": Color(0.9, 0.5, 0.2), "qty": 0, "locked": false},
-		{"id": "frame_5", "name": "MOLDURA 5", "art": ART_FRAME, "bg": Color(0.55, 0.6, 0.68), "qty": 0, "locked": false},
-		{"id": "frame_6", "name": "MOLDURA 6", "art": ART_ARVENIS, "bg": Color(0.16, 0.5, 0.5), "qty": 0, "locked": false},
-		{"id": "frame_7", "name": "MOLDURA 7", "art": ART_FRAME, "bg": Color(0.56, 0.42, 0.28), "qty": 0, "locked": false},
-		{"id": "frame_8", "name": "MOLDURA 8", "art": ART_AVATAR_3, "bg": Color(0.4, 0.45, 0.55), "qty": 0, "locked": true},
-	]
-	_catalog[Category.EMOTE] = [
-		{"id": "emote_1", "name": "EMOTE 1", "art": ART_BLIND, "bg": Color(0.42, 0.23, 0.55), "qty": 0, "locked": false},
-		{"id": "emote_2", "name": "EMOTE 2", "art": ART_SPY, "bg": Color(0.36, 0.68, 0.88), "qty": 0, "locked": false},
-		{"id": "emote_3", "name": "EMOTE 3", "art": ART_FREEZE, "bg": Color(0.62, 0.84, 0.84), "qty": 0, "locked": false},
-		{"id": "emote_4", "name": "EMOTE 4", "art": ART_LANTERN, "bg": Color(0.85, 0.62, 0.42), "qty": 0, "locked": false},
-		{"id": "emote_5", "name": "EMOTE 5", "art": ART_TRAP, "bg": Color(0.9, 0.5, 0.2), "qty": 0, "locked": false},
-		{"id": "emote_6", "name": "EMOTE 6", "art": ART_IMUNITY, "bg": Color(0.45, 0.68, 0.16), "qty": 0, "locked": false},
-		{"id": "emote_7", "name": "EMOTE 7", "art": ART_DETECT, "bg": Color(0.5, 0.28, 0.62), "qty": 0, "locked": false},
-		{"id": "emote_8", "name": "EMOTE 8", "art": ART_BLOCK, "bg": Color(0.55, 0.6, 0.68), "qty": 0, "locked": false},
-		{"id": "emote_9", "name": "EMOTE 9", "art": ART_EVIL, "bg": Color(0.4, 0.45, 0.55), "qty": 0, "locked": true},
-	]
-	_catalog[Category.CONSUMABLE] = [
-		{"id": "cons_1", "name": "GELO", "art": ART_FREEZE, "bg": Color(0.62, 0.84, 0.84), "qty": 3, "locked": false},
-		{"id": "cons_2", "name": "ARMADILHA", "art": ART_TRAP, "bg": Color(0.9, 0.5, 0.2), "qty": 2, "locked": false},
-		{"id": "cons_3", "name": "ESCUDO", "art": ART_IMUNITY, "bg": Color(0.36, 0.68, 0.88), "qty": 1, "locked": false},
-		{"id": "cons_4", "name": "LANTERNA", "art": ART_LANTERN, "bg": Color(0.85, 0.62, 0.42), "qty": 5, "locked": false},
-		{"id": "cons_5", "name": "CEGUEIRA", "art": ART_BLIND, "bg": Color(0.42, 0.23, 0.55), "qty": 2, "locked": false},
-		{"id": "cons_6", "name": "ESPIÃO", "art": ART_SPY, "bg": Color(0.5, 0.28, 0.62), "qty": 4, "locked": false},
-		{"id": "cons_7", "name": "RADAR", "art": ART_DETECT, "bg": Color(0.45, 0.68, 0.16), "qty": 1, "locked": false},
-		{"id": "cons_8", "name": "BLOQUEIO", "art": ART_BLOCK, "bg": Color(0.55, 0.6, 0.68), "qty": 2, "locked": false},
-	]
-	_equipped[Category.AVATAR] = "avatar_1"
-	_equipped[Category.FRAME] = "frame_1"
-	_equipped[Category.EMOTE] = "emote_1"
-	_selected[Category.AVATAR] = "avatar_1"
-	_selected[Category.FRAME] = "frame_1"
-	_selected[Category.EMOTE] = "emote_1"
-	_selected[Category.CONSUMABLE] = "cons_1"
+func _connect_view_model() -> void:
+	if _view_model == null:
+		return
+	if not _view_model.inventory_changed.is_connected(_refresh_all):
+		_view_model.inventory_changed.connect(_refresh_all)
+	if not _view_model.asset_changed.is_connected(_on_asset_changed):
+		_view_model.asset_changed.connect(_on_asset_changed)
+	if not _view_model.download_changed.is_connected(_on_download_changed):
+		_view_model.download_changed.connect(_on_download_changed)
+	if not _view_model.loading_changed.is_connected(_on_loading_changed):
+		_view_model.loading_changed.connect(_on_loading_changed)
+	if not _view_model.error_changed.is_connected(_on_error_changed):
+		_view_model.error_changed.connect(_on_error_changed)
 
 
-func _refresh() -> void:
-	if _catalog.is_empty():
-		_build_catalog()
+func _disconnect_view_model() -> void:
+	if _view_model == null:
+		return
+	if _view_model.inventory_changed.is_connected(_refresh_all):
+		_view_model.inventory_changed.disconnect(_refresh_all)
+	if _view_model.asset_changed.is_connected(_on_asset_changed):
+		_view_model.asset_changed.disconnect(_on_asset_changed)
+	if _view_model.download_changed.is_connected(_on_download_changed):
+		_view_model.download_changed.disconnect(_on_download_changed)
+	if _view_model.loading_changed.is_connected(_on_loading_changed):
+		_view_model.loading_changed.disconnect(_on_loading_changed)
+	if _view_model.error_changed.is_connected(_on_error_changed):
+		_view_model.error_changed.disconnect(_on_error_changed)
+
+
+func _refresh_all() -> void:
+	if _view_model == null:
+		return
+	_tabs = _view_model.categories()
+	if _tab.is_empty() or not _tabs.has(_tab):
+		if _tabs.is_empty():
+			_tab = ""
+		else:
+			_tab = str(_tabs[0])
+		_page = 0
 	_refresh_tabs()
 	_refresh_grid()
 	_refresh_pager()
+	_refresh_status()
 
 
 func _refresh_tabs() -> void:
-	for i in _tab_buttons.size():
-		var btn := _tab_buttons[i] as Button
-		var active: bool = i == _category
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = TAB_BLUE if active else TAB_GREEN
-		sb.border_width_left = 3
-		sb.border_width_top = 3
-		sb.border_width_right = 3
-		sb.border_width_bottom = 3
-		sb.border_color = NAVY
-		sb.corner_radius_top_left = 14
-		sb.corner_radius_top_right = 14
-		sb.corner_radius_bottom_right = 4
-		sb.corner_radius_bottom_left = 4
-		btn.add_theme_stylebox_override("normal", sb)
-		btn.add_theme_stylebox_override("hover", sb)
-		btn.add_theme_stylebox_override("pressed", sb)
-		btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-		btn.custom_minimum_size = Vector2(116, 56) if active else Vector2(96, 46)
-		var box := btn.get_child(0)
-		var icon := box.get_child(0) as TextureRect
-		var label := box.get_child(1) as Label
-		icon.custom_minimum_size = Vector2(30, 30) if active else Vector2(24, 24)
-		label.add_theme_font_size_override("font_size", 20 if active else 12)
+	for child in _tabs_row.get_children():
+		_tabs_row.remove_child(child)
+		child.queue_free()
+	for tab_id_variant in _tabs:
+		_tabs_row.add_child(_make_tab(str(tab_id_variant)))
+
+
+func _make_tab(tab_id: String) -> Button:
+	var active: bool = tab_id == _tab
+	var btn := Button.new()
+	btn.name = "%sTab" % tab_id
+	btn.set_meta("tab_id", tab_id)
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = TAB_BLUE if active else TAB_GREEN
+	sb.border_width_left = 3
+	sb.border_width_top = 3
+	sb.border_width_right = 3
+	sb.border_width_bottom = 3
+	sb.border_color = NAVY
+	sb.corner_radius_top_left = 14
+	sb.corner_radius_top_right = 14
+	sb.corner_radius_bottom_right = 4
+	sb.corner_radius_bottom_left = 4
+	btn.add_theme_stylebox_override("normal", sb)
+	btn.add_theme_stylebox_override("hover", sb)
+	btn.add_theme_stylebox_override("pressed", sb)
+	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	btn.custom_minimum_size = Vector2(104, 52) if active else Vector2(88, 44)
+	var box := VBoxContainer.new()
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	box.add_theme_constant_override("separation", 0)
+	btn.add_child(box)
+	var icon := TextureRect.new()
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icon.custom_minimum_size = Vector2(28, 28) if active else Vector2(22, 22)
+	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	icon.texture = TAB_ICONS.get(tab_id, TAB_ICON_FALLBACK)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	box.add_child(icon)
+	var label := Label.new()
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.text = str(TAB_TITLES.get(tab_id, tab_id))
+	label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	label.add_theme_constant_override("outline_size", 3)
+	label.add_theme_font_size_override("font_size", 16 if active else 11)
+	box.add_child(label)
+	btn.pressed.connect(_on_tab_pressed.bind(tab_id))
+	return btn
 
 
 func _refresh_grid() -> void:
 	for child in _grid.get_children():
 		_grid.remove_child(child)
 		child.queue_free()
-	for item in _page_items():
-		_grid.add_child(_make_card(item))
+	if _tab.is_empty() or _view_model == null:
+		return
+	for item_variant in _page_items():
+		var item := item_variant as InventoryItem
+		if item != null:
+			_grid.add_child(_make_card(item))
 
 
 func _refresh_pager() -> void:
+	if _view_model != null and _view_model.is_loading():
+		_page_label.text = "Carregando..."
+		_prev_btn.disabled = true
+		_next_btn.disabled = true
+		return
 	var pages := _page_count()
 	_page_label.text = "Pág %d" % (_page + 1)
 	_prev_btn.disabled = _page <= 0
 	_next_btn.disabled = _page >= pages - 1
 
 
+func _refresh_status() -> void:
+	if _view_model == null:
+		return
+	if _view_model.is_loading():
+		_status_label.text = "Carregando inventário..."
+	elif _view_model.load_failed():
+		if _view_model.error_message().is_empty():
+			_status_label.text = "Não foi possível carregar o inventário."
+		else:
+			_status_label.text = _view_model.error_message()
+	elif _view_model.has_error():
+		_status_label.text = _view_model.error_message()
+	elif not _view_model.has_items():
+		_status_label.text = "Nenhum item por aqui ainda."
+	elif _page_items().is_empty():
+		_status_label.text = "Nada nesta aba."
+	else:
+		_status_label.text = ""
+
+
 func _page_count() -> int:
-	var total: int = (_catalog[_category] as Array).size()
+	if _view_model == null or _tab.is_empty():
+		return 1
+	var total: int = _view_model.items_for(_tab).size()
 	return maxi(1, int(ceil(float(total) / float(PAGE_SIZE))))
 
 
 func _page_items() -> Array:
-	var items: Array = _catalog[_category] as Array
+	if _view_model == null or _tab.is_empty():
+		return []
+	var items: Array = _view_model.items_for(_tab)
 	return items.slice(_page * PAGE_SIZE, _page * PAGE_SIZE + PAGE_SIZE)
 
 
-func _make_card(item: Dictionary) -> Button:
-	var highlighted: bool = String(_equipped.get(_category, "")) == String(item["id"]) or String(_selected.get(_category, "")) == String(item["id"])
+func _card_color(item: InventoryItem) -> Color:
+	if PALETTE.is_empty():
+		return TAB_GREEN
+	var index: int = absi(item.item_id.hash()) % PALETTE.size()
+	return PALETTE[index] as Color
+
+
+func _make_card(item: InventoryItem) -> Button:
+	var is_selected: bool = str(_selected.get(_tab, "")) == item.item_id
 	var btn := Button.new()
 	btn.custom_minimum_size = Vector2(96, 122)
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = item["bg"]
-	sb.border_width_left = 5 if highlighted else 3
-	sb.border_width_top = 5 if highlighted else 3
-	sb.border_width_right = 5 if highlighted else 3
-	sb.border_width_bottom = 5 if highlighted else 3
-	if _category == Category.CONSUMABLE and highlighted:
+	sb.bg_color = _card_color(item)
+	sb.border_width_left = 5 if (item.equipped or is_selected) else 3
+	sb.border_width_top = 5 if (item.equipped or is_selected) else 3
+	sb.border_width_right = 5 if (item.equipped or is_selected) else 3
+	sb.border_width_bottom = 5 if (item.equipped or is_selected) else 3
+	if is_selected:
 		sb.border_color = SELECT_ORANGE
-	elif highlighted:
+	elif item.equipped:
 		sb.border_color = TAB_BLUE
 	else:
 		sb.border_color = NAVY
@@ -219,23 +294,44 @@ func _make_card(item: Dictionary) -> Button:
 	btn.add_theme_stylebox_override("pressed", sb)
 	btn.add_theme_stylebox_override("disabled", sb)
 	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	var art := TextureRect.new()
-	art.texture = item["art"]
-	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	art.set_anchors_preset(Control.PRESET_FULL_RECT)
-	art.offset_left = 10
-	art.offset_top = 6
-	art.offset_right = -10
-	art.offset_bottom = -28
-	if bool(item["locked"]):
-		art.modulate = Color(0.55, 0.55, 0.6, 1)
-	btn.add_child(art)
+	var texture := _view_model.texture_for(item)
+	if texture != null:
+		var art := TextureRect.new()
+		art.texture = texture
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		art.set_anchors_preset(Control.PRESET_FULL_RECT)
+		art.offset_left = 10
+		art.offset_top = 6
+		art.offset_right = -10
+		art.offset_bottom = -28
+		btn.add_child(art)
+	else:
+		var initial := Label.new()
+		initial.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		initial.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		initial.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		var clean_name := item.name.strip_edges()
+		if clean_name.is_empty():
+			initial.text = "?"
+		else:
+			initial.text = clean_name.left(1).to_upper()
+		initial.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		initial.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		initial.add_theme_constant_override("outline_size", 6)
+		initial.add_theme_font_size_override("font_size", 44)
+		initial.set_anchors_preset(Control.PRESET_FULL_RECT)
+		initial.offset_left = 10
+		initial.offset_top = 6
+		initial.offset_right = -10
+		initial.offset_bottom = -28
+		btn.add_child(initial)
 	var name_label := Label.new()
-	name_label.text = String(item["name"])
+	name_label.text = item.name.strip_edges()
 	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	name_label.clip_text = true
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	name_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	name_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
@@ -250,65 +346,109 @@ func _make_card(item: Dictionary) -> Button:
 	name_label.offset_right = -2
 	name_label.offset_bottom = -4
 	btn.add_child(name_label)
-	if int(item["qty"]) > 0:
-		var badge := PanelContainer.new()
-		var badge_sb := StyleBoxFlat.new()
-		badge_sb.bg_color = SELECT_ORANGE
-		badge_sb.border_width_left = 2
-		badge_sb.border_width_top = 2
-		badge_sb.border_width_right = 2
-		badge_sb.border_width_bottom = 2
-		badge_sb.border_color = NAVY
-		badge_sb.corner_radius_top_left = 10
-		badge_sb.corner_radius_top_right = 10
-		badge_sb.corner_radius_bottom_right = 10
-		badge_sb.corner_radius_bottom_left = 10
-		badge.add_theme_stylebox_override("panel", badge_sb)
-		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		badge.anchor_left = 1.0
-		badge.anchor_top = 0.0
-		badge.anchor_right = 1.0
-		badge.anchor_bottom = 0.0
-		badge.offset_left = -46
-		badge.offset_top = 6
-		badge.offset_right = -6
-		badge.offset_bottom = 30
-		var badge_label := Label.new()
-		badge_label.text = "x%d" % int(item["qty"])
-		badge_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		badge_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		badge_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		badge_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-		badge_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
-		badge_label.add_theme_constant_override("outline_size", 3)
-		badge_label.add_theme_font_size_override("font_size", 13)
-		badge.add_child(badge_label)
-		btn.add_child(badge)
-	if bool(item["locked"]):
-		var dim := ColorRect.new()
-		dim.color = Color(0, 0, 0, 0.55)
-		dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		dim.set_anchors_preset(Control.PRESET_FULL_RECT)
-		btn.add_child(dim)
-		var lock_label := Label.new()
-		lock_label.text = "BLOQUEADO"
-		lock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lock_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		lock_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		lock_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-		lock_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
-		lock_label.add_theme_constant_override("outline_size", 4)
-		lock_label.add_theme_font_size_override("font_size", 13)
-		lock_label.set_anchors_preset(Control.PRESET_FULL_RECT)
-		btn.add_child(lock_label)
-	btn.pressed.connect(_on_item_pressed.bind(String(item["id"])))
+	if _view_model.is_consumable_tab(_tab) and item.quantity > 0:
+		btn.add_child(_make_badge("x%d" % item.quantity))
+	if _view_model.needs_download(item):
+		btn.add_child(_make_download_button(item))
+	btn.pressed.connect(_on_item_pressed.bind(item.item_id))
 	return btn
 
 
-func _on_tab_pressed(index: int) -> void:
-	_category = index
+func _make_badge(text: String) -> PanelContainer:
+	var badge := PanelContainer.new()
+	var badge_sb := StyleBoxFlat.new()
+	badge_sb.bg_color = SELECT_ORANGE
+	badge_sb.border_width_left = 2
+	badge_sb.border_width_top = 2
+	badge_sb.border_width_right = 2
+	badge_sb.border_width_bottom = 2
+	badge_sb.border_color = NAVY
+	badge_sb.corner_radius_top_left = 10
+	badge_sb.corner_radius_top_right = 10
+	badge_sb.corner_radius_bottom_right = 10
+	badge_sb.corner_radius_bottom_left = 10
+	badge.add_theme_stylebox_override("panel", badge_sb)
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.anchor_left = 1.0
+	badge.anchor_top = 0.0
+	badge.anchor_right = 1.0
+	badge.anchor_bottom = 0.0
+	badge.offset_left = -46
+	badge.offset_top = 6
+	badge.offset_right = -6
+	badge.offset_bottom = 30
+	var badge_label := Label.new()
+	badge_label.text = text
+	badge_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	badge_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	badge_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	badge_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	badge_label.add_theme_constant_override("outline_size", 3)
+	badge_label.add_theme_font_size_override("font_size", 13)
+	badge.add_child(badge_label)
+	return badge
+
+
+func _make_download_button(item: InventoryItem) -> Button:
+	var dl := Button.new()
+	dl.name = "DownloadBtn"
+	dl.set_meta("item_id", item.item_id)
+	dl.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var downloading: bool = _view_model.is_downloading(item)
+	if downloading:
+		dl.text = "..."
+		dl.disabled = true
+	else:
+		dl.text = "↓"
+		dl.disabled = false
+	var dl_sb := StyleBoxFlat.new()
+	dl_sb.bg_color = SELECT_ORANGE
+	dl_sb.border_width_left = 2
+	dl_sb.border_width_top = 2
+	dl_sb.border_width_right = 2
+	dl_sb.border_width_bottom = 2
+	dl_sb.border_color = NAVY
+	dl_sb.corner_radius_top_left = 10
+	dl_sb.corner_radius_top_right = 10
+	dl_sb.corner_radius_bottom_right = 10
+	dl_sb.corner_radius_bottom_left = 10
+	dl.add_theme_stylebox_override("normal", dl_sb)
+	dl.add_theme_stylebox_override("hover", dl_sb)
+	dl.add_theme_stylebox_override("pressed", dl_sb)
+	dl.add_theme_stylebox_override("disabled", dl_sb)
+	dl.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	dl.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	dl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	dl.add_theme_constant_override("outline_size", 3)
+	dl.add_theme_font_size_override("font_size", 18)
+	dl.anchor_left = 0.0
+	dl.anchor_top = 0.0
+	dl.anchor_right = 0.0
+	dl.anchor_bottom = 0.0
+	dl.offset_left = 6
+	dl.offset_top = 6
+	dl.offset_right = 44
+	dl.offset_bottom = 40
+	if not downloading:
+		dl.pressed.connect(_on_download_pressed.bind(item.item_id))
+	return dl
+
+
+func _find_item(item_id: String) -> InventoryItem:
+	if _view_model == null:
+		return null
+	for item_variant in _view_model.items():
+		var item := item_variant as InventoryItem
+		if item != null and item.item_id == item_id:
+			return item
+	return null
+
+
+func _on_tab_pressed(tab_id: String) -> void:
+	_tab = tab_id
 	_page = 0
-	_refresh()
+	_refresh_all()
 
 
 func _on_prev_pressed() -> void:
@@ -324,12 +464,31 @@ func _on_next_pressed() -> void:
 
 
 func _on_item_pressed(item_id: String) -> void:
-	for item in (_catalog[_category] as Array):
-		if String(item["id"]) == item_id and bool(item["locked"]):
-			return
-	if _category == Category.CONSUMABLE:
-		_selected[_category] = item_id
-	else:
-		_equipped[_category] = item_id
-		_selected[_category] = item_id
+	if _tab.is_empty():
+		return
+	_selected[_tab] = item_id
 	_refresh_grid()
+
+
+func _on_download_pressed(item_id: String) -> void:
+	var item := _find_item(item_id)
+	if item == null:
+		return
+	_view_model.download_asset(item)
+
+
+func _on_asset_changed(_item_id: String) -> void:
+	_refresh_grid()
+
+
+func _on_download_changed(_item_id: String) -> void:
+	_refresh_grid()
+
+
+func _on_loading_changed(_is_loading: bool) -> void:
+	_refresh_pager()
+	_refresh_status()
+
+
+func _on_error_changed(_message: String) -> void:
+	_refresh_status()
