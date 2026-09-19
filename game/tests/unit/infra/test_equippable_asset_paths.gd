@@ -87,3 +87,8 @@ func test_is_equippable_and_tab_of() -> void:
 	assert_false(EquippableAssetPaths.is_equippable(null), "nulo não é equipável")
 	assert_eq(EquippableAssetPaths.tab_of(equippable), "FRAME", "aba da categoria")
 	assert_eq(EquippableAssetPaths.tab_of(consumable), "CONSUMABLE", "não equipável vai para consumíveis")
+
+
+func test_load_local_texture_missing_returns_null() -> void:
+	assert_null(EquippableAssetPaths.load_local_texture("AVATAR/inexistente.webp"), "sem arquivo retorna nulo")
+	assert_null(EquippableAssetPaths.load_local_texture("caminho-invalido"), "caminho inválido retorna nulo")

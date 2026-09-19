@@ -103,6 +103,30 @@ static func user_dir(asset_path: String) -> String:
 	return "%s/%s" % [LOCAL_BASE_USER, str(parsed["dir"])]
 
 
+# Carrega a textura do asset local (user:// primeiro, res:// depois).
+# Retorna null quando o arquivo ainda não foi baixado.
+# Gera mipmaps para que a redução (ex.: 1024px no card de 96px)
+# preserve os tons médios em vez de colapsar os detalhes.
+static func load_local_texture(asset_path: String) -> Texture2D:
+	var user_p := user_path(asset_path)
+	if not user_p.is_empty() and FileAccess.file_exists(user_p):
+		var user_image := Image.load_from_file(user_p)
+		if user_image != null and not user_image.is_empty():
+			user_image.generate_mipmaps()
+			return ImageTexture.create_from_image(user_image)
+	var res_p := res_path(asset_path)
+	if res_p.is_empty():
+		return null
+	if ResourceLoader.exists(res_p):
+		return load(res_p) as Texture2D
+	if FileAccess.file_exists(res_p):
+		var res_image := Image.load_from_file(res_p)
+		if res_image != null and not res_image.is_empty():
+			res_image.generate_mipmaps()
+			return ImageTexture.create_from_image(res_image)
+	return null
+
+
 # Fallback da categoria. AVATAR e BANNER possuem defaults conhecidos;
 # demais categorias usam default.* caso exista, ou vazio quando não há.
 static func default_res_path(category: String) -> String:

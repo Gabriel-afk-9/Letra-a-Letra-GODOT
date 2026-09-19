@@ -21,6 +21,9 @@ const AVATAR_COSMETICS := {
 	"arvenis": preload("res://assets/cosmetics/avatar/arvenis.png"),
 }
 
+# Mesma máscara de cantos arredondados dos cards do inventário.
+const AVATAR_MASK_SHADER := preload("res://assets/styles/rounded_image_mask.gdshader")
+
 const FRAME_COSMETICS := {
 	# Frames serão adicionados quando houver assets
 }
@@ -69,53 +72,19 @@ func _ready() -> void:
 	_setup_avatar_shader()
 
 
+func page_id() -> StringName:
+	return &"play"
+
+
+func enter(_params: Dictionary) -> void:
+	if not is_node_ready() or _view_model == null:
+		return
+	_view_model.load_initial()
+
+
 func _setup_avatar_shader() -> void:
-	var shader := Shader.new()
-	shader.code = """
-shader_type canvas_item;
-
-uniform float corner_radius : hint_range(0.0, 0.5) = 0.08;
-
-void fragment() {
-	vec2 uv = UV;
-
-	// Distância normalizada até os quatro cantos.
-	vec2 dist = min(uv, 1.0 - uv);
-
-	// Para cada canto, calcula a distância até o centro do arco.
-	float d = min(
-		length(uv - vec2(corner_radius, corner_radius)),
-		min(
-			length(uv - vec2(1.0 - corner_radius, corner_radius)),
-			min(
-				length(uv - vec2(corner_radius, 1.0 - corner_radius)),
-				length(uv - vec2(1.0 - corner_radius, 1.0 - corner_radius))
-			)
-		)
-	);
-
-	// Só aplica o círculo nas regiões próximas aos cantos.
-	float corner_x = step(uv.x, corner_radius) + step(1.0 - corner_radius, uv.x);
-	float corner_y = step(uv.y, corner_radius) + step(1.0 - corner_radius, uv.y);
-
-	float in_corner = min(corner_x, corner_y);
-
-	float mask = 1.0;
-
-	if (in_corner > 0.0) {
-		mask = step(d, corner_radius);
-	}
-
-	vec4 color = texture(TEXTURE, UV);
-	COLOR = vec4(color.rgb, color.a * mask);
-}
-"""
-
 	var mat := ShaderMaterial.new()
-	mat.shader = shader
-
-	mat.set_shader_parameter("corner_radius", 0.03)
-
+	mat.shader = AVATAR_MASK_SHADER
 	avatar_texture.material = mat
 
 
@@ -165,12 +134,16 @@ func _apply_card_background(has_banner: bool) -> void:
 
 
 func _apply_cosmetics(profile: HomePlayerProfile) -> void:
-	# Avatar
-	var avatar_name := profile.equipped_avatar.to_lower()
-	if AVATAR_COSMETICS.has(avatar_name):
-		avatar_texture.texture = AVATAR_COSMETICS[avatar_name]
+	# Avatar: usa o item equipado real quando o asset está disponível
+	# localmente; sem nada equipado, exibe o mock por nome.
+	var equipped_item := _view_model.equipped_avatar_item()
+	var real_texture: Texture2D = null
+	if equipped_item != null:
+		real_texture = EquippableAssetPaths.load_local_texture(equipped_item.asset_path)
+	if real_texture != null:
+		avatar_texture.texture = real_texture
 	else:
-		avatar_texture.texture = AVATAR_COSMETICS["logo"]
+		avatar_texture.texture = _mock_avatar_texture(profile.equipped_avatar)
 	
 	# Frame
 	var frame_name := profile.equipped_frame.to_lower()
@@ -193,6 +166,13 @@ func _apply_cosmetics(profile: HomePlayerProfile) -> void:
 		banner_texture.visible = false
 		# Restore color background
 		_apply_card_background(profile.has_banner)
+
+
+func _mock_avatar_texture(avatar_name: String) -> Texture2D:
+	var key := avatar_name.strip_edges().to_lower()
+	if AVATAR_COSMETICS.has(key):
+		return AVATAR_COSMETICS[key]
+	return AVATAR_COSMETICS["logo"]
 
 
 func _on_game_mode_changed(mode: int) -> void:
@@ -233,10 +213,6 @@ func _on_dim_background_gui_input(event: InputEvent) -> void:
 
 func _on_play_btn_pressed() -> void:
 	_view_model.play()
-
-
-func page_id() -> StringName:
-	return &"play"
 
 
 func _on_nav_btn_pressed(section: String) -> void:

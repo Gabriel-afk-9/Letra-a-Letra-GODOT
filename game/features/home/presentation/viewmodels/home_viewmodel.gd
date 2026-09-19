@@ -51,6 +51,24 @@ func profile() -> HomePlayerProfile:
 	return _profile
 
 
+# Avatar equipado real (com assetPath), vindo do inventário
+# pré-carregado. Null quando nada está equipado.
+func equipped_avatar_item() -> InventoryItem:
+	if _data_store == null or not _data_store.is_inventory_loaded():
+		return null
+	for item_variant in _data_store.get_inventory():
+		var item := item_variant as InventoryItem
+		if item == null:
+			continue
+		if not EquippableAssetPaths.is_equippable(item):
+			continue
+		if item.category.strip_edges().to_upper() != "AVATAR":
+			continue
+		if item.equipped:
+			return item
+	return null
+
+
 func selected_game_mode() -> int:
 	return _game_mode
 

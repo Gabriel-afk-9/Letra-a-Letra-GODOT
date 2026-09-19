@@ -81,6 +81,7 @@ func test_load_initial_seeds_from_store_then_refreshes() -> void:
 
 	assert_eq(seen, [1, 2], "semeia do store e depois atualiza pela API")
 	assert_eq(seeded_vm.items().size(), 2, "itens finais vêm da API")
+	assert_eq(store.get_inventory().size(), 2, "store atualizado para as próximas telas")
 
 
 func test_sections_and_cosmetic_categories_always_visible() -> void:

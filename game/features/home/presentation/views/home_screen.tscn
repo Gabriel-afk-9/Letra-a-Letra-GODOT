@@ -414,12 +414,12 @@ theme_override_styles/panel = SubResource("AvatarFrameStyle")
 layout_mode = 2
 texture = ExtResource("3_cosmetic_avatar_default")
 expand_mode = 1
-stretch_mode = 5
+stretch_mode = 6
 
 [node name="AvatarFrameTexture" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/AvatarFrame" unique_id=790813430]
 layout_mode = 2
 expand_mode = 1
-stretch_mode = 5
+stretch_mode = 6
 
 [node name="ProfileInfo" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox" unique_id=599158578]
 layout_mode = 2

@@ -118,6 +118,7 @@ func download(item: InventoryItem) -> void:
 		_downloading.erase(clean)
 		download_failed.emit(item.item_id, ERROR_SAVE)
 		return
+	image.generate_mipmaps()
 	_cache["local:" + clean] = ImageTexture.create_from_image(image)
 	_downloading.erase(clean)
 	asset_ready.emit(item.item_id)
@@ -138,21 +139,7 @@ func _load_local(asset_path: String) -> Texture2D:
 	var key := "local:" + asset_path.strip_edges()
 	if _cache.has(key):
 		return _cache[key] as Texture2D
-	var texture: Texture2D = null
-	var user_p := EquippableAssetPaths.user_path(asset_path)
-	if not user_p.is_empty() and FileAccess.file_exists(user_p):
-		var user_image := Image.load_from_file(user_p)
-		if user_image != null and not user_image.is_empty():
-			texture = ImageTexture.create_from_image(user_image)
-	if texture == null:
-		var res_p := EquippableAssetPaths.res_path(asset_path)
-		if not res_p.is_empty():
-			if ResourceLoader.exists(res_p):
-				texture = load(res_p) as Texture2D
-			elif FileAccess.file_exists(res_p):
-				var res_image := Image.load_from_file(res_p)
-				if res_image != null and not res_image.is_empty():
-					texture = ImageTexture.create_from_image(res_image)
+	var texture := EquippableAssetPaths.load_local_texture(asset_path)
 	_cache[key] = texture
 	return texture
 

@@ -58,6 +58,8 @@ func refresh() -> void:
 		inventory_changed.emit()
 		return
 	_items = result.get("items", [])
+	if _data_store != null:
+		_data_store.set_inventory(_items)
 	inventory_changed.emit()
 
 
