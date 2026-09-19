@@ -38,4 +38,12 @@ static func to_domain(data: Dictionary) -> GamePlayerState:
 	if raw_effects is Array:
 		parsed_effects = (raw_effects as Array).duplicate()
 
-	return GamePlayerState.new(parsed_id, parsed_inventory, parsed_effects)
+	var raw_cosmetics = data.get("cosmeticsEquipped", [])
+	var cosmetics: Array = raw_cosmetics if raw_cosmetics is Array else []
+
+	return GamePlayerState.new(
+		parsed_id,
+		parsed_inventory,
+		parsed_effects,
+		EquippedAvatar.avatar_asset_path(cosmetics)
+	)

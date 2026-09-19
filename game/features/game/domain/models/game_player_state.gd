@@ -8,16 +8,19 @@ const INVENTORY_SIZE := 5
 var player_id: String
 var inventory: Array[GamePower]
 var effects: Array = []
+var avatar_asset_path: String = ""
 
 
 func _init(
 	p_player_id: String,
 	p_inventory: Array[GamePower] = [],
-	p_effects: Array = []
+	p_effects: Array = [],
+	p_avatar_asset_path: String = ""
 ) -> void:
 	player_id = p_player_id
 	inventory = p_inventory
 	effects = p_effects
+	avatar_asset_path = p_avatar_asset_path
 
 
 func to_dictionary() -> Dictionary:
@@ -32,7 +35,8 @@ func to_dictionary() -> Dictionary:
 	return {
 		"id": player_id,
 		"inventory": parsed_inventory,
-		"effects": effects.duplicate()
+		"effects": effects.duplicate(),
+		"avatar_asset_path": avatar_asset_path
 	}
 
 

@@ -30,6 +30,8 @@ signal board_changed(board: GameBoard)
 signal words_changed(words: Array)
 signal my_inventory_changed(inventory: Array)
 signal opponent_inventory_changed(inventory: Array)
+signal my_avatar_changed(texture: Texture2D)
+signal opponent_avatar_changed(texture: Texture2D)
 signal power_granted(power: GamePower)
 signal turn_state_changed(is_my_turn: bool)
 signal turn_timer_updated(seconds_remaining: float)
@@ -71,6 +73,8 @@ var _armed_power_type: String = ""
 var _is_game_over: bool = false
 
 var _opponent_id: String = ""
+var _my_avatar_path: String = ""
+var _opponent_avatar_path: String = ""
 var _block_click_history: Dictionary = {}
 var _pending_block_actor: String = ""
 var _pending_block_pos := Vector2i(-1, -1)
@@ -90,6 +94,8 @@ func _init(usecase: GameUseCase, navigation: NavigationService) -> void:
 	_usecase.words_updated.connect(_on_words_updated)
 	_usecase.my_inventory_updated.connect(_on_my_inventory_updated)
 	_usecase.opponent_inventory_updated.connect(_on_opponent_inventory_updated)
+	_usecase.my_avatar_updated.connect(_on_my_avatar_updated)
+	_usecase.opponent_avatar_updated.connect(_on_opponent_avatar_updated)
 	_usecase.power_granted.connect(_on_power_granted)
 	_usecase.turn_changed.connect(_on_turn_changed)
 	_usecase.my_cell_revealed.connect(_on_my_cell_revealed)
@@ -107,14 +113,16 @@ func _init(usecase: GameUseCase, navigation: NavigationService) -> void:
 
 
 
-func start(game_id: String, opponent_id: String) -> void:
+func start(game_id: String, opponent_id: String, my_avatar: String = "", opponent_avatar: String = "") -> void:
 	_is_game_over = false
 	_opponent_id = opponent_id
+	_my_avatar_path = ""
+	_opponent_avatar_path = ""
 	_block_click_history.clear()
 	_pending_block_actor = ""
 	_pending_block_pos = Vector2i(-1, -1)
 	_set_loading(true)
-	_usecase.start(game_id, opponent_id)
+	_usecase.start(game_id, opponent_id, my_avatar, opponent_avatar)
 	_set_loading(false)
 
 
@@ -537,6 +545,24 @@ func _on_my_inventory_updated(inventory: Array) -> void:
 func _on_opponent_inventory_updated(inventory: Array) -> void:
 	_opponent_inventory = inventory
 	opponent_inventory_changed.emit(inventory)
+
+
+func _on_my_avatar_updated(avatar_asset_path: String) -> void:
+	if avatar_asset_path.is_empty() or avatar_asset_path == _my_avatar_path:
+		return
+	_my_avatar_path = avatar_asset_path
+	var assets: EquippableAssetService = ServiceRegistry.avatar_assets()
+	EquippedAvatar.ensure_downloaded(assets, avatar_asset_path)
+	my_avatar_changed.emit(EquippedAvatar.texture_for(assets, avatar_asset_path))
+
+
+func _on_opponent_avatar_updated(avatar_asset_path: String) -> void:
+	if avatar_asset_path.is_empty() or avatar_asset_path == _opponent_avatar_path:
+		return
+	_opponent_avatar_path = avatar_asset_path
+	var assets: EquippableAssetService = ServiceRegistry.avatar_assets()
+	EquippedAvatar.ensure_downloaded(assets, avatar_asset_path)
+	opponent_avatar_changed.emit(EquippedAvatar.texture_for(assets, avatar_asset_path))
 
 
 func _on_power_granted(power: GamePower) -> void:

@@ -9,11 +9,13 @@ signal error(message: String)
 
 var _repository: MatchmakingRepository
 var _current_user_provider: CurrentUserProvider
+var _data_store: InitialDataStore
 
 
-func _init(repository: MatchmakingRepository, current_user_provider: CurrentUserProvider) -> void:
+func _init(repository: MatchmakingRepository, current_user_provider: CurrentUserProvider, data_store: InitialDataStore = null) -> void:
 	_repository = repository
 	_current_user_provider = current_user_provider
+	_data_store = data_store
 
 	_repository.searching.connect(_on_searching)
 	_repository.search_cancelled.connect(_on_search_cancelled)
@@ -33,6 +35,19 @@ func cancel_search() -> void:
 func current_player_nickname() -> String:
 	var user := _current_user_provider.current_user()
 	return user.nickname if user != null else ""
+
+
+func current_player_avatar_path() -> String:
+	if _data_store == null or not _data_store.is_inventory_loaded():
+		return ""
+	for item_variant in _data_store.get_inventory():
+		var item := item_variant as InventoryItem
+		if item == null:
+			continue
+		var path := EquippedAvatar.avatar_asset_path([item])
+		if not path.is_empty():
+			return path
+	return ""
 
 
 

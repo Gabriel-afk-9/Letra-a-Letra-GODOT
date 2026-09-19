@@ -32,6 +32,8 @@ var _armed_scope: String = ""
 
 var _my_nickname := ""
 var _opponent_nickname := ""
+var _my_avatar_texture: Texture2D = null
+var _opponent_avatar_texture: Texture2D = null
 var _cached_is_my_turn: bool = false
 var _cached_seconds_remaining: float = 0.0
 var _my_inventory_cache: Array = []
@@ -91,21 +93,28 @@ func _apply_board_90_percent() -> void:
 	words_container_view.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	board_view.apply_responsive(layout_w, cell, font_sz)
 
-func setup(view_model: GameViewModel, game_id: String, opponent_id: String, me_nickname: String, opponent_nickname: String) -> void:
+func setup(view_model: GameViewModel, game_id: String, opponent_id: String, me_nickname: String, opponent_nickname: String, my_avatar: String = "", opponent_avatar: String = "") -> void:
 	_view_model = view_model
 	_my_nickname = me_nickname
 	_opponent_nickname = opponent_nickname
+	var assets: EquippableAssetService = ServiceRegistry.avatar_assets()
+	EquippedAvatar.ensure_downloaded(assets, my_avatar)
+	EquippedAvatar.ensure_downloaded(assets, opponent_avatar)
+	_my_avatar_texture = EquippedAvatar.texture_for(assets, my_avatar) if not my_avatar.is_empty() else null
+	_opponent_avatar_texture = EquippedAvatar.texture_for(assets, opponent_avatar) if not opponent_avatar.is_empty() else null
 	if is_instance_valid(player_info_bar):
-		player_info_bar.setup_players(me_nickname, opponent_nickname)
+		player_info_bar.setup_players(me_nickname, opponent_nickname, _my_avatar_texture, _opponent_avatar_texture)
 	_build_board_buttons()
 	_connect_view_model()
-	_view_model.start(game_id, opponent_id)
+	_view_model.start(game_id, opponent_id, my_avatar, opponent_avatar)
 
 func _connect_view_model() -> void:
 	_view_model.board_changed.connect(_on_board_changed)
 	_view_model.words_changed.connect(_on_words_changed)
 	_view_model.my_inventory_changed.connect(_on_my_inventory_changed)
 	_view_model.opponent_inventory_changed.connect(_on_opponent_inventory_changed)
+	_view_model.my_avatar_changed.connect(_on_my_avatar_changed)
+	_view_model.opponent_avatar_changed.connect(_on_opponent_avatar_changed)
 	_view_model.power_granted.connect(_on_power_granted)
 	_view_model.turn_state_changed.connect(_on_turn_state_changed)
 	_view_model.turn_timer_updated.connect(_on_turn_timer_updated)
@@ -225,6 +234,18 @@ func _on_opponent_inventory_changed(inventory: Array) -> void:
 	_cached_opponent_inventory = inventory
 	if is_instance_valid(player_info_bar):
 		player_info_bar.set_opponent_inventory(inventory)
+
+
+func _on_my_avatar_changed(texture: Texture2D) -> void:
+	_my_avatar_texture = texture
+	if is_instance_valid(player_info_bar):
+		player_info_bar.set_my_avatar(texture)
+
+
+func _on_opponent_avatar_changed(texture: Texture2D) -> void:
+	_opponent_avatar_texture = texture
+	if is_instance_valid(player_info_bar):
+		player_info_bar.set_opponent_avatar(texture)
 
 func _on_defense_pulse_changed(pulse_ids: Array) -> void:
 	if is_instance_valid(_inventory_panel):

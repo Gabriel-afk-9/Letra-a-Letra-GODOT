@@ -7,7 +7,8 @@ static func bind(view: MatchmakingScreen) -> void:
 
 	var usecase := MatchmakingUseCase.new(
 		ServiceRegistry.matchmaking_repository(),
-		current_user_provider
+		current_user_provider,
+		ServiceRegistry.initial_data_store()
 	)
 
 	var navigation := ServiceRegistry.navigation_service()

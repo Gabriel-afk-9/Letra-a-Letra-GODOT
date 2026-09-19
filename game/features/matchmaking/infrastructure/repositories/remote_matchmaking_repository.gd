@@ -97,7 +97,11 @@ func _handle_matchmaking(message: WebSocketMessage) -> void:
 		error.emit("Opponent not found.")
 		return
 
-	var current_player := MatchmakingPlayer.new(me.id, me.nickname)
+	var current_player := MatchmakingPlayer.new(
+		me.id,
+		me.nickname,
+		EquippedAvatar.avatar_asset_path(_local_cosmetics(players, me.id))
+	)
 	var current_turn_player_id := str(message.data.get("currentTurnPlayerId", ""))
 
 	match_found.emit(
@@ -134,3 +138,16 @@ func _find_opponent(players: Array, my_id: String) -> MatchmakingPlayer:
 		return MatchmakingPlayerMapper.to_domain(player)
 
 	return null
+
+
+func _local_cosmetics(players: Array, my_id: String) -> Array:
+	for player_variant in players:
+		if not player_variant is Dictionary:
+			continue
+		var player: Dictionary = player_variant
+		if str(player.get("id", "")) != my_id:
+			continue
+		var cosmetics_variant = player.get("cosmeticsEquipped", [])
+		if cosmetics_variant is Array:
+			return cosmetics_variant
+	return []

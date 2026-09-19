@@ -12,6 +12,7 @@ var _game_repository: RemoteGameRepository
 var _user_repository: RemoteUserRepository
 var _current_user_provider: CurrentUserProvider
 var _initial_data_store: InitialDataStore
+var _avatar_assets: EquippableAssetService
 
 func _enter_tree() -> void:
 	if _initialized: return
@@ -38,6 +39,8 @@ func _enter_tree() -> void:
 	_game_repository = RemoteGameRepository.new(_websocket_client, _current_user_provider)
 
 	_initial_data_store = InitialDataStore.new()
+	_avatar_assets = EquippableAssetService.new()
+	add_child(_avatar_assets)
 
 func session_persistence() -> SessionPersistence:
 	return _session_persistence
@@ -69,3 +72,6 @@ func current_user_provider() -> CurrentUserProvider:
 
 func initial_data_store() -> InitialDataStore:
 	return _initial_data_store
+
+func avatar_assets() -> EquippableAssetService:
+	return _avatar_assets

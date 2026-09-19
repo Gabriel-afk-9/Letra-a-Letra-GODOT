@@ -24,5 +24,7 @@ static func bind(view: GameScreen) -> void:
 		event.game_id,
 		event.opponent.id,
 		event.me.nickname,
-		event.opponent.nickname
+		event.opponent.nickname,
+		event.me.avatar_asset_path,
+		event.opponent.avatar_asset_path
 	)

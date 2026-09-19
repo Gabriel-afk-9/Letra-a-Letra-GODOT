@@ -46,7 +46,10 @@ func _on_state_changed(state: MatchmakingViewModel.MatchmakingState) -> void:
 
 
 func _on_opponent_found(event: MatchmakingFoundEvent) -> void:
-	opponent_player_card.show_opponent(event.opponent.nickname)
+	opponent_player_card.show_opponent(
+		event.opponent.nickname,
+		_view_model.opponent_avatar(event)
+	)
 
 
 func _on_error_changed(message: String) -> void:
@@ -99,7 +102,10 @@ func _update_ui_for_state(state: MatchmakingViewModel.MatchmakingState) -> void:
 
 
 func _update_local_player() -> void:
-	my_player_card.show_local(_view_model.current_player_nickname())
+	my_player_card.show_local(
+		_view_model.current_player_nickname(),
+		_view_model.current_player_avatar()
+	)
 
 
 func _on_cancel_button_pressed() -> void:

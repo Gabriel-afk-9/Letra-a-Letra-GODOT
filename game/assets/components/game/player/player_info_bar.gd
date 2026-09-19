@@ -16,6 +16,8 @@ const DOT_EMPTY_BG := Color(0.5, 0.5, 0.5, 0.6)
 var _cards_fade_tween: Tween
 var _my_nickname: String = ""
 var _opponent_nickname: String = ""
+var _my_avatar: Texture2D = null
+var _opponent_avatar: Texture2D = null
 var _is_my_turn: bool = false
 var _seconds_remaining: float = 0.0
 var _my_dots: Array = []
@@ -53,9 +55,22 @@ func _shrink_game_cards() -> void:
 				nick.add_theme_constant_override("outline_size", 2)
 
 
-func setup_players(my_nickname: String, opponent_nickname: String) -> void:
+func setup_players(my_nickname: String, opponent_nickname: String, my_avatar: Texture2D = null, opponent_avatar: Texture2D = null) -> void:
 	_my_nickname = my_nickname
 	_opponent_nickname = opponent_nickname
+	_my_avatar = my_avatar
+	_opponent_avatar = opponent_avatar
+	_update_player_cards()
+
+
+func set_my_avatar(texture: Texture2D) -> void:
+	_my_avatar = texture
+	_update_player_cards()
+
+
+func set_opponent_avatar(texture: Texture2D) -> void:
+	_opponent_avatar = texture
+	_update_player_cards()
 
 
 func set_turn(is_my_turn: bool) -> void:
@@ -81,7 +96,7 @@ func _update_player_cards() -> void:
 	var appearing_wrapper: Control = my_card_wrapper if _is_my_turn else opponent_card_wrapper
 	if _is_my_turn:
 		if my_player_card.has_method("show_local"):
-			my_player_card.show_local(_my_nickname)
+			my_player_card.show_local(_my_nickname, _my_avatar)
 		if is_instance_valid(my_power_dots):
 			my_power_dots.show()
 		if opponent_player_card.has_method("clear"):
@@ -90,7 +105,7 @@ func _update_player_cards() -> void:
 			opponent_power_dots.hide()
 	else:
 		if opponent_player_card.has_method("show_opponent"):
-			opponent_player_card.show_opponent(_opponent_nickname)
+			opponent_player_card.show_opponent(_opponent_nickname, _opponent_avatar)
 		if is_instance_valid(opponent_power_dots):
 			opponent_power_dots.show()
 		if my_player_card.has_method("clear"):

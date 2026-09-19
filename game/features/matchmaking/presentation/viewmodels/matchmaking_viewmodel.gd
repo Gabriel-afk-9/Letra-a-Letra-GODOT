@@ -36,6 +36,18 @@ func state() -> MatchmakingState:
 func current_player_nickname() -> String:
 	return _usecase.current_player_nickname()
 
+func current_player_avatar() -> Texture2D:
+	var assets: EquippableAssetService = ServiceRegistry.avatar_assets()
+	var path := _usecase.current_player_avatar_path()
+	EquippedAvatar.ensure_downloaded(assets, path)
+	return EquippedAvatar.texture_for(assets, path)
+
+
+func opponent_avatar(event: MatchmakingFoundEvent) -> Texture2D:
+	var assets: EquippableAssetService = ServiceRegistry.avatar_assets()
+	EquippedAvatar.ensure_downloaded(assets, event.opponent.avatar_asset_path)
+	return EquippedAvatar.texture_for(assets, event.opponent.avatar_asset_path)
+
 func start_search() -> void:
 	if _state == MatchmakingState.SEARCHING:
 		return

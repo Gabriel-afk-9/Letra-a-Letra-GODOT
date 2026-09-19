@@ -6,6 +6,8 @@ signal board_updated(board: GameBoard)
 signal words_updated(words: Array)
 signal my_inventory_updated(inventory: Array)
 signal opponent_inventory_updated(inventory: Array)
+signal my_avatar_updated(avatar_asset_path: String)
+signal opponent_avatar_updated(avatar_asset_path: String)
 signal power_granted(power: GamePower)
 signal turn_changed(current_turn_player_id: String, turn_ends_at: String, is_my_turn: bool)
 signal turn_passed
@@ -22,6 +24,8 @@ signal action_rejected(error_code: String, cell_x: int, cell_y: int)
 var _repository: GameRepository
 var _current_user_provider: CurrentUserProvider
 var _opponent_id: String = ""
+var _my_avatar_path: String = ""
+var _opponent_avatar_path: String = ""
 
 var _previous_my_inventory_ids: Dictionary = {}
 var _my_inventory_synced: bool = false
@@ -52,9 +56,15 @@ func _init(repository: GameRepository, current_user_provider: CurrentUserProvide
 
 
 
-func start(game_id: String, opponent_id: String) -> void:
+func start(game_id: String, opponent_id: String, my_avatar: String = "", opponent_avatar: String = "") -> void:
 	_opponent_id = opponent_id
+	_my_avatar_path = my_avatar
+	_opponent_avatar_path = opponent_avatar
 	_repository.start(game_id)
+	if not my_avatar.is_empty():
+		my_avatar_updated.emit(my_avatar)
+	if not opponent_avatar.is_empty():
+		opponent_avatar_updated.emit(opponent_avatar)
 
 
 func reveal_cell(x: int, y: int) -> void:
@@ -125,8 +135,14 @@ func _on_players_updated(players: Array) -> void:
 			my_inventory_updated.emit(player.inventory)
 			_emit_power_granted(player.inventory)
 			_sync_my_effects(player.effects)
+			if not player.avatar_asset_path.is_empty() and player.avatar_asset_path != _my_avatar_path:
+				_my_avatar_path = player.avatar_asset_path
+				my_avatar_updated.emit(player.avatar_asset_path)
 		elif player.player_id == _opponent_id:
 			opponent_inventory_updated.emit(player.inventory)
+			if not player.avatar_asset_path.is_empty() and player.avatar_asset_path != _opponent_avatar_path:
+				_opponent_avatar_path = player.avatar_asset_path
+				opponent_avatar_updated.emit(player.avatar_asset_path)
 
 
 func _emit_power_granted(inventory: Array) -> void:
