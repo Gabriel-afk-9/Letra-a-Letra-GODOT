@@ -158,6 +158,23 @@ func test_inventory_empty_sections_stay_visible() -> void:
 	assert_eq((_page.get_node("Content/MainVBox/Panel/PanelMargin/PanelVBox/StatusLabel") as Label).text, "Nada nesta seção.", "status de categoria vazia")
 
 
+func test_inventory_tab_buttons_layout() -> void:
+	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
+
+	var section_btn := _tabs_row().get_node("COSMETICSTab") as Button
+	assert_true(section_btn.clip_contents, "botão de seção recorta o conteúdo")
+	assert_eq(section_btn.find_children("*", "HBoxContainer", true, false).size(), 1, "seção usa linha horizontal ícone+texto")
+	var section_labels := section_btn.find_children("*", "Label", true, false)
+	assert_eq((section_labels[0] as Label).text, "COSMÉTICOS", "título completo da seção")
+	var icons := section_btn.find_children("*", "TextureRect", true, false)
+	assert_eq((icons[0] as TextureRect).custom_minimum_size, Vector2(26, 26), "ícone com tamanho fixo")
+	var cat_btn := _sub_tabs_row().get_node("AVATARTab") as Button
+	assert_true(cat_btn.clip_contents, "subaba recorta o conteúdo")
+	var cat_labels := cat_btn.find_children("*", "Label", true, false)
+	assert_eq((cat_labels[0] as Label).text, "AVATAR", "título completo da categoria")
+	assert_eq((cat_labels[0] as Label).text_overrun_behavior, TextServer.OVERRUN_TRIM_ELLIPSIS, "elipse em vez de corte seco")
+
+
 func test_inventory_cards_keep_constant_size() -> void:
 	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
 

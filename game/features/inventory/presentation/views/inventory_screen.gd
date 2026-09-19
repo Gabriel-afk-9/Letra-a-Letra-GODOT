@@ -26,13 +26,6 @@ const SECTION_ICONS := {
 	"OTHERS": preload("res://assets/images/icons/navbar-2.png"),
 }
 
-const TAB_ICONS := {
-	"AVATAR": preload("res://assets/images/icons/icon-user.png"),
-	"BANNER": preload("res://assets/images/icons/room-icon.png"),
-	"FRAME": preload("res://assets/images/icons/room-icon.png"),
-	"EMOTE": preload("res://assets/images/icons/bot-icon.png"),
-	"CONSUMABLE": preload("res://assets/images/icons/navbar-2.png"),
-}
 const TAB_ICON_FALLBACK := preload("res://assets/images/icons/navbar-2.png")
 
 const PALETTE: Array = [
@@ -199,9 +192,9 @@ func _make_section_tab(section_id: String) -> Button:
 		str(SECTION_TITLES.get(section_id, section_id)),
 		SECTION_ICONS.get(section_id, TAB_ICON_FALLBACK),
 		active,
-		Vector2(150, 56),
-		Vector2(130, 48),
-		18,
+		Vector2(170, 58),
+		Vector2(150, 50),
+		16,
 		14
 	)
 	btn.pressed.connect(_on_section_pressed.bind(section_id))
@@ -213,12 +206,12 @@ func _make_category_tab(category_id: String) -> Button:
 	var btn := _build_tab_button(
 		category_id,
 		str(TAB_TITLES.get(category_id, category_id)),
-		TAB_ICONS.get(category_id, TAB_ICON_FALLBACK),
+		null,
 		active,
 		Vector2(72, 48),
-		Vector2(58, 42),
-		14,
-		11
+		Vector2(60, 42),
+		12,
+		10
 	)
 	btn.pressed.connect(_on_category_pressed.bind(category_id))
 	return btn
@@ -238,6 +231,7 @@ func _build_tab_button(
 	btn.name = "%sTab" % tab_id
 	btn.set_meta("tab_id", tab_id)
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	btn.clip_contents = true
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = TAB_BLUE if active else TAB_GREEN
 	sb.border_width_left = 3
@@ -254,30 +248,48 @@ func _build_tab_button(
 	btn.add_theme_stylebox_override("pressed", sb)
 	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	btn.custom_minimum_size = min_active if active else min_inactive
-	var box := VBoxContainer.new()
-	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.alignment = BoxContainer.ALIGNMENT_CENTER
-	box.add_theme_constant_override("separation", 0)
-	btn.add_child(box)
-	var icon := TextureRect.new()
-	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	icon.custom_minimum_size = Vector2(28, 28) if active else Vector2(22, 22)
-	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	icon.texture = icon_texture
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	box.add_child(icon)
+	var margin := MarginContainer.new()
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left", 8)
+	margin.add_theme_constant_override("margin_top", 4)
+	margin.add_theme_constant_override("margin_right", 8)
+	margin.add_theme_constant_override("margin_bottom", 4)
+	btn.add_child(margin)
+	if icon_texture != null:
+		var row := HBoxContainer.new()
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.alignment = BoxContainer.ALIGNMENT_CENTER
+		row.add_theme_constant_override("separation", 6)
+		margin.add_child(row)
+		var icon := TextureRect.new()
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		icon.custom_minimum_size = Vector2(26, 26)
+		icon.texture = icon_texture
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		row.add_child(icon)
+		var label := _make_tab_label(title, HORIZONTAL_ALIGNMENT_LEFT, font_active if active else font_inactive)
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(label)
+	else:
+		margin.add_child(_make_tab_label(title, HORIZONTAL_ALIGNMENT_CENTER, font_active if active else font_inactive))
+	return btn
+
+
+func _make_tab_label(title: String, alignment: HorizontalAlignment, font_size: int) -> Label:
 	var label := Label.new()
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.horizontal_alignment = alignment
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.clip_text = true
+	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	label.text = title
 	label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
 	label.add_theme_constant_override("outline_size", 3)
-	label.add_theme_font_size_override("font_size", font_active if active else font_inactive)
-	box.add_child(label)
-	return btn
+	label.add_theme_font_size_override("font_size", font_size)
+	return label
 
 
 func _refresh_grid() -> void:
