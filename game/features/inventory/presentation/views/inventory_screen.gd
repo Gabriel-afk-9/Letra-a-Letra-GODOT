@@ -27,6 +27,8 @@ const SECTION_ICONS := {
 }
 
 const TAB_ICON_FALLBACK := preload("res://assets/images/icons/navbar-2.png")
+const CARD_MASK_SHADER := preload("res://assets/styles/rounded_image_mask.gdshader")
+const CARD_CORNER_RADIUS := 16
 
 const PALETTE: Array = [
 	Color(0.42, 0.23, 0.55),
@@ -49,6 +51,7 @@ const PALETTE: Array = [
 
 var _view_model: InventoryViewModel
 var _assets_node: Node
+var _image_material: ShaderMaterial
 var _section: String = ""
 var _category: String = ""
 var _page: int = 0
@@ -358,26 +361,22 @@ func _card_color(item: InventoryItem) -> Color:
 
 func _make_card(item: InventoryItem) -> Button:
 	var is_selected: bool = str(_selected.get(_filter_id(), "")) == item.item_id
+	var highlighted: bool = item.equipped or is_selected
+	var ring_color := NAVY
+	if is_selected:
+		ring_color = SELECT_ORANGE
+	elif item.equipped:
+		ring_color = TAB_BLUE
 	var btn := Button.new()
 	btn.custom_minimum_size = Vector2(96, 122)
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = _card_color(item)
-	sb.border_width_left = 5 if (item.equipped or is_selected) else 3
-	sb.border_width_top = 5 if (item.equipped or is_selected) else 3
-	sb.border_width_right = 5 if (item.equipped or is_selected) else 3
-	sb.border_width_bottom = 5 if (item.equipped or is_selected) else 3
-	if is_selected:
-		sb.border_color = SELECT_ORANGE
-	elif item.equipped:
-		sb.border_color = TAB_BLUE
-	else:
-		sb.border_color = NAVY
-	sb.corner_radius_top_left = 16
-	sb.corner_radius_top_right = 16
-	sb.corner_radius_bottom_right = 16
-	sb.corner_radius_bottom_left = 16
+	sb.corner_radius_top_left = CARD_CORNER_RADIUS
+	sb.corner_radius_top_right = CARD_CORNER_RADIUS
+	sb.corner_radius_bottom_right = CARD_CORNER_RADIUS
+	sb.corner_radius_bottom_left = CARD_CORNER_RADIUS
 	sb.shadow_color = Color(0, 0, 0, 0.35)
 	sb.shadow_size = 6
 	sb.shadow_offset = Vector2(0, 3)
@@ -391,13 +390,10 @@ func _make_card(item: InventoryItem) -> Button:
 		var art := TextureRect.new()
 		art.texture = texture
 		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		art.material = _card_image_material()
 		art.set_anchors_preset(Control.PRESET_FULL_RECT)
-		art.offset_left = 10
-		art.offset_top = 6
-		art.offset_right = -10
-		art.offset_bottom = -28
 		btn.add_child(art)
 	else:
 		var initial := Label.new()
@@ -414,10 +410,6 @@ func _make_card(item: InventoryItem) -> Button:
 		initial.add_theme_constant_override("outline_size", 6)
 		initial.add_theme_font_size_override("font_size", 44)
 		initial.set_anchors_preset(Control.PRESET_FULL_RECT)
-		initial.offset_left = 10
-		initial.offset_top = 6
-		initial.offset_right = -10
-		initial.offset_bottom = -28
 		btn.add_child(initial)
 	var name_label := Label.new()
 	name_label.text = item.name.strip_edges()
@@ -442,8 +434,36 @@ func _make_card(item: InventoryItem) -> Button:
 		btn.add_child(_make_badge("x%d" % item.quantity))
 	if _view_model.needs_download(item):
 		btn.add_child(_make_download_button(item))
+	btn.add_child(_make_card_frame(highlighted, ring_color))
 	btn.pressed.connect(_on_item_pressed.bind(item.item_id))
 	return btn
+
+
+func _card_image_material() -> ShaderMaterial:
+	if _image_material == null or not is_instance_valid(_image_material):
+		_image_material = ShaderMaterial.new()
+		_image_material.shader = CARD_MASK_SHADER
+	return _image_material
+
+
+func _make_card_frame(highlighted: bool, ring_color: Color) -> PanelContainer:
+	var frame := PanelContainer.new()
+	frame.name = "CardFrame"
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.set_anchors_preset(Control.PRESET_FULL_RECT)
+	var ring := StyleBoxFlat.new()
+	ring.draw_center = false
+	ring.border_width_left = 5 if highlighted else 3
+	ring.border_width_top = 5 if highlighted else 3
+	ring.border_width_right = 5 if highlighted else 3
+	ring.border_width_bottom = 5 if highlighted else 3
+	ring.border_color = ring_color
+	ring.corner_radius_top_left = CARD_CORNER_RADIUS
+	ring.corner_radius_top_right = CARD_CORNER_RADIUS
+	ring.corner_radius_bottom_right = CARD_CORNER_RADIUS
+	ring.corner_radius_bottom_left = CARD_CORNER_RADIUS
+	frame.add_theme_stylebox_override("panel", ring)
+	return frame
 
 
 func _make_badge(text: String) -> PanelContainer:

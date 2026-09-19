@@ -184,6 +184,31 @@ func test_inventory_cards_keep_constant_size() -> void:
 	assert_eq(card.size_flags_vertical, Control.SIZE_FILL, "card não estica na vertical")
 
 
+func test_inventory_card_image_fills_with_rounded_frame() -> void:
+	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
+
+	var card := _grid().get_child(0) as Button
+	var arts := card.find_children("*", "TextureRect", true, false)
+	assert_eq(arts.size(), 1, "uma imagem por card")
+	var art := arts[0] as TextureRect
+	assert_eq(art.stretch_mode, TextureRect.STRETCH_KEEP_ASPECT_COVERED, "imagem preenche todo o card")
+	assert_eq(Vector4(art.offset_left, art.offset_top, art.offset_right, art.offset_bottom), Vector4.ZERO, "imagem sem recuo")
+	assert_true(art.material is ShaderMaterial, "máscara de cantos aplicada")
+	var names_found := false
+	for label in card.find_children("*", "Label", true, false):
+		if (label as Label).text == "Avatar av-1":
+			names_found = true
+	assert_true(names_found, "nome sobre a imagem")
+	var frame := card.get_node_or_null("CardFrame") as PanelContainer
+	assert_not_null(frame, "moldura de contorno existe")
+	assert_eq(card.get_child(card.get_child_count() - 1), frame, "moldura por cima da imagem")
+	var ring := frame.get_theme_stylebox("panel") as StyleBoxFlat
+	assert_false(ring.draw_center, "anel sem centro para a imagem aparecer")
+	assert_eq(ring.corner_radius_top_left, 16, "cantos arredondados")
+	assert_eq(ring.corner_radius_bottom_right, 16, "cantos arredondados")
+	assert_eq(ring.border_color, Color(0.118, 0.165, 0.267), "contorno escuro")
+
+
 func test_inventory_missing_asset_shows_download_button() -> void:
 	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
 
