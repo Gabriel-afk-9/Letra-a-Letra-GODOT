@@ -29,6 +29,10 @@ class FakeNavigation:
 		last_route = route
 		go_count += 1
 
+	func go_to_shell() -> void:
+		last_route = AppRoutes.SHELL
+		go_count += 1
+
 
 var _users: FakeUserRepository
 var _shop: FakeShopRepository

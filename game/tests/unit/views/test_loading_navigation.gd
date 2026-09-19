@@ -18,8 +18,14 @@ func test_register_redirects_to_loading() -> void:
 
 func test_loading_navigates_to_shell_and_login() -> void:
 	var gd := FileAccess.get_file_as_string("res://features/loading/presentation/viewmodels/loading_viewmodel.gd")
-	assert_true(gd.contains("AppRoutes.SHELL"), "loading deve navegar para SHELL no sucesso")
+	assert_true(gd.contains("go_to_shell()"), "loading libera a shell pelo acesso direto no sucesso")
 	assert_true(gd.contains("AppRoutes.LOGIN"), "loading deve voltar ao LOGIN em 401")
+
+
+func test_shell_destination_always_passes_through_loading() -> void:
+	var gd := FileAccess.get_file_as_string("res://core/presentation/navigation/navigation_service.gd")
+	assert_true(gd.contains("AppRoutes.LOADING"), "go_to(SHELL) desvia para o LOADING")
+	assert_true(gd.contains("func go_to_shell"), "shell direta fica restrita ao bypass")
 
 
 func test_loading_screen_derives_from_main() -> void:

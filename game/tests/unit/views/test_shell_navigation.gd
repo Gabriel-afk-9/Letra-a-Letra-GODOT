@@ -55,7 +55,7 @@ func test_auth_redirects_to_loading() -> void:
 	var register := FileAccess.get_file_as_string("res://features/register/presentation/viewmodels/register_viewmodel.gd")
 	assert_true(register.contains("AppRoutes.LOADING"), "registro vai para o loading")
 	var loading := FileAccess.get_file_as_string("res://features/loading/presentation/viewmodels/loading_viewmodel.gd")
-	assert_true(loading.contains("AppRoutes.SHELL"), "loading vai para o shell no sucesso")
+	assert_true(loading.contains("go_to_shell()"), "loading libera o shell no sucesso")
 
 func test_navbar_selected_state_is_dynamic() -> void:
 	var gd := FileAccess.get_file_as_string("res://shared/components/navbar/navbar.gd")

@@ -43,7 +43,7 @@ func start() -> void:
 	if result.success:
 		_set_progress(1.0)
 		loaded.emit()
-		_navigation.go_to(AppRoutes.SHELL)
+		_navigation.go_to_shell()
 		return
 
 	if result.unauthorized:
