@@ -71,6 +71,7 @@ func _build_catalog() -> void:
 		{"id": "avatar_1", "name": "AVATAR 1", "art": ART_STUPID, "bg": Color(0.42, 0.23, 0.55), "qty": 0, "locked": false},
 		{"id": "avatar_2", "name": "BANNER 1", "art": ART_LANTERN, "bg": Color(0.45, 0.68, 0.16), "qty": 0, "locked": false},
 		{"id": "avatar_3", "name": "AVATAR 3", "art": ART_ARVENIS, "bg": Color(0.36, 0.68, 0.88), "qty": 0, "locked": false},
+		{"id": "avatar_4", "name": "AVATAR 4", "art": ART_STUPID, "bg": Color(0.42, 0.23, 0.55), "qty": 0, "locked": false},
 		{"id": "avatar_5", "name": "AVATAR 5", "art": ART_EVIL, "bg": Color(0.55, 0.6, 0.68), "qty": 0, "locked": false},
 		{"id": "avatar_6", "name": "AVATAR 6", "art": ART_PIE, "bg": Color(0.5, 0.28, 0.62), "qty": 0, "locked": false},
 		{"id": "avatar_7", "name": "AVATAR 7", "art": ART_OLD_MAN, "bg": Color(0.62, 0.84, 0.84), "qty": 0, "locked": false},

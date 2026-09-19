@@ -400,7 +400,7 @@ func _update_board_interactivity() -> void:
 				break
 
 	var is_over := _view_model != null and _view_model.is_game_over()
-	var board_visual_dimmed := (_global_power_armed or _action_locked) and not is_over
+	var board_visual_dimmed := _global_power_armed and not is_over
 	if not is_over and _view_model != null and _view_model.is_frozen() and _armed_scope == GamePowerCatalog.SCOPE_GLOBAL:
 		var sel := _view_model.selected_power_id()
 		for p in _my_inventory_cache:
