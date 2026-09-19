@@ -112,6 +112,8 @@ func _connect_view_model() -> void:
 		_view_model.asset_changed.connect(_on_asset_changed)
 	if not _view_model.download_changed.is_connected(_on_download_changed):
 		_view_model.download_changed.connect(_on_download_changed)
+	if not _view_model.action_changed.is_connected(_on_action_changed):
+		_view_model.action_changed.connect(_on_action_changed)
 	if not _view_model.loading_changed.is_connected(_on_loading_changed):
 		_view_model.loading_changed.connect(_on_loading_changed)
 	if not _view_model.error_changed.is_connected(_on_error_changed):
@@ -127,6 +129,8 @@ func _disconnect_view_model() -> void:
 		_view_model.asset_changed.disconnect(_on_asset_changed)
 	if _view_model.download_changed.is_connected(_on_download_changed):
 		_view_model.download_changed.disconnect(_on_download_changed)
+	if _view_model.action_changed.is_connected(_on_action_changed):
+		_view_model.action_changed.disconnect(_on_action_changed)
 	if _view_model.loading_changed.is_connected(_on_loading_changed):
 		_view_model.loading_changed.disconnect(_on_loading_changed)
 	if _view_model.error_changed.is_connected(_on_error_changed):
@@ -363,10 +367,10 @@ func _make_card(item: InventoryItem) -> Button:
 	var is_selected: bool = str(_selected.get(_filter_id(), "")) == item.item_id
 	var highlighted: bool = item.equipped or is_selected
 	var ring_color := NAVY
-	if is_selected:
+	if item.equipped:
+		ring_color = TAB_GREEN
+	elif is_selected:
 		ring_color = SELECT_ORANGE
-	elif item.equipped:
-		ring_color = TAB_BLUE
 	var btn := Button.new()
 	btn.custom_minimum_size = Vector2(96, 122)
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -434,6 +438,8 @@ func _make_card(item: InventoryItem) -> Button:
 		btn.add_child(_make_badge("x%d" % item.quantity))
 	if _view_model.needs_download(item):
 		btn.add_child(_make_download_button(item))
+	if _is_cosmetics() and is_selected and not item.equipped:
+		btn.add_child(_make_equip_button(item))
 	btn.add_child(_make_card_frame(highlighted, ring_color))
 	btn.pressed.connect(_on_item_pressed.bind(item.item_id))
 	return btn
@@ -464,6 +470,51 @@ func _make_card_frame(highlighted: bool, ring_color: Color) -> PanelContainer:
 	ring.corner_radius_bottom_left = CARD_CORNER_RADIUS
 	frame.add_theme_stylebox_override("panel", ring)
 	return frame
+
+
+func _make_equip_button(item: InventoryItem) -> Button:
+	var eq := Button.new()
+	eq.name = "EquipBtn"
+	eq.set_meta("item_id", item.item_id)
+	eq.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var busy: bool = _view_model.is_equip_busy(item)
+	var locked: bool = not _view_model.action_id().is_empty()
+	if busy:
+		eq.text = "..."
+	else:
+		eq.text = "EQUIPAR"
+	eq.disabled = locked
+	var eq_sb := StyleBoxFlat.new()
+	eq_sb.bg_color = TAB_GREEN
+	eq_sb.border_width_left = 2
+	eq_sb.border_width_top = 2
+	eq_sb.border_width_right = 2
+	eq_sb.border_width_bottom = 2
+	eq_sb.border_color = NAVY
+	eq_sb.corner_radius_top_left = 10
+	eq_sb.corner_radius_top_right = 10
+	eq_sb.corner_radius_bottom_right = 10
+	eq_sb.corner_radius_bottom_left = 10
+	eq.add_theme_stylebox_override("normal", eq_sb)
+	eq.add_theme_stylebox_override("hover", eq_sb)
+	eq.add_theme_stylebox_override("pressed", eq_sb)
+	eq.add_theme_stylebox_override("disabled", eq_sb)
+	eq.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	eq.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	eq.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	eq.add_theme_constant_override("outline_size", 3)
+	eq.add_theme_font_size_override("font_size", 13)
+	eq.anchor_left = 0.5
+	eq.anchor_top = 0.5
+	eq.anchor_right = 0.5
+	eq.anchor_bottom = 0.5
+	eq.offset_left = -46
+	eq.offset_top = -18
+	eq.offset_right = 46
+	eq.offset_bottom = 18
+	if not locked:
+		eq.pressed.connect(_on_equip_pressed.bind(item.item_id))
+	return eq
 
 
 func _make_badge(text: String) -> PanelContainer:
@@ -593,11 +644,22 @@ func _on_download_pressed(item_id: String) -> void:
 	_view_model.download_asset(item)
 
 
+func _on_equip_pressed(item_id: String) -> void:
+	var item := _find_item(item_id)
+	if item == null:
+		return
+	_view_model.equip_item(item)
+
+
 func _on_asset_changed(_item_id: String) -> void:
 	_refresh_grid()
 
 
 func _on_download_changed(_item_id: String) -> void:
+	_refresh_grid()
+
+
+func _on_action_changed(_action_id: String) -> void:
 	_refresh_grid()
 
 

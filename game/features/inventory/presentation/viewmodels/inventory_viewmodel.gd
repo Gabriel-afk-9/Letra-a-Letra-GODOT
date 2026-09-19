@@ -7,6 +7,7 @@ class_name InventoryViewModel
 signal inventory_changed
 signal asset_changed(item_id: String)
 signal download_changed(item_id: String)
+signal action_changed(action_id: String)
 
 const TAB_ORDER: Array = ["AVATAR", "BANNER", "FRAME", "EMOTE", "BOARD", "CELL"]
 const SECTION_COSMETICS := "COSMETICS"
@@ -17,6 +18,7 @@ var _assets: EquippableAssetService
 var _data_store: InitialDataStore
 var _items: Array = []
 var _seeded_from_store: bool = false
+var _action_id: String = ""
 
 
 func _init(
@@ -154,6 +156,42 @@ func download_asset(item: InventoryItem) -> void:
 		return
 	download_changed.emit(item.item_id)
 	await _assets.download(item)
+
+
+func action_id() -> String:
+	return _action_id
+
+
+func is_equip_busy(item: InventoryItem) -> bool:
+	if item == null or _action_id.is_empty():
+		return false
+	return _action_id == "equip:" + item.item_id
+
+
+# Equipa o cosmético no servidor e recarrega o inventário para refletir
+# a verdade do servidor (inclui desequipar o anterior da categoria).
+func equip_item(item: InventoryItem) -> void:
+	if item == null:
+		return
+	if not EquippableAssetPaths.is_equippable(item):
+		return
+	if item.equipped:
+		return
+	if not _action_id.is_empty():
+		return
+	_set_action("equip:" + item.item_id)
+	_clear_error()
+	var result: Dictionary = await _usecase.equip_item(item)
+	_set_action("")
+	if result.has("error"):
+		_set_error(str(result["error"]))
+		return
+	await refresh()
+
+
+func _set_action(value: String) -> void:
+	_action_id = value
+	action_changed.emit(value)
 
 
 func _on_asset_ready(item_id: String) -> void:

@@ -127,3 +127,42 @@ func test_download_guards_without_network() -> void:
 	_vm.download_asset(consumable)
 	_vm.download_asset(null)
 	assert_true(changed.is_empty(), "chamadas inválidas não emitem nada")
+
+
+func test_equip_posts_context_and_refreshes() -> void:
+	_repo.inventory_result = {"items": [_avatar("a-1"), _avatar("a-2")], "status_code": 200}
+	await _vm.refresh()
+	var unequipped := _avatar("a-1")
+	var equipped := _avatar("a-2")
+	equipped.equipped = true
+	_repo.inventory_result = {"items": [unequipped, equipped], "status_code": 200}
+	var actions: Array = []
+	_vm.action_changed.connect(func(action_id: String) -> void: actions.append(action_id))
+
+	await _vm.equip_item(_vm.items()[1] as InventoryItem)
+
+	assert_eq(_repo.last_equip_id, "a-2", "POST com o id do item")
+	assert_eq(_repo.last_equip_context, "PROFILE", "contexto do item no corpo")
+	assert_eq(actions, ["equip:a-2", ""], "ação abre e fecha")
+	assert_true((_vm.items()[1] as InventoryItem).equipped, "recarrega com o novo estado do servidor")
+
+
+func test_equip_error_surfaces_and_skips_refresh() -> void:
+	_repo.inventory_result = {"items": [_avatar("a-1")], "status_code": 200}
+	await _vm.refresh()
+	_repo.equip_result = {"error": "Item indisponível.", "status_code": 422}
+	var errors: Array = []
+	_vm.error_changed.connect(func(message: String) -> void: errors.append(message))
+
+	await _vm.equip_item(_vm.items()[0] as InventoryItem)
+
+	assert_eq(_repo.last_equip_id, "a-1", "tentou equipar")
+	assert_eq(errors.back(), "Item indisponível.", "erro exibido na tela")
+	assert_false((_vm.items()[0] as InventoryItem).equipped, "sem refresh em caso de erro")
+
+
+func test_equip_guards_invalid_calls() -> void:
+	await _vm.equip_item(null)
+	await _vm.equip_item(_consumable("c-1"))
+	await _vm.equip_item(_avatar("a-1", true))
+	assert_true(_repo.last_equip_id.is_empty(), "nenhuma requisição inválida")

@@ -97,6 +97,15 @@ func _download_button(card: Button) -> Button:
 	return card.get_node_or_null("DownloadBtn") as Button
 
 
+func _equip_button(card: Button) -> Button:
+	return card.get_node_or_null("EquipBtn") as Button
+
+
+func _card_ring(card: Button) -> StyleBoxFlat:
+	var frame := card.get_node("CardFrame") as PanelContainer
+	return frame.get_theme_stylebox("panel") as StyleBoxFlat
+
+
 func _stage_user_asset(asset_path: String) -> void:
 	var user_p := EquippableAssetPaths.user_path(asset_path)
 	var dir := EquippableAssetPaths.user_dir(asset_path)
@@ -253,6 +262,54 @@ func test_inventory_paginates_client_side() -> void:
 	assert_eq(_grid().get_child_count(), 1, "segunda página exibe o restante")
 	_page._on_prev_pressed()
 	assert_eq(_page._page, 0, "deve voltar para a página 1")
+
+
+func test_inventory_tap_shows_equip_button() -> void:
+	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
+
+	var card := _grid().get_child(0) as Button
+	assert_null(_equip_button(card), "sem botão antes do toque")
+	_page._on_item_pressed("av-1")
+	await get_tree().process_frame
+	card = _grid().get_child(0) as Button
+	var eq := _equip_button(card)
+	assert_not_null(eq, "toque revela o botão equipar")
+	assert_eq(eq.text, "EQUIPAR", "rótulo do botão")
+
+
+func test_inventory_equipped_item_has_green_ring() -> void:
+	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp", true))])
+	_page._on_item_pressed("av-1")
+	await get_tree().process_frame
+
+	var card := _grid().get_child(0) as Button
+	assert_null(_equip_button(card), "item equipado não oferece equipar")
+	assert_eq(_card_ring(card).border_color, Color(0.2, 0.72, 0.42), "borda verde no item equipado")
+
+
+func test_inventory_equip_flow_posts_and_updates() -> void:
+	await _bind_items([
+		_item(_avatar_dict("av-1", "AVATAR/ceo.webp")),
+		_item(_avatar_dict("av-2", "AVATAR/ceo.webp")),
+	])
+	_repo.inventory_result = {
+		"items": [
+			_item(_avatar_dict("av-1", "AVATAR/ceo.webp")),
+			_item(_avatar_dict("av-2", "AVATAR/ceo.webp", true)),
+		],
+		"status_code": 200,
+	}
+	_page._on_item_pressed("av-2")
+	await get_tree().process_frame
+	_page._on_equip_pressed("av-2")
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	assert_eq(_repo.last_equip_id, "av-2", "POST para o item tocado")
+	assert_eq(_repo.last_equip_context, "PROFILE", "contexto enviado no corpo")
+	var target := _grid().get_child(1) as Button
+	assert_eq(_card_ring(target).border_color, Color(0.2, 0.72, 0.42), "borda verde após equipar")
+	assert_null(_equip_button(target), "botão some após equipar")
 
 
 func test_inventory_select_marks_item() -> void:
