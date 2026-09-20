@@ -247,6 +247,7 @@ icon = ExtResource("7_person")
 expand_icon = true
 
 [node name="LoginPopup" parent="." unique_id=414094504 instance=ExtResource("8_login_popup")]
+visible = false
 z_index = 5
 layout_mode = 1
 

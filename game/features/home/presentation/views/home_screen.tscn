@@ -627,7 +627,7 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 22
-text = "Escolha um modo de jogo"
+text = "Escolha um modo de  jogo"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -773,11 +773,14 @@ horizontal_alignment = 1
 [node name="OptCasualBtn" type="Button" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1037737629]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
+focus_mode = 0
+mouse_filter = 2
 theme_override_styles/normal = SubResource("OptCasual")
 theme_override_styles/pressed = SubResource("OptCasual")
 theme_override_styles/hover = SubResource("OptCasual")
 theme_override_styles/disabled = SubResource("OptCasual")
 theme_override_styles/focus = SubResource("NavEmpty")
+disabled = true
 script = ExtResource("7")
 
 [node name="OptCasualBox" type="VBoxContainer" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn" unique_id=2026336804]
@@ -828,11 +831,14 @@ autowrap_mode = 2
 [node name="OptBotBtn" type="Button" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1382637656]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
+focus_mode = 0
+mouse_filter = 2
 theme_override_styles/normal = SubResource("OptBot")
 theme_override_styles/pressed = SubResource("OptBot")
 theme_override_styles/hover = SubResource("OptBot")
 theme_override_styles/disabled = SubResource("OptBot")
 theme_override_styles/focus = SubResource("NavEmpty")
+disabled = true
 script = ExtResource("7")
 
 [node name="OptBotBox" type="VBoxContainer" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn" unique_id=435126566]
@@ -883,11 +889,14 @@ autowrap_mode = 2
 [node name="OptRankBtn" type="Button" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1326886001]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
+focus_mode = 0
+mouse_filter = 2
 theme_override_styles/normal = SubResource("OptRank")
 theme_override_styles/pressed = SubResource("OptRank")
 theme_override_styles/hover = SubResource("OptRank")
 theme_override_styles/disabled = SubResource("OptRank")
 theme_override_styles/focus = SubResource("NavEmpty")
+disabled = true
 script = ExtResource("7")
 
 [node name="OptRankBox" type="VBoxContainer" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn" unique_id=1721785008]
