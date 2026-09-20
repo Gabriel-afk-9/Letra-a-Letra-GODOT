@@ -13,6 +13,8 @@ const CARD_GREEN := Color(0.23, 0.62, 0.32)
 
 const ART_REFRESH := preload("res://assets/images/icons/refresh.png")
 
+const TAP_SLOP := 12.0
+
 @onready var _feedback_label: Label = $Center/VBox/FeedbackLabel
 @onready var _create_btn: Button = $Center/VBox/ActionsRow/CreateBtn
 @onready var _code_btn: Button = $Center/VBox/ActionsRow/CodeBtn
@@ -41,6 +43,9 @@ const ART_REFRESH := preload("res://assets/images/icons/refresh.png")
 @onready var _code_dim: ColorRect = $CodePopup/DimBackground
 
 var _view_model: RoomsViewModel
+var _selected_game_id: String = ""
+var _press_game_id: String = ""
+var _press_position := Vector2.ZERO
 
 
 func page_id() -> StringName:
@@ -88,6 +93,8 @@ func _connect_view_model() -> void:
 	_view_model.notice_changed.connect(_on_notice_changed)
 	_view_model.room_created.connect(_on_room_created)
 	_view_model.create_failed.connect(_on_create_failed)
+	_view_model.room_joined.connect(_on_room_joined)
+	_view_model.join_failed.connect(_on_join_failed)
 
 
 func close_popups() -> void:
@@ -103,10 +110,13 @@ func _refresh_rooms() -> void:
 		_rooms_rows.remove_child(child)
 		child.queue_free()
 	var rooms := _view_model.rooms()
+	_reconcile_selection(rooms)
+	var locked := not _view_model.action_id().is_empty()
+	var joining := _view_model.is_joining()
 	for item_variant in rooms:
 		var room := item_variant as Room
 		if room != null:
-			_rooms_rows.add_child(_make_room_card(room))
+			_rooms_rows.add_child(_make_room_card(room, room.game_id == _selected_game_id, joining, locked))
 	if _view_model.is_rooms_busy():
 		if _view_model.mode() == RoomsViewModel.MODE_SEARCH:
 			_rooms_status.text = "Buscando..."
@@ -123,6 +133,26 @@ func _refresh_rooms() -> void:
 		_rooms_status.text = ""
 	_refresh_pager()
 	_refresh_buttons()
+
+
+func _reconcile_selection(rooms: Array) -> void:
+	if _selected_game_id.is_empty():
+		return
+	for item_variant in rooms:
+		var room := item_variant as Room
+		if room != null and room.game_id == _selected_game_id:
+			return
+	_selected_game_id = ""
+
+
+func _selected_room() -> Room:
+	if _selected_game_id.is_empty():
+		return null
+	for item_variant in _view_model.rooms():
+		var room := item_variant as Room
+		if room != null and room.game_id == _selected_game_id:
+			return room
+	return null
 
 
 func _refresh_pager() -> void:
@@ -149,16 +179,17 @@ func _apply_row_lock(row: Node, locked: bool) -> void:
 		(btn_variant as Button).disabled = locked
 
 
-func _make_room_card(room: Room) -> PanelContainer:
+func _make_room_card(room: Room, selected: bool, joining: bool, locked: bool) -> PanelContainer:
 	var card := PanelContainer.new()
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	card.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = _card_color_for(room)
-	sb.border_width_left = 4
-	sb.border_width_top = 4
-	sb.border_width_right = 4
-	sb.border_width_bottom = 4
-	sb.border_color = Color.BLACK
+	sb.border_width_left = 6 if selected else 4
+	sb.border_width_top = 6 if selected else 4
+	sb.border_width_right = 6 if selected else 4
+	sb.border_width_bottom = 6 if selected else 4
+	sb.border_color = SELECT_ORANGE if selected else Color.BLACK
 	sb.corner_radius_top_left = 18
 	sb.corner_radius_top_right = 18
 	sb.corner_radius_bottom_right = 18
@@ -169,14 +200,22 @@ func _make_room_card(room: Room) -> PanelContainer:
 	margin.add_theme_constant_override("margin_top", 10)
 	margin.add_theme_constant_override("margin_right", 12)
 	margin.add_theme_constant_override("margin_bottom", 10)
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(margin)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	margin.add_child(row)
 	var info := VBoxContainer.new()
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	info.add_theme_constant_override("separation", 2)
-	margin.add_child(info)
+	info.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(info)
 	var title_label := Label.new()
 	title_label.text = room.display_name()
 	title_label.clip_text = true
+	title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	title_label.add_theme_color_override("font_color", Color.WHITE)
 	title_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	title_label.add_theme_constant_override("outline_size", 4)
@@ -185,10 +224,107 @@ func _make_room_card(room: Room) -> PanelContainer:
 	var sub_label := Label.new()
 	sub_label.text = _room_subtitle(room)
 	sub_label.clip_text = true
+	sub_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	sub_label.add_theme_color_override("font_color", Color(1, 1, 1, 0.85))
 	sub_label.add_theme_font_size_override("font_size", 13)
 	info.add_child(sub_label)
+	if selected:
+		var join_btn := _make_join_btn(joining)
+		join_btn.disabled = locked
+		join_btn.pressed.connect(_on_join_pressed.bind(room.game_id))
+		row.add_child(join_btn)
+	card.gui_input.connect(_on_card_gui_input.bind(room.game_id))
 	return card
+
+
+func _make_join_btn(joining: bool) -> Button:
+	var btn := Button.new()
+	btn.text = "Entrando..." if joining else "Entrar"
+	btn.custom_minimum_size = Vector2(110, 48)
+	btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	btn.add_theme_color_override("font_color", Color.WHITE)
+	btn.add_theme_color_override("font_outline_color", Color.BLACK)
+	btn.add_theme_constant_override("outline_size", 3)
+	btn.add_theme_font_size_override("font_size", 16)
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = TAB_BLUE
+	sb.border_width_left = 3
+	sb.border_width_top = 3
+	sb.border_width_right = 3
+	sb.border_width_bottom = 3
+	sb.border_color = NAVY
+	sb.corner_radius_top_left = 12
+	sb.corner_radius_top_right = 12
+	sb.corner_radius_bottom_right = 12
+	sb.corner_radius_bottom_left = 12
+	btn.add_theme_stylebox_override("normal", sb)
+	btn.add_theme_stylebox_override("hover", sb)
+	btn.add_theme_stylebox_override("pressed", sb)
+	btn.add_theme_stylebox_override("disabled", sb)
+	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	return btn
+
+
+func _on_card_gui_input(event: InputEvent, game_id: String) -> void:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		if mb.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if mb.pressed:
+			_press_game_id = game_id
+			_press_position = mb.position
+		elif _press_game_id == game_id and _press_position.distance_to(mb.position) <= TAP_SLOP:
+			_press_game_id = ""
+			_select_room(game_id)
+	elif event is InputEventScreenTouch:
+		var touch := event as InputEventScreenTouch
+		if touch.pressed:
+			_press_game_id = game_id
+			_press_position = touch.position
+		elif _press_game_id == game_id and _press_position.distance_to(touch.position) <= TAP_SLOP:
+			_press_game_id = ""
+			_select_room(game_id)
+
+
+func _select_room(game_id: String) -> void:
+	if _view_model.is_rooms_busy() or not _view_model.action_id().is_empty():
+		return
+	if _selected_game_id == game_id:
+		return
+	_selected_game_id = game_id
+	_feedback_label.text = ""
+	_refresh_rooms()
+
+
+func _on_join_pressed(game_id: String) -> void:
+	if _view_model.is_joining():
+		return
+	_selected_game_id = game_id
+	var room := _selected_room()
+	if room == null:
+		_refresh_rooms()
+		return
+	_feedback_label.text = ""
+	var result: Dictionary = _view_model.join_room(room.game_id)
+	if not is_inside_tree():
+		return
+	if result.has("error"):
+		var message := str(result["error"])
+		if message.is_empty():
+			return
+		_feedback_label.show_error(message)
+		_refresh_rooms()
+
+
+func _on_room_joined(_room: Room) -> void:
+	_selected_game_id = ""
+	_refresh_rooms()
+
+
+func _on_join_failed(message: String) -> void:
+	_feedback_label.show_error(message)
+	_refresh_rooms()
 
 
 func _card_color_for(room: Room) -> Color:

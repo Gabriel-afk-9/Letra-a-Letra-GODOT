@@ -7,10 +7,13 @@ signal action_changed(action_id: String)
 signal notice_changed(message: String)
 signal room_created(room: Room)
 signal create_failed(message: String)
+signal room_joined(room: Room)
+signal join_failed(message: String)
 
 const MODE_BROWSE := "browse"
 const MODE_SEARCH := "search"
 const ACTION_CREATE := "create"
+const ACTION_JOIN := "join"
 
 var _usecase: RoomsUseCase
 var _navigation: NavigationService
@@ -31,6 +34,7 @@ var _rooms_gen: int = 0
 
 var _rooms_busy: bool = false
 var _create_busy: bool = false
+var _join_busy: bool = false
 var _action_id: String = ""
 var _page_size: int = 6
 
@@ -45,6 +49,8 @@ func _init(
 	_pending_navigation_payload = pending_navigation_payload
 	_usecase.room_created.connect(_on_room_created)
 	_usecase.create_failed.connect(_on_create_failed)
+	_usecase.room_joined.connect(_on_room_joined)
+	_usecase.join_failed.connect(_on_join_failed)
 
 
 func setup_page_size(size: int) -> void:
@@ -116,6 +122,10 @@ func is_rooms_busy() -> bool:
 
 func is_creating() -> bool:
 	return _create_busy
+
+
+func is_joining() -> bool:
+	return _join_busy
 
 
 func action_id() -> String:
@@ -288,10 +298,7 @@ func create_room(room_name: String, allow_spectators: bool, private_game: bool) 
 func _on_room_created(room: Room) -> void:
 	_set_create_busy(false)
 	room_created.emit(room)
-	if _pending_navigation_payload != null:
-		_pending_navigation_payload.set_payload(RoomCreatedEvent.new(room.game_id, room.display_name()))
-	if _navigation != null:
-		_navigation.go_to(AppRoutes.ROOM)
+	_enter_lobby(room)
 
 
 func _on_create_failed(message: String) -> void:
@@ -302,8 +309,48 @@ func _on_create_failed(message: String) -> void:
 	create_failed.emit(text)
 
 
+func join_room(game_id: String) -> Dictionary:
+	if _join_busy or not _action_id.is_empty():
+		return {"error": ""}
+	_set_join_busy(true)
+	_clear_error()
+	var result: Dictionary = _usecase.join_room(game_id)
+	if result.has("error"):
+		_set_join_busy(false)
+		return result
+	return {"ok": true}
+
+
+func _on_room_joined(room: Room) -> void:
+	_set_join_busy(false)
+	room_joined.emit(room)
+	_enter_lobby(room)
+
+
+func _on_join_failed(message: String) -> void:
+	_set_join_busy(false)
+	var text := message.strip_edges()
+	if text.is_empty():
+		text = "Falha de conexão. Tente novamente."
+	join_failed.emit(text)
+
+
+func _enter_lobby(room: Room) -> void:
+	if _pending_navigation_payload != null:
+		_pending_navigation_payload.set_payload(RoomCreatedEvent.new(room.game_id, room.display_name()))
+	if _navigation != null:
+		_navigation.go_to(AppRoutes.ROOM)
+
+
 func _set_create_busy(value: bool) -> void:
 	if _create_busy == value:
 		return
 	_create_busy = value
 	_set_action(ACTION_CREATE if value else "")
+
+
+func _set_join_busy(value: bool) -> void:
+	if _join_busy == value:
+		return
+	_join_busy = value
+	_set_action(ACTION_JOIN if value else "")

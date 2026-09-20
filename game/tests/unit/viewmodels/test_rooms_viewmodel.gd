@@ -209,3 +209,58 @@ func test_create_failure_emits_message_and_unlocks() -> void:
 	assert_eq(failures, ["the room name is invalid"])
 	assert_false(_vm.is_creating())
 	assert_eq(_vm.action_id(), "")
+
+
+func test_join_validates_empty_game_id() -> void:
+	var result: Dictionary = _vm.join_room("   ")
+
+	assert_eq(result["error"], "Selecione uma sala válida.")
+	assert_false(_vm.is_joining())
+	assert_eq(_repo.last_join_game_id, "")
+
+
+func test_join_sends_game_id_and_locks() -> void:
+	_repo.join_result = {"ok": true}
+
+	var result: Dictionary = _vm.join_room("g-42")
+
+	assert_eq(result, {"ok": true})
+	assert_eq(_repo.last_join_game_id, "g-42")
+	assert_true(_vm.is_joining())
+	assert_eq(_vm.action_id(), "join")
+
+
+func test_join_duplicate_is_ignored() -> void:
+	_repo.join_result = {"ok": true}
+	_vm.join_room("g-1")
+	_repo.last_join_game_id = ""
+
+	var result: Dictionary = _vm.join_room("g-2")
+
+	assert_eq(result, {"error": ""})
+	assert_eq(_repo.last_join_game_id, "")
+
+
+func test_join_success_emits_and_unlocks() -> void:
+	var room := Room.new("g-42", "Copa", "CUSTOM", "WAITING", [], {}, [])
+	_repo.join_result = {"room": room}
+	var joined: Array = []
+	_vm.room_joined.connect(func(r: Room) -> void: joined.append(r))
+
+	_vm.join_room("g-42")
+
+	assert_eq(joined, [room])
+	assert_false(_vm.is_joining())
+	assert_eq(_vm.action_id(), "")
+
+
+func test_join_failure_emits_message_and_unlocks() -> void:
+	_repo.join_result = {"error": "the game is full"}
+	var failures: Array = []
+	_vm.join_failed.connect(func(message: String) -> void: failures.append(message))
+
+	_vm.join_room("g-42")
+
+	assert_eq(failures, ["the game is full"])
+	assert_false(_vm.is_joining())
+	assert_eq(_vm.action_id(), "")

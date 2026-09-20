@@ -3,6 +3,8 @@ class_name RoomsUseCase
 
 signal room_created(room: Room)
 signal create_failed(message: String)
+signal room_joined(room: Room)
+signal join_failed(message: String)
 
 const ROOM_NAME_MAX_LENGTH := 32
 
@@ -13,6 +15,8 @@ func _init(room_repository: RoomRepository) -> void:
 	_room_repository = room_repository
 	_room_repository.room_created.connect(_on_room_created)
 	_room_repository.create_failed.connect(_on_create_failed)
+	_room_repository.room_joined.connect(_on_room_joined)
+	_room_repository.join_failed.connect(_on_join_failed)
 
 
 func fetch_public_rooms(page: int, size: int) -> Dictionary:
@@ -49,3 +53,19 @@ func _on_room_created(room: Room) -> void:
 
 func _on_create_failed(message: String) -> void:
 	create_failed.emit(message)
+
+
+func join_room(game_id: String) -> Dictionary:
+	var clean := game_id.strip_edges()
+	if clean.is_empty():
+		return {"error": "Selecione uma sala válida."}
+	_room_repository.join_room(clean)
+	return {"ok": true}
+
+
+func _on_room_joined(room: Room) -> void:
+	room_joined.emit(room)
+
+
+func _on_join_failed(message: String) -> void:
+	join_failed.emit(message)

@@ -4,6 +4,8 @@ class_name RoomRepository
 
 signal room_created(room: Room)
 signal create_failed(message: String)
+signal room_joined(room: Room)
+signal join_failed(message: String)
 
 
 func fetch_public_rooms(
@@ -40,6 +42,13 @@ func create_room(
 	room_name: String,
 	allow_spectators: bool,
 	private_game: bool
+) -> void:
+
+	assert(false, "Must be implemented.")
+
+
+func join_room(
+	game_id: String
 ) -> void:
 
 	assert(false, "Must be implemented.")

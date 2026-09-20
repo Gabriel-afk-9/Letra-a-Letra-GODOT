@@ -5,6 +5,7 @@ var browse_result: Dictionary = {"rooms": [], "page": 0, "total_pages": 1, "tota
 var search_result: Dictionary = {"rooms": [], "page": 0, "total_pages": 1, "total_elements": 0}
 var code_result: Dictionary = {"game_id": "game-1"}
 var create_result: Dictionary = {"ok": true}
+var join_result: Dictionary = {"ok": true}
 
 var last_page: int = -1
 var last_size: int = -1
@@ -13,6 +14,7 @@ var last_code: String = ""
 var last_create_name: String = ""
 var last_create_allow: bool = false
 var last_create_private: bool = false
+var last_join_game_id: String = ""
 
 
 func fetch_public_rooms(page: int, size: int) -> Dictionary:
@@ -41,3 +43,11 @@ func create_room(room_name: String, allow_spectators: bool, private_game: bool) 
 		room_created.emit(create_result["room"])
 	elif create_result.has("error"):
 		create_failed.emit(str(create_result["error"]))
+
+
+func join_room(game_id: String) -> void:
+	last_join_game_id = game_id
+	if join_result.has("room"):
+		room_joined.emit(join_result["room"])
+	elif join_result.has("error"):
+		join_failed.emit(str(join_result["error"]))

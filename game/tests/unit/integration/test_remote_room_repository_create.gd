@@ -86,3 +86,65 @@ func test_unrelated_events_are_ignored() -> void:
 	assert_signal_not_emitted(_repo, "room_created")
 	assert_signal_not_emitted(_repo, "create_failed")
 	assert_false((_repo._pending_payload as Dictionary).is_empty())
+
+
+func test_join_builds_real_envelope() -> void:
+	_repo.join_room("g-42")
+
+	assert_eq(_repo._join_payload, {"type": "JOIN_GAME", "gameId": "g-42"})
+
+
+func test_join_ignores_duplicate_while_pending() -> void:
+	_repo.join_room("g-1")
+	_repo.join_room("g-2")
+
+	assert_eq((_repo._join_payload as Dictionary)["gameId"], "g-1")
+
+
+func test_participant_join_emits_room_and_releases() -> void:
+	watch_signals(_repo)
+	_repo.join_room("g-42")
+	_fake_ws.emit_message_dict({
+		"event": "PARTICIPANT_JOIN",
+		"data": {
+			"gameId": "g-42",
+			"gameName": "Copa",
+			"type": "CUSTOM",
+			"status": "WAITING",
+			"participants": [],
+		},
+	})
+
+	assert_signal_emitted(_repo, "room_joined")
+	assert_signal_not_emitted(_repo, "join_failed")
+	assert_true((_repo._join_payload as Dictionary).is_empty())
+
+
+func test_error_event_emits_join_failed() -> void:
+	watch_signals(_repo)
+	_repo.join_room("g-42")
+	_fake_ws.emit_message_dict({"event": "ERROR", "message": "the game is full"})
+
+	assert_signal_emitted(_repo, "join_failed")
+	assert_signal_not_emitted(_repo, "room_joined")
+
+
+func test_disconnect_during_join_fails() -> void:
+	watch_signals(_repo)
+	_repo.join_room("g-42")
+	_fake_ws.disconnected.emit()
+
+	assert_signal_emitted(_repo, "join_failed")
+
+
+func test_join_ignores_create_success_event() -> void:
+	watch_signals(_repo)
+	_repo.join_room("g-42")
+	_fake_ws.emit_message_dict({
+		"event": "GAME_CREATED",
+		"data": {"gameId": "g-9", "gameName": "Outra", "status": "WAITING", "participants": []},
+	})
+
+	assert_signal_not_emitted(_repo, "room_joined")
+	assert_signal_not_emitted(_repo, "join_failed")
+	assert_false((_repo._join_payload as Dictionary).is_empty())

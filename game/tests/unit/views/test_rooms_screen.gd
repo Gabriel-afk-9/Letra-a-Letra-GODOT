@@ -120,3 +120,77 @@ func test_rooms_create_failure_restores_popup() -> void:
 
 	assert_eq((_page.get_node("CreatePopup/Center/Card/Margin/Form/ErrorLabel") as Label).text, "the room name is invalid", "erro deve aparecer no popup")
 	assert_false((_page.get_node("CreatePopup/Center/Card/Margin/Form/ButtonRow/ConfirmBtn") as Button).disabled, "botão deve liberar nova tentativa")
+
+
+func _inject_rooms() -> Array:
+	var rooms := [
+		Room.new("g-1", "Sala Um", "CUSTOM", "WAITING", [], {}, []),
+		Room.new("g-2", "Sala Dois", "CUSTOM", "WAITING", [], {}, []),
+	]
+	_page._view_model._browse_rooms = rooms
+	_page._view_model._browse_loaded = true
+	_page._refresh_rooms()
+	return rooms
+
+
+func _cards() -> Array:
+	return _page.get_node("Center/VBox/ContentPanel/ContentMargin/RoomsSection/RoomsScroll/RoomsRows").get_children()
+
+
+func _join_buttons() -> Array:
+	var found: Array = []
+	for card in _cards():
+		found.append_array(card.find_children("*", "Button", true, false))
+	return found
+
+
+func _card_border(card: PanelContainer) -> Color:
+	return (card.get_theme_stylebox("panel") as StyleBoxFlat).border_color
+
+
+func test_select_room_highlights_card_and_shows_join_only_there() -> void:
+	_inject_rooms()
+
+	assert_true(_join_buttons().is_empty(), "sem seleção não há botão Entrar")
+	_page._select_room("g-2")
+
+	var cards := _cards()
+	assert_eq(_card_border(cards[0]), Color.BLACK, "card não selecionado mantém borda preta")
+	assert_eq(_card_border(cards[1]), _page.SELECT_ORANGE, "card selecionado recebe destaque laranja")
+	assert_eq(_join_buttons().size(), 1, "apenas o card selecionado tem botão")
+	assert_eq((_join_buttons()[0] as Button).text, "Entrar")
+
+
+func test_select_room_can_switch_and_reconciles_on_refresh() -> void:
+	_inject_rooms()
+	_page._select_room("g-1")
+	_page._select_room("g-2")
+
+	assert_eq(_join_buttons().size(), 1)
+	_page._view_model._browse_rooms = [Room.new("g-1", "Sala Um", "CUSTOM", "WAITING", [], {}, [])]
+	_page._refresh_rooms()
+
+	assert_true(_join_buttons().is_empty(), "seleção inválida deve sumir após reconciliação")
+
+
+func test_join_failure_keeps_selection_and_shows_error() -> void:
+	_inject_rooms()
+	_page._select_room("g-1")
+	_page._view_model._set_join_busy(true)
+	_page._refresh_rooms()
+
+	assert_eq((_join_buttons()[0] as Button).text, "Entrando...", "botão deve indicar carregamento")
+	_page._view_model._set_join_busy(false)
+	_page._on_join_failed("the game is full")
+
+	assert_eq(_join_buttons().size(), 1, "seleção deve ser mantida para nova tentativa")
+	assert_eq((_page.get_node("Center/VBox/FeedbackLabel") as Label).text, "the game is full")
+	assert_eq((_join_buttons()[0] as Button).text, "Entrar", "botão deve sair do loading")
+
+
+func test_join_success_clears_selection() -> void:
+	_inject_rooms()
+	_page._select_room("g-1")
+	_page._on_room_joined(Room.new("g-1", "Sala Um", "CUSTOM", "WAITING", [], {}, []))
+
+	assert_true(_join_buttons().is_empty(), "após sucesso não há mais seleção")
