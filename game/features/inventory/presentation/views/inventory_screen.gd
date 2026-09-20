@@ -202,7 +202,8 @@ func _make_section_tab(section_id: String) -> Button:
 		Vector2(170, 58),
 		Vector2(150, 50),
 		16,
-		14
+		14,
+		4
 	)
 	btn.pressed.connect(_on_section_pressed.bind(section_id))
 	return btn
@@ -218,7 +219,8 @@ func _make_category_tab(category_id: String) -> Button:
 		Vector2(72, 48),
 		Vector2(60, 42),
 		12,
-		10
+		10,
+		14
 	)
 	btn.pressed.connect(_on_category_pressed.bind(category_id))
 	return btn
@@ -232,7 +234,8 @@ func _build_tab_button(
 	min_active: Vector2,
 	min_inactive: Vector2,
 	font_active: int,
-	font_inactive: int
+	font_inactive: int,
+	bottom_radius: int = 14
 ) -> Button:
 	var btn := Button.new()
 	btn.name = "%sTab" % tab_id
@@ -248,8 +251,8 @@ func _build_tab_button(
 	sb.border_color = NAVY
 	sb.corner_radius_top_left = 14
 	sb.corner_radius_top_right = 14
-	sb.corner_radius_bottom_right = 4
-	sb.corner_radius_bottom_left = 4
+	sb.corner_radius_bottom_right = bottom_radius
+	sb.corner_radius_bottom_left = bottom_radius
 	btn.add_theme_stylebox_override("normal", sb)
 	btn.add_theme_stylebox_override("hover", sb)
 	btn.add_theme_stylebox_override("pressed", sb)
@@ -327,7 +330,7 @@ func _refresh_status() -> void:
 	if _view_model == null:
 		return
 	if _view_model.is_loading():
-		_status_label.text = "Carregando inventário..."
+		_status_label.text = ""
 	elif _view_model.load_failed():
 		if _view_model.error_message().is_empty():
 			_status_label.text = "Não foi possível carregar o inventário."
