@@ -50,6 +50,8 @@ func _on_opponent_found(event: MatchmakingFoundEvent) -> void:
 		event.opponent.nickname,
 		_view_model.opponent_avatar(event)
 	)
+	if opponent_player_card.has_method("set_stats_from_player"):
+		opponent_player_card.set_stats_from_player(event.opponent)
 
 
 func _on_error_changed(message: String) -> void:
@@ -106,6 +108,10 @@ func _update_local_player() -> void:
 		_view_model.current_player_nickname(),
 		_view_model.current_player_avatar()
 	)
+	if my_player_card.has_method("set_stats_from_player"):
+		var local_stats: MatchmakingPlayer = _view_model.current_player_stats()
+		if local_stats != null:
+			my_player_card.set_stats_from_player(local_stats)
 
 
 func _on_cancel_button_pressed() -> void:

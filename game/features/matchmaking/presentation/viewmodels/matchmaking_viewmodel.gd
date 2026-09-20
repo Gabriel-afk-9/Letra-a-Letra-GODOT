@@ -32,15 +32,19 @@ func _init(usecase: MatchmakingUseCase, navigation: NavigationService, pending_n
 
 func state() -> MatchmakingState:
 	return _state
-
 func current_player_nickname() -> String:
 	return _usecase.current_player_nickname()
+
 
 func current_player_avatar() -> Texture2D:
 	var assets: EquippableAssetService = ServiceRegistry.avatar_assets()
 	var path := _usecase.current_player_avatar_path()
 	EquippedAvatar.ensure_downloaded(assets, path)
 	return EquippedAvatar.texture_for(assets, path)
+
+
+func current_player_stats() -> MatchmakingPlayer:
+	return _usecase.current_player_matchmaking_player()
 
 
 func opponent_avatar(event: MatchmakingFoundEvent) -> Texture2D:

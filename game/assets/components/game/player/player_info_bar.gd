@@ -25,8 +25,8 @@ var _opponent_dots: Array = []
 
 
 func _ready() -> void:
-	_my_dots = my_power_dots.get_children() if is_instance_valid(my_power_dots) else []
-	_opponent_dots = opponent_power_dots.get_children() if is_instance_valid(opponent_power_dots) else []
+	_my_dots = my_power_dots.get_children() if is_instance_valid(my_power_dots) and my_power_dots != null else []
+	_opponent_dots = opponent_power_dots.get_children() if is_instance_valid(opponent_power_dots) and opponent_power_dots != null else []
 	_shrink_game_cards()
 
 
@@ -85,33 +85,35 @@ func set_turn_seconds(seconds_remaining: float) -> void:
 
 
 func set_my_inventory(inventory: Array) -> void:
+	if my_player_card != null and my_player_card.has_method("set_power_dots"):
+		my_player_card.set_power_dots(inventory)
+		return
 	_update_power_dots(_my_dots, inventory)
 
 
 func set_opponent_inventory(inventory: Array) -> void:
+	if opponent_player_card != null and opponent_player_card.has_method("set_power_dots"):
+		opponent_player_card.set_power_dots(inventory)
+		return
 	_update_power_dots(_opponent_dots, inventory)
 
 
 func _update_player_cards() -> void:
+	if is_instance_valid(my_power_dots):
+		my_power_dots.hide()
+	if is_instance_valid(opponent_power_dots):
+		opponent_power_dots.hide()
 	var appearing_wrapper: Control = my_card_wrapper if _is_my_turn else opponent_card_wrapper
 	if _is_my_turn:
 		if my_player_card.has_method("show_local"):
 			my_player_card.show_local(_my_nickname, _my_avatar)
-		if is_instance_valid(my_power_dots):
-			my_power_dots.show()
 		if opponent_player_card.has_method("clear"):
 			opponent_player_card.clear()
-		if is_instance_valid(opponent_power_dots):
-			opponent_power_dots.hide()
 	else:
 		if opponent_player_card.has_method("show_opponent"):
 			opponent_player_card.show_opponent(_opponent_nickname, _opponent_avatar)
-		if is_instance_valid(opponent_power_dots):
-			opponent_power_dots.show()
 		if my_player_card.has_method("clear"):
 			my_player_card.clear()
-		if is_instance_valid(my_power_dots):
-			my_power_dots.hide()
 	if is_instance_valid(_cards_fade_tween) and _cards_fade_tween.is_valid():
 		_cards_fade_tween.kill()
 	if is_instance_valid(appearing_wrapper):

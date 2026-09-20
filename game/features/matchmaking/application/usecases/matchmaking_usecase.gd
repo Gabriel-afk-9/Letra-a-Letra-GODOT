@@ -50,6 +50,21 @@ func current_player_avatar_path() -> String:
 	return ""
 
 
+func current_player_matchmaking_player() -> MatchmakingPlayer:
+	var user := _current_user_provider.current_user()
+	if user == null:
+		return null
+	return MatchmakingPlayer.new(
+		user.id,
+		user.nickname,
+		current_player_avatar_path(),
+		user.total_wins,
+		user.win_streak,
+		user.total_matches,
+		true
+	)
+
+
 
 func _on_searching() -> void:
 	searching.emit()
