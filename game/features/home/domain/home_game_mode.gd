@@ -9,6 +9,7 @@ enum Mode {
 	NORMAL,
 	RANKED,
 	BOT,
+	NONE = -1,
 }
 
 const LABELS := {

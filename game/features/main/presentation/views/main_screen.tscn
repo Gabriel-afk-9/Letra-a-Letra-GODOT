@@ -175,11 +175,23 @@ offset_top = -278.0
 offset_bottom = -66.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/separation = 16
+theme_override_constants/separation = 25
 alignment = 2
 
+[node name="ErrorLabel" type="Label" parent="Main/ButtonsBox" unique_id=1852516625]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0.3019608, 0.3019608, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+text_overrun_behavior = 3
+script = ExtResource("4_error")
+
 [node name="GoogleBtn" type="Button" parent="Main/ButtonsBox" unique_id=413515080]
-custom_minimum_size = Vector2(180, 60)
+custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0, 0, 0, 1)
@@ -198,7 +210,7 @@ icon = ExtResource("5_google")
 expand_icon = true
 
 [node name="EmailBtn" type="Button" parent="Main/ButtonsBox" unique_id=546474771]
-custom_minimum_size = Vector2(180, 60)
+custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -215,7 +227,7 @@ icon = ExtResource("6_mail")
 expand_icon = true
 
 [node name="GuestBtn" type="Button" parent="Main/ButtonsBox" unique_id=242232262]
-custom_minimum_size = Vector2(180, 60)
+custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -233,18 +245,6 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_disabled")
 text = "CONVIDADO"
 icon = ExtResource("7_person")
 expand_icon = true
-
-[node name="ErrorLabel" type="Label" parent="Main/ButtonsBox" unique_id=1852516625]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 0.3019608, 0.3019608, 1)
-theme_override_font_sizes/font_size = 14
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
-text_overrun_behavior = 3
-script = ExtResource("4_error")
 
 [node name="LoginPopup" parent="." unique_id=414094504 instance=ExtResource("8_login_popup")]
 z_index = 5

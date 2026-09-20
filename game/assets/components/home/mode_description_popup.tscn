@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://bw307rfctxpi1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_popup"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.25)
+shadow_size = 6
+shadow_offset = Vector2(0, 3)
+
+[node name="ModeDescriptionPopup" type="Control" unique_id=249835640 groups=["mode_description_popup"]]
+visible = false
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=-1294967295]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = -10.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_popup")
+
+[node name="Margin" type="MarginContainer" parent="Panel" unique_id=-1294967294]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="Panel/Margin" unique_id=-1294967293]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
+theme_override_font_sizes/font_size = 13
+text = "Descrição"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ArrowBorder" type="Polygon2D" parent="." unique_id=-1294967292]
+visible = false
+position = Vector2(80, 0)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(-12, 0, 12, 0, 0, 12)
+
+[node name="Arrow" type="Polygon2D" parent="." unique_id=-1294967291]
+visible = false
+position = Vector2(80, 0)
+polygon = PackedVector2Array(-8, 0, 8, 0, 0, 8)

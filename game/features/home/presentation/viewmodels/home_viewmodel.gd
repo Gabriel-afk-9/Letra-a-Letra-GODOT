@@ -9,7 +9,7 @@ var _get_current_user_usecase: GetCurrentUserUseCase
 var _navigation: NavigationService
 var _data_store: InitialDataStore
 var _profile: HomePlayerProfile = null
-var _game_mode: int = HomeGameMode.Mode.NORMAL
+var _game_mode: int = HomeGameMode.Mode.NONE
 
 
 func _init(
@@ -79,6 +79,14 @@ func select_game_mode(mode: int) -> void:
 	if _game_mode == mode:
 		return
 	_game_mode = mode
+	_clear_error()
+	game_mode_changed.emit(_game_mode)
+
+
+func clear_game_mode() -> void:
+	if _game_mode == HomeGameMode.Mode.NONE:
+		return
+	_game_mode = HomeGameMode.Mode.NONE
 	_clear_error()
 	game_mode_changed.emit(_game_mode)
 

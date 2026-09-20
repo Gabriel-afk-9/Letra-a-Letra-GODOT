@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://blwyrv133qdpl"]
+
+[ext_resource type="Script" uid="uid://cmvx0iqt627ix" path="res://assets/components/home/home_mode_button.gd" id="2_btn"]
+[ext_resource type="Texture2D" uid="uid://e753xeshtu33" path="res://assets/images/icons/Play.png" id="3_play"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_base"]
+bg_color = Color(0.243, 0.573, 0.839, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
+
+[node name="HomeModeButton" type="Button" unique_id=26825845 groups=["home_mode_button"]]
+custom_minimum_size = Vector2(110, 85)
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_base")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_base")
+theme_override_styles/hover = SubResource("StyleBoxFlat_base")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_base")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+script = ExtResource("2_btn")
+
+[node name="CenterBox" type="VBoxContainer" parent="." unique_id=1000000001]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="IconWrap" type="CenterContainer" parent="CenterBox" unique_id=1000000002]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="CenterBox/IconWrap" unique_id=1000000003]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_play")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CrownWrap" type="Control" parent="CenterBox/IconWrap" unique_id=1000000004]
+visible = false
+custom_minimum_size = Vector2(32, 22)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Crown" type="Polygon2D" parent="CenterBox/IconWrap/CrownWrap" unique_id=1000000005]
+position = Vector2(4, 3)
+polygon = PackedVector2Array(0, 16, 0, 5, 6, 10, 12, 1, 18, 10, 24, 5, 24, 16)
+
+[node name="Label" type="Label" parent="CenterBox" unique_id=1000000006]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9647059)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 18
+text = "CASUAL"
+horizontal_alignment = 1
+vertical_alignment = 1

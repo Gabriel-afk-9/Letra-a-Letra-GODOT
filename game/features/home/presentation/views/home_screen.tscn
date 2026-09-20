@@ -2,17 +2,21 @@
 
 [ext_resource type="Script" uid="uid://cdaar7k8dj5rc" path="res://features/home/presentation/views/home_screen.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://ddw4mt7rfhvhp" path="res://assets/cosmetics/avatar/logo.png" id="3_cosmetic_avatar_default"]
-[ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="5"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="7"]
 [ext_resource type="StyleBox" uid="uid://bovag1plxp43w" path="res://assets/styles/buttons/white_button_menu.tres" id="7_aky6k"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="8"]
 [ext_resource type="Texture2D" uid="uid://e753xeshtu33" path="res://assets/images/icons/Play.png" id="9"]
-[ext_resource type="StyleBox" uid="uid://b13v067ao1u61" path="res://assets/styles/buttons/blue_button_default.tres" id="9_onqej"]
 [ext_resource type="Texture2D" uid="uid://c6bifs6l41y1w" path="res://assets/images/icons/config-icon.png" id="14"]
 [ext_resource type="Texture2D" uid="uid://cl7e2iwhugcu0" path="res://assets/images/icons/bot-icon.png" id="15"]
 [ext_resource type="Texture2D" uid="uid://brrme07786k2s" path="res://assets/images/logo/lal.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://7qca7tdjacgk" path="res://assets/images/art/letraCoin.png" id="17"]
+[ext_resource type="StyleBox" uid="uid://dg4hibs521wqk" path="res://assets/styles/buttons/home/button_red_x.tres" id="17_6ks1k"]
 [ext_resource type="Texture2D" uid="uid://djfl7kt6bm64t" path="res://assets/images/art/letraGem.png" id="18"]
+[ext_resource type="PackedScene" uid="uid://blwyrv133qdpl" path="res://assets/components/home/home_mode_button.tscn" id="20_home_btn"]
+[ext_resource type="StyleBox" uid="uid://b01gylab453s3" path="res://assets/styles/buttons/home/home_casual.tres" id="22_casual"]
+[ext_resource type="StyleBox" uid="uid://r2ors7bdhlmn" path="res://assets/styles/buttons/home/home_bot.tres" id="23_bot"]
+[ext_resource type="StyleBox" uid="uid://6ei5y4f77pii" path="res://assets/styles/buttons/home/home_rank.tres" id="24_rank"]
+[ext_resource type="Texture2D" uid="uid://boi28pqwrgtwg" path="res://assets/images/icons/info.png" id="info_icon"]
 
 [sub_resource type="StyleBoxFlat" id="LevelBadge"]
 bg_color = Color(0.184, 0.608, 0.847, 1)
@@ -129,54 +133,35 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
-[sub_resource type="StyleBoxFlat" id="ModeBarFrame"]
-bg_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-expand_margin_left = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dkdn4"]
-bg_color = Color(0.105882354, 0.6156863, 0.87058824, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dlv83"]
-bg_color = Color(0.18431373, 0.7490196, 0.44313726, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jhbxb"]
-bg_color = Color(0.9607843, 0.50980395, 0.12156863, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[sub_resource type="StyleBoxFlat" id="InfoBtnStyle"]
+bg_color = Color(1, 1, 1, 1)
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="ModeCardStyle"]
 bg_color = Color(1, 1, 1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.102, 0.137, 0.251, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 shadow_color = Color(0, 0, 0, 0.35)
-shadow_size = 8
-shadow_offset = Vector2(0, 4)
+shadow_size = 3
 
 [sub_resource type="StyleBoxFlat" id="OptCasual"]
 bg_color = Color(0.243, 0.573, 0.839, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -184,6 +169,11 @@ corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxFlat" id="OptBot"]
 bg_color = Color(0.184, 0.749, 0.443, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -191,6 +181,11 @@ corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxFlat" id="OptRank"]
 bg_color = Color(0.961, 0.51, 0.122, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -616,7 +611,8 @@ expand_mode = 5
 stretch_mode = 5
 
 [node name="PlayTopSpacer" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox" unique_id=353610773]
-custom_minimum_size = Vector2(0, 40)
+visible = false
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -625,173 +621,91 @@ layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="PlayBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea" unique_id=1171412795]
-custom_minimum_size = Vector2(220, 73)
-layout_mode = 2
-size_flags_horizontal = 4
-mouse_default_cursor_shape = 2
-theme_override_styles/normal = ExtResource("9_onqej")
-theme_override_styles/pressed = ExtResource("9_onqej")
-theme_override_styles/hover = ExtResource("9_onqej")
-theme_override_styles/disabled = ExtResource("5")
-script = ExtResource("7")
-
-[node name="PlayBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayBtn" unique_id=1809348918]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 0.0002296703
-mouse_filter = 2
-theme_override_constants/separation = 9
-alignment = 1
-
-[node name="PlayBtnIcon" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayBtn/PlayBox" unique_id=838800511]
-custom_minimum_size = Vector2(34, 34)
-layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-texture = ExtResource("9")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="PlayBtnLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayBtn/PlayBox" unique_id=822299047]
+[node name="ModePromptLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea" unique_id=923606785]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 26
-text = "JOGAR"
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 22
+text = "Escolha um modo de jogo"
+horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
 
-[node name="ModeBar" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea" unique_id=460801904]
+[node name="PlayTopSpacer" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea" unique_id=1105322069]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlayModesWrapper" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea" unique_id=923606786]
+custom_minimum_size = Vector2(356, 130)
 layout_mode = 2
 size_flags_horizontal = 4
-mouse_default_cursor_shape = 2
-theme_override_styles/panel = SubResource("ModeBarFrame")
 
-[node name="ModeBarMargin" type="MarginContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar" unique_id=546464878]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 3
-theme_override_constants/margin_top = 3
-theme_override_constants/margin_right = 3
-theme_override_constants/margin_bottom = 3
-
-[node name="ModeSegRow" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin" unique_id=1650195599]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 3
-
-[node name="Match" type="Panel" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=1603964006]
-custom_minimum_size = Vector2(64, 36)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_dkdn4")
-
-[node name="SegCasualBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Match" unique_id=220799910]
-layout_mode = 0
-offset_right = 62.0
-offset_bottom = 36.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 4
-alignment = 1
-
-[node name="SegCasualIcon" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Match/SegCasualBox" unique_id=1582296498]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-texture = ExtResource("9")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="SegCasualLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Match/SegCasualBox" unique_id=1520682186]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 12
-text = "CASUAL"
-vertical_alignment = 1
-
-[node name="Bot" type="Panel" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=1550188329]
-custom_minimum_size = Vector2(64, 36)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_dlv83")
-
-[node name="SegBotBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Bot" unique_id=82998273]
-layout_mode = 0
-offset_left = 3.0
-offset_right = 47.0
-offset_bottom = 36.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 4
-alignment = 1
-
-[node name="SegBotIcon" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Bot/SegBotBox" unique_id=1478308146]
-custom_minimum_size = Vector2(18, 18)
-layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-texture = ExtResource("15")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="SegBotLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Bot/SegBotBox" unique_id=374058844]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 12
-text = "BOT"
-vertical_alignment = 1
-
-[node name="Rank" type="Panel" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow" unique_id=1427982363]
-custom_minimum_size = Vector2(64, 36)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_jhbxb")
-
-[node name="SegRankBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Rank" unique_id=744231051]
+[node name="PlayModesRow" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayModesWrapper" unique_id=923606784]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -27.0
-offset_top = -18.0
-offset_right = 28.0
-offset_bottom = 18.0
+offset_left = -178.0
+offset_top = -55.0
+offset_right = 178.0
+offset_bottom = 55.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 16
 alignment = 1
 
-[node name="CrownWrap" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Rank/SegRankBox" unique_id=1621495236]
-custom_minimum_size = Vector2(20, 14)
+[node name="ModeInlineBotBtn" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayModesWrapper/PlayModesRow" unique_id=2000000001 instance=ExtResource("20_home_btn")]
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = ExtResource("23_bot")
+theme_override_styles/pressed = ExtResource("23_bot")
+theme_override_styles/hover = ExtResource("23_bot")
+theme_override_styles/disabled = ExtResource("23_bot")
 
-[node name="Crown" type="Polygon2D" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Rank/SegRankBox/CrownWrap" unique_id=1736331664]
-position = Vector2(0, -2)
-polygon = PackedVector2Array(0, 14, 0, 4, 5, 8, 10, 0, 15, 8, 20, 4, 20, 14)
-
-[node name="SegRankLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModeBar/ModeBarMargin/ModeSegRow/Rank/SegRankBox" unique_id=494134014]
+[node name="ModeInlineCasualBtn" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayModesWrapper/PlayModesRow" unique_id=2000000010 instance=ExtResource("20_home_btn")]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 12
-text = "RANK"
-vertical_alignment = 1
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = ExtResource("22_casual")
+theme_override_styles/pressed = ExtResource("22_casual")
+theme_override_styles/hover = ExtResource("22_casual")
+theme_override_styles/disabled = ExtResource("22_casual")
+
+[node name="ModeInlineRankBtn" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayModesWrapper/PlayModesRow" unique_id=2000000020 instance=ExtResource("20_home_btn")]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = ExtResource("24_rank")
+theme_override_styles/pressed = ExtResource("24_rank")
+theme_override_styles/hover = ExtResource("24_rank")
+theme_override_styles/disabled = ExtResource("24_rank")
+
+[node name="InfoBtn" type="Button" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayModesWrapper" unique_id=2000000030]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.014
+offset_left = -12.0
+offset_top = -13.0
+offset_right = 15.015991
+offset_bottom = 19.0
+grow_horizontal = 0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_styles/normal = SubResource("InfoBtnStyle")
+theme_override_styles/pressed = SubResource("InfoBtnStyle")
+theme_override_styles/hover = SubResource("InfoBtnStyle")
+theme_override_styles/disabled = SubResource("InfoBtnStyle")
+theme_override_styles/focus = SubResource("NavEmpty")
+icon = ExtResource("info_icon")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("7")
 
 [node name="PlayBottomSpacer" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox" unique_id=52319805]
 custom_minimum_size = Vector2(0, 24)
@@ -824,30 +738,39 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ModeCard" type="PanelContainer" parent="ModePopup/Center" unique_id=219973243]
+[node name="CardWrapper" type="Control" parent="ModePopup/Center" unique_id=219973244]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+
+[node name="ModeCard" type="PanelContainer" parent="ModePopup/Center/CardWrapper" unique_id=219973243]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("ModeCardStyle")
 
-[node name="ModeCardMargin" type="MarginContainer" parent="ModePopup/Center/ModeCard" unique_id=1859949291]
+[node name="ModeCardMargin" type="MarginContainer" parent="ModePopup/Center/CardWrapper/ModeCard" unique_id=1859949291]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 16
 
-[node name="ModeCardVBox" type="VBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin" unique_id=1598566784]
+[node name="ModeCardVBox" type="VBoxContainer" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin" unique_id=1598566784]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ModeTitle" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=232661764]
+[node name="ModeTitle" type="Label" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=232661764]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.102, 0.137, 0.251, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 20
-text = "MODO DE JOGO"
+text = "MODOS DE JOGO"
 horizontal_alignment = 1
 
-[node name="OptCasualBtn" type="Button" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1037737629]
+[node name="OptCasualBtn" type="Button" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1037737629]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_styles/normal = SubResource("OptCasual")
@@ -857,7 +780,7 @@ theme_override_styles/disabled = SubResource("OptCasual")
 theme_override_styles/focus = SubResource("NavEmpty")
 script = ExtResource("7")
 
-[node name="OptCasualBox" type="VBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn" unique_id=2026336804]
+[node name="OptCasualBox" type="VBoxContainer" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn" unique_id=2026336804]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -868,13 +791,13 @@ mouse_filter = 2
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="OptCasualTopRow" type="HBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox" unique_id=1689399275]
+[node name="OptCasualTopRow" type="HBoxContainer" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox" unique_id=1689399275]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="OptCasualIcon" type="TextureRect" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox/OptCasualTopRow" unique_id=2132301538]
+[node name="OptCasualIcon" type="TextureRect" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox/OptCasualTopRow" unique_id=2132301538]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 size_flags_vertical = 4
@@ -883,22 +806,26 @@ texture = ExtResource("9")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="OptCasualName" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox/OptCasualTopRow" unique_id=126870883]
+[node name="OptCasualName" type="Label" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox/OptCasualTopRow" unique_id=126870883]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 17
 text = "Casual"
 vertical_alignment = 1
 
-[node name="OptCasualDesc" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox" unique_id=460972268]
+[node name="OptCasualDesc" type="Label" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn/OptCasualBox" unique_id=460972268]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 0.85)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 12
 text = "Partida rápida contra outro jogador."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="OptBotBtn" type="Button" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1382637656]
+[node name="OptBotBtn" type="Button" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1382637656]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_styles/normal = SubResource("OptBot")
@@ -908,7 +835,7 @@ theme_override_styles/disabled = SubResource("OptBot")
 theme_override_styles/focus = SubResource("NavEmpty")
 script = ExtResource("7")
 
-[node name="OptBotBox" type="VBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn" unique_id=435126566]
+[node name="OptBotBox" type="VBoxContainer" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn" unique_id=435126566]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -919,13 +846,13 @@ mouse_filter = 2
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="OptBotTopRow" type="HBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox" unique_id=348458890]
+[node name="OptBotTopRow" type="HBoxContainer" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox" unique_id=348458890]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="OptBotIcon" type="TextureRect" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox/OptBotTopRow" unique_id=1986996209]
+[node name="OptBotIcon" type="TextureRect" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox/OptBotTopRow" unique_id=1986996209]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 size_flags_vertical = 4
@@ -934,22 +861,26 @@ texture = ExtResource("15")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="OptBotName" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox/OptBotTopRow" unique_id=1636775737]
+[node name="OptBotName" type="Label" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox/OptBotTopRow" unique_id=1636775737]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 17
 text = "Bot"
 vertical_alignment = 1
 
-[node name="OptBotDesc" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox" unique_id=554131564]
+[node name="OptBotDesc" type="Label" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn/OptBotBox" unique_id=554131564]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 0.85)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 12
 text = "Treine suas estratégias contra o robô."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="OptRankBtn" type="Button" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1326886001]
+[node name="OptRankBtn" type="Button" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox" unique_id=1326886001]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_styles/normal = SubResource("OptRank")
@@ -959,7 +890,7 @@ theme_override_styles/disabled = SubResource("OptRank")
 theme_override_styles/focus = SubResource("NavEmpty")
 script = ExtResource("7")
 
-[node name="OptRankBox" type="VBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn" unique_id=1721785008]
+[node name="OptRankBox" type="VBoxContainer" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn" unique_id=1721785008]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -970,33 +901,60 @@ mouse_filter = 2
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="OptRankTopRow" type="HBoxContainer" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox" unique_id=1842845879]
+[node name="OptRankTopRow" type="HBoxContainer" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox" unique_id=1842845879]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="OptRankCrownWrap" type="Control" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox/OptRankTopRow" unique_id=2061650422]
+[node name="OptRankCrownWrap" type="Control" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox/OptRankTopRow" unique_id=2061650422]
 custom_minimum_size = Vector2(28, 20)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="OptRankCrown" type="Polygon2D" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox/OptRankTopRow/OptRankCrownWrap" unique_id=1310196483]
+[node name="OptRankCrown" type="Polygon2D" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox/OptRankTopRow/OptRankCrownWrap" unique_id=1310196483]
 position = Vector2(2, 2)
 polygon = PackedVector2Array(0, 16, 0, 5, 6, 10, 12, 1, 18, 10, 24, 5, 24, 16)
 
-[node name="OptRankName" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox/OptRankTopRow" unique_id=391975025]
+[node name="OptRankName" type="Label" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox/OptRankTopRow" unique_id=391975025]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 17
 text = "Rank"
 vertical_alignment = 1
 
-[node name="OptRankDesc" type="Label" parent="ModePopup/Center/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox" unique_id=996776144]
+[node name="OptRankDesc" type="Label" parent="ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn/OptRankBox" unique_id=996776144]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 0.85)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 12
 text = "Vença outros jogadores e suba no ranking."
 horizontal_alignment = 1
 autowrap_mode = 2
+
+[node name="CloseBtn" type="Button" parent="ModePopup/Center/CardWrapper" unique_id=219973245]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -26.0
+offset_top = -151.0
+offset_right = 10.0
+offset_bottom = -115.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = ExtResource("17_6ks1k")
+theme_override_styles/pressed = ExtResource("17_6ks1k")
+theme_override_styles/hover = ExtResource("17_6ks1k")
+theme_override_styles/disabled = ExtResource("17_6ks1k")
+theme_override_styles/focus = SubResource("NavEmpty")
+text = "X"
+script = ExtResource("7")
