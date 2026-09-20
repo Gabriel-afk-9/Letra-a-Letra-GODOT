@@ -9,6 +9,7 @@
 [ext_resource type="StyleBox" uid="uid://brk4w17avnm65" path="res://assets/styles/buttons/orange_button_default.tres" id="7"]
 [ext_resource type="StyleBox" uid="uid://b6nvfx34smt17" path="res://assets/styles/buttons/red_button_default.tres" id="8"]
 [ext_resource type="StyleBox" uid="uid://dw3p2i2kuyqou" path="res://assets/styles/buttons/disabled_button.tres" id="9"]
+[ext_resource type="Script" path="res://shared/components/toggle_switch/toggle_switch.gd" id="10"]
 
 [sub_resource type="StyleBoxFlat" id="PanelStyle"]
 bg_color = Color(0.878, 0.914, 0.945, 1)
@@ -416,18 +417,46 @@ placeholder_text = "Nome da sala"
 max_length = 32
 script = ExtResource("3")
 
-[node name="SpectatorsCheck" type="CheckBox" parent="CreatePopup/Center/Card/Margin/Form"]
+[node name="SpectatorsRow" type="HBoxContainer" parent="CreatePopup/Center/Card/Margin/Form"]
 layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SpectatorsLabel" type="Label" parent="CreatePopup/Center/Card/Margin/Form/SpectatorsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 16
 text = "Permitir espectadores"
-button_pressed = true
+vertical_alignment = 1
+clip_text = true
 
-[node name="PrivateCheck" type="CheckBox" parent="CreatePopup/Center/Card/Margin/Form"]
+[node name="SpectatorsSwitch" type="Control" parent="CreatePopup/Center/Card/Margin/Form/SpectatorsRow"]
+custom_minimum_size = Vector2(76, 36)
 layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("10")
+initial_on = true
+
+[node name="PrivateRow" type="HBoxContainer" parent="CreatePopup/Center/Card/Margin/Form"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PrivateLabel" type="Label" parent="CreatePopup/Center/Card/Margin/Form/PrivateRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 16
 text = "Sala privada"
+vertical_alignment = 1
+clip_text = true
+
+[node name="PrivateSwitch" type="Control" parent="CreatePopup/Center/Card/Margin/Form/PrivateRow"]
+custom_minimum_size = Vector2(76, 36)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("10")
 
 [node name="ButtonRow" type="HBoxContainer" parent="CreatePopup/Center/Card/Margin/Form"]
 layout_mode = 2

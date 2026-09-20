@@ -66,10 +66,41 @@ func test_rooms_create_popup_has_name_and_options() -> void:
 
 	assert_not_null(_page.get_node("CreatePopup/Center/Card/Margin/Form/NameInput"), "campo de nome deve existir")
 	assert_eq((_page.get_node("CreatePopup/Center/Card/Margin/Form/NameInput") as LineEdit).placeholder_text, "Nome da sala", "placeholder deve indicar o nome")
-	assert_true((_page.get_node("CreatePopup/Center/Card/Margin/Form/SpectatorsCheck") as CheckBox).button_pressed, "espectadores devem iniciar habilitados")
-	assert_false((_page.get_node("CreatePopup/Center/Card/Margin/Form/PrivateCheck") as CheckBox).button_pressed, "sala deve iniciar pública")
+	assert_not_null(_page.get_node("CreatePopup/Center/Card/Margin/Form/SpectatorsRow/SpectatorsLabel"), "label de espectadores deve existir")
+	assert_not_null(_page.get_node("CreatePopup/Center/Card/Margin/Form/PrivateRow/PrivateLabel"), "label de sala privada deve existir")
+	assert_true((_page.get_node("CreatePopup/Center/Card/Margin/Form/SpectatorsRow/SpectatorsSwitch") as ToggleSwitch).is_on(), "espectadores devem iniciar habilitados")
+	assert_false((_page.get_node("CreatePopup/Center/Card/Margin/Form/PrivateRow/PrivateSwitch") as ToggleSwitch).is_on(), "sala deve iniciar pública")
 	assert_not_null(_page.get_node("CreatePopup/Center/Card/Margin/Form/ButtonRow/CancelBtn"), "botão cancelar deve existir")
 	assert_not_null(_page.get_node("CreatePopup/Center/Card/Margin/Form/ButtonRow/ConfirmBtn"), "botão criar deve existir")
+
+
+func test_rooms_create_switches_drive_payload() -> void:
+	_page._on_create_pressed()
+	var spectators := _page.get_node("CreatePopup/Center/Card/Margin/Form/SpectatorsRow/SpectatorsSwitch") as ToggleSwitch
+	var private_sw := _page.get_node("CreatePopup/Center/Card/Margin/Form/PrivateRow/PrivateSwitch") as ToggleSwitch
+	spectators.set_value(false)
+	private_sw.set_value(true)
+
+	assert_false(spectators.is_on())
+	assert_true(private_sw.is_on())
+	assert_eq(spectators.state_text(), "OFF")
+	assert_eq(private_sw.state_text(), "ON")
+
+
+func test_rooms_create_popup_labels_stay_black() -> void:
+	var title := _page.get_node("CreatePopup/Center/Card/Margin/Form/Title") as Label
+	var spectators_label := _page.get_node("CreatePopup/Center/Card/Margin/Form/SpectatorsRow/SpectatorsLabel") as Label
+	var private_label := _page.get_node("CreatePopup/Center/Card/Margin/Form/PrivateRow/PrivateLabel") as Label
+
+	assert_eq(title.get_theme_color("font_color"), Color(0, 0, 0, 1), "título deve ser preto")
+	assert_eq(spectators_label.get_theme_color("font_color"), Color(0, 0, 0, 1), "label deve ser preto")
+	assert_eq(private_label.get_theme_color("font_color"), Color(0, 0, 0, 1), "label deve ser preto")
+	assert_false(title.has_theme_color("font_hover_color"), "label não deve ter cor de hover")
+	assert_false(spectators_label.has_theme_color("font_hover_color"), "label não deve ter cor de hover")
+	assert_false(private_label.has_theme_color("font_hover_color"), "label não deve ter cor de hover")
+	var popup := _page.get_node("CreatePopup")
+	assert_true(popup.find_children("*", "CheckBox", true, false).is_empty(), "popup não deve usar CheckBox")
+	assert_true(popup.find_children("*", "CheckButton", true, false).is_empty(), "popup não deve usar CheckButton")
 
 
 func test_rooms_create_empty_name_shows_error() -> void:

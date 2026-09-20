@@ -27,8 +27,8 @@ const ART_REFRESH := preload("res://assets/images/icons/refresh.png")
 @onready var _create_popup: Control = $CreatePopup
 @onready var _create_name_input: LineEdit = $CreatePopup/Center/Card/Margin/Form/NameInput
 @onready var _create_error: Label = $CreatePopup/Center/Card/Margin/Form/ErrorLabel
-@onready var _create_spectators: CheckBox = $CreatePopup/Center/Card/Margin/Form/SpectatorsCheck
-@onready var _create_private: CheckBox = $CreatePopup/Center/Card/Margin/Form/PrivateCheck
+@onready var _create_spectators: ToggleSwitch = $CreatePopup/Center/Card/Margin/Form/SpectatorsRow/SpectatorsSwitch
+@onready var _create_private: ToggleSwitch = $CreatePopup/Center/Card/Margin/Form/PrivateRow/PrivateSwitch
 @onready var _create_cancel_btn: Button = $CreatePopup/Center/Card/Margin/Form/ButtonRow/CancelBtn
 @onready var _create_confirm_btn: Button = $CreatePopup/Center/Card/Margin/Form/ButtonRow/ConfirmBtn
 @onready var _create_dim: ColorRect = $CreatePopup/DimBackground
@@ -238,8 +238,8 @@ func _on_search_submitted(_text: String) -> void:
 func _on_create_pressed() -> void:
 	_code_popup.hide()
 	_create_name_input.text = ""
-	_create_spectators.button_pressed = true
-	_create_private.button_pressed = false
+	_create_spectators.set_value(true, true)
+	_create_private.set_value(false, true)
 	_create_error.hide()
 	_set_create_loading(false)
 	_create_popup.show()
@@ -266,8 +266,8 @@ func _on_create_confirm_pressed() -> void:
 	_set_create_loading(true)
 	var result: Dictionary = _view_model.create_room(
 		clean,
-		_create_spectators.button_pressed,
-		_create_private.button_pressed
+		_create_spectators.is_on(),
+		_create_private.is_on()
 	)
 	if not is_inside_tree():
 		return
@@ -285,8 +285,8 @@ func _set_create_loading(loading: bool) -> void:
 	_create_confirm_btn.disabled = loading
 	_create_cancel_btn.disabled = loading
 	_create_name_input.editable = not loading
-	_create_spectators.disabled = loading
-	_create_private.disabled = loading
+	_create_spectators.set_disabled(loading)
+	_create_private.set_disabled(loading)
 	_create_confirm_btn.text = "Criando..." if loading else "CRIAR"
 
 
