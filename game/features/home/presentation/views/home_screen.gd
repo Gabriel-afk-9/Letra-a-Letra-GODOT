@@ -89,6 +89,7 @@ func page_id() -> StringName:
 
 
 func enter(_params: Dictionary) -> void:
+	_start_prompt_pulse()
 	if not is_node_ready() or _view_model == null:
 		return
 	_view_model.load_initial()
@@ -112,9 +113,6 @@ func _connect_view_model() -> void:
 func _connect_buttons() -> void:
 	if is_instance_valid(mode_bar):
 		mode_bar.gui_input.connect(_on_mode_bar_gui_input)
-	opt_casual_btn.pressed.connect(_on_mode_option_pressed.bind(HomeGameMode.Mode.NORMAL))
-	opt_bot_btn.pressed.connect(_on_mode_option_pressed.bind(HomeGameMode.Mode.BOT))
-	opt_rank_btn.pressed.connect(_on_mode_option_pressed.bind(HomeGameMode.Mode.RANKED))
 	if is_instance_valid(close_btn):
 		close_btn.pressed.connect(_on_close_btn_pressed)
 	dim_background.gui_input.connect(_on_dim_background_gui_input)
@@ -201,13 +199,12 @@ func _start_prompt_pulse() -> void:
 		_prompt_tween.kill()
 		_prompt_tween = null
 	mode_prompt_label.visible = true
-	mode_prompt_label.modulate.a = 0.0
+	mode_prompt_label.modulate.a = 1.0
 	_prompt_tween = create_tween()
 	_prompt_tween.set_loops()
 	_prompt_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_prompt_tween.tween_property(mode_prompt_label, "modulate:a", 1.0, 0.25)
-	_prompt_tween.tween_property(mode_prompt_label, "modulate:a", 0.55, 0.65)
-	_prompt_tween.tween_property(mode_prompt_label, "modulate:a", 1.0, 0.65)
+	_prompt_tween.tween_property(mode_prompt_label, "modulate:a", 0.95, 1.5)
+	_prompt_tween.tween_property(mode_prompt_label, "modulate:a", 1.0, 1.5)
 
 
 func _on_mode_bar_gui_input(event: InputEvent) -> void:
@@ -219,9 +216,9 @@ func _on_mode_bar_gui_input(event: InputEvent) -> void:
 			mode_popup.show()
 
 
-func _on_mode_option_pressed(mode: int) -> void:
-	mode_popup.hide()
-	_view_model.select_game_mode(mode)
+func _on_mode_option_pressed(_mode: int) -> void:
+	# Desativado: Opt* do ModePopup são apenas informativos, não fecham o popup.
+	return
 
 
 func _on_inline_mode_pressed(mode: int) -> void:
@@ -252,6 +249,9 @@ func exit() -> void:
 	if is_instance_valid(_prompt_tween) and _prompt_tween.is_valid():
 		_prompt_tween.kill()
 		_prompt_tween = null
+	if is_instance_valid(mode_prompt_label):
+		mode_prompt_label.visible = true
+		mode_prompt_label.modulate.a = 1.0
 
 
 func _notification(what: int) -> void:
@@ -259,6 +259,9 @@ func _notification(what: int) -> void:
 		if is_instance_valid(_prompt_tween) and _prompt_tween.is_valid():
 			_prompt_tween.kill()
 			_prompt_tween = null
+		if is_instance_valid(mode_prompt_label):
+			mode_prompt_label.visible = true
+			mode_prompt_label.modulate.a = 1.0
 
 
 func _on_play_btn_pressed() -> void:
