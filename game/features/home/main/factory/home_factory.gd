@@ -9,8 +9,15 @@ static func create() -> HomeViewModel:
 		SessionStore
 	)
 
+	var login_repository := RemoteLoginRepository.new(
+		services.http_client()
+	)
+
 	return HomeViewModel.new(
 		get_current_user_usecase,
 		services.navigation_service(),
-		services.initial_data_store()
+		services.initial_data_store(),
+		login_repository,
+		SessionStore,
+		services.session_persistence()
 	)

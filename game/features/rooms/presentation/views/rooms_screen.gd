@@ -25,7 +25,12 @@ const ART_REFRESH := preload("res://assets/images/icons/refresh.png")
 @onready var _next_btn: Button = $Center/VBox/ContentPanel/ContentMargin/RoomsSection/PagerRow/NextBtn
 @onready var _refresh_btn: Button = $TopCorner/RefreshBtn
 @onready var _create_popup: Control = $CreatePopup
-@onready var _create_close_btn: Button = $CreatePopup/Center/Card/Margin/Form/ButtonRow/CloseBtn
+@onready var _create_name_input: LineEdit = $CreatePopup/Center/Card/Margin/Form/NameInput
+@onready var _create_error: Label = $CreatePopup/Center/Card/Margin/Form/ErrorLabel
+@onready var _create_spectators: CheckBox = $CreatePopup/Center/Card/Margin/Form/SpectatorsCheck
+@onready var _create_private: CheckBox = $CreatePopup/Center/Card/Margin/Form/PrivateCheck
+@onready var _create_cancel_btn: Button = $CreatePopup/Center/Card/Margin/Form/ButtonRow/CancelBtn
+@onready var _create_confirm_btn: Button = $CreatePopup/Center/Card/Margin/Form/ButtonRow/ConfirmBtn
 @onready var _create_dim: ColorRect = $CreatePopup/DimBackground
 @onready var _code_popup: Control = $CodePopup
 @onready var _code_input: LineEdit = $CodePopup/Center/Card/Margin/Form/CodeInput
@@ -64,7 +69,9 @@ func _ready() -> void:
 	_search_input.text_changed.connect(_on_search_text_changed)
 	_search_btn.pressed.connect(_on_search_pressed)
 	_search_input.text_submitted.connect(_on_search_submitted)
-	_create_close_btn.pressed.connect(close_popups)
+	_create_cancel_btn.pressed.connect(close_popups)
+	_create_confirm_btn.pressed.connect(_on_create_confirm_pressed)
+	_create_name_input.text_submitted.connect(_on_create_name_submitted)
 	_create_dim.gui_input.connect(_on_popup_dim_gui_input)
 	_code_cancel_btn.pressed.connect(close_popups)
 	_code_confirm_btn.pressed.connect(_on_code_confirm_pressed)
@@ -79,6 +86,8 @@ func _connect_view_model() -> void:
 	_view_model.action_changed.connect(_on_action_changed)
 	_view_model.error_changed.connect(_on_error_changed)
 	_view_model.notice_changed.connect(_on_notice_changed)
+	_view_model.room_created.connect(_on_room_created)
+	_view_model.create_failed.connect(_on_create_failed)
 
 
 func close_popups() -> void:
@@ -228,7 +237,70 @@ func _on_search_submitted(_text: String) -> void:
 
 func _on_create_pressed() -> void:
 	_code_popup.hide()
+	_create_name_input.text = ""
+	_create_spectators.button_pressed = true
+	_create_private.button_pressed = false
+	_create_error.hide()
+	_set_create_loading(false)
 	_create_popup.show()
+	await get_tree().process_frame
+	if is_instance_valid(_create_name_input):
+		_create_name_input.grab_focus()
+
+
+func _on_create_name_submitted(_text: String) -> void:
+	_on_create_confirm_pressed()
+
+
+func _on_create_confirm_pressed() -> void:
+	if _view_model.is_creating():
+		return
+	var clean := _create_name_input.text.strip_edges()
+	if clean.is_empty():
+		_create_name_input.shake()
+		_create_name_input.grab_focus()
+		_create_error.show()
+		_create_error.show_error("Digite o nome da sala.")
+		return
+	_create_error.hide()
+	_set_create_loading(true)
+	var result: Dictionary = _view_model.create_room(
+		clean,
+		_create_spectators.button_pressed,
+		_create_private.button_pressed
+	)
+	if not is_inside_tree():
+		return
+	if result.has("error"):
+		_set_create_loading(false)
+		var message := str(result["error"])
+		if message.is_empty():
+			return
+		_create_name_input.shake()
+		_create_error.show()
+		_create_error.show_error(message)
+
+
+func _set_create_loading(loading: bool) -> void:
+	_create_confirm_btn.disabled = loading
+	_create_cancel_btn.disabled = loading
+	_create_name_input.editable = not loading
+	_create_spectators.disabled = loading
+	_create_private.disabled = loading
+	_create_confirm_btn.text = "Criando..." if loading else "CRIAR"
+
+
+func _on_room_created(_room: Room) -> void:
+	_set_create_loading(false)
+	close_popups()
+
+
+func _on_create_failed(message: String) -> void:
+	if not _create_popup.visible:
+		return
+	_set_create_loading(false)
+	_create_error.show()
+	_create_error.show_error(message)
 
 
 func _on_code_pressed() -> void:

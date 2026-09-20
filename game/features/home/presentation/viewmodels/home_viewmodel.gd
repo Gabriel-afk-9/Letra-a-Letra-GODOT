@@ -8,6 +8,9 @@ signal game_mode_changed(mode: int)
 var _get_current_user_usecase: GetCurrentUserUseCase
 var _navigation: NavigationService
 var _data_store: InitialDataStore
+var _login_repository: LoginRepository = null
+var _logout_session_store = null
+var _persistence: SessionPersistence = null
 var _profile: HomePlayerProfile = null
 var _game_mode: int = HomeGameMode.Mode.NONE
 
@@ -15,11 +18,17 @@ var _game_mode: int = HomeGameMode.Mode.NONE
 func _init(
 	get_current_user_usecase: GetCurrentUserUseCase,
 	navigation: NavigationService,
-	data_store: InitialDataStore = null
+	data_store: InitialDataStore = null,
+	login_repository: LoginRepository = null,
+	session_store = null,
+	persistence: SessionPersistence = null
 ) -> void:
 	_get_current_user_usecase = get_current_user_usecase
 	_navigation = navigation
 	_data_store = data_store
+	_login_repository = login_repository
+	_logout_session_store = session_store
+	_persistence = persistence
 
 
 func load_initial() -> void:
@@ -103,6 +112,22 @@ func play() -> void:
 
 func go_to_matchmaking() -> void:
 	_navigation.go_to(AppRoutes.MATCHMAKING)
+
+
+func logout_and_go_to_main() -> void:
+	if is_loading():
+		return
+	_set_loading(true)
+	if _login_repository != null:
+		await _login_repository.logout()
+	if _logout_session_store != null and _logout_session_store.has_method("end_session"):
+		_logout_session_store.end_session()
+	if _persistence != null:
+		_persistence.clear()
+	if _data_store != null:
+		_data_store.clear()
+	_set_loading(false)
+	_navigation.go_to(AppRoutes.MAIN)
 
 
 func go_to_room() -> void:

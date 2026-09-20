@@ -392,20 +392,62 @@ text = "CRIAR SALA"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="InfoLabel" type="Label" parent="CreatePopup/Center/Card/Margin/Form"]
+[node name="ErrorLabel" type="Label" parent="CreatePopup/Center/Card/Margin/Form"]
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0, 0, 0, 0.7)
-theme_override_font_sizes/font_size = 14
-text = "A criação de salas ainda não está disponível. Aguarde as próximas atualizações!"
+theme_override_colors/font_color = Color(1, 0.302, 0.302, 1)
+theme_override_font_sizes/font_size = 13
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
+script = ExtResource("2")
+
+[node name="NameInput" type="LineEdit" parent="CreatePopup/Center/Card/Margin/Form"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = ExtResource("6")
+theme_override_styles/focus = ExtResource("6")
+placeholder_text = "Nome da sala"
+max_length = 32
+script = ExtResource("3")
+
+[node name="SpectatorsCheck" type="CheckBox" parent="CreatePopup/Center/Card/Margin/Form"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "Permitir espectadores"
+button_pressed = true
+
+[node name="PrivateCheck" type="CheckBox" parent="CreatePopup/Center/Card/Margin/Form"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "Sala privada"
 
 [node name="ButtonRow" type="HBoxContainer" parent="CreatePopup/Center/Card/Margin/Form"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="CloseBtn" type="Button" parent="CreatePopup/Center/Card/Margin/Form/ButtonRow"]
+[node name="CancelBtn" type="Button" parent="CreatePopup/Center/Card/Margin/Form/ButtonRow"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = ExtResource("8")
+theme_override_styles/pressed = ExtResource("8")
+theme_override_styles/hover = ExtResource("8")
+theme_override_styles/disabled = ExtResource("9")
+text = "CANCELAR"
+script = ExtResource("4")
+
+[node name="ConfirmBtn" type="Button" parent="CreatePopup/Center/Card/Margin/Form/ButtonRow"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -416,7 +458,7 @@ theme_override_styles/normal = ExtResource("7")
 theme_override_styles/pressed = ExtResource("7")
 theme_override_styles/hover = ExtResource("7")
 theme_override_styles/disabled = ExtResource("9")
-text = "FECHAR"
+text = "CRIAR"
 script = ExtResource("4")
 
 [node name="CodePopup" type="Control" parent="."]

@@ -129,7 +129,7 @@ func _connect_buttons() -> void:
 	coins_plus_btn.pressed.connect(_on_nav_btn_pressed.bind("Loja"))
 	gems_plus_btn.pressed.connect(_on_nav_btn_pressed.bind("Loja"))
 	settings_btn.pressed.connect(_on_nav_btn_pressed.bind("Configurações"))
-	menu_btn.pressed.connect(_on_nav_btn_pressed.bind("Menu"))
+	menu_btn.pressed.connect(_on_menu_btn_pressed)
 
 
 func _on_user_loaded(user: User) -> void:
@@ -272,6 +272,11 @@ func _on_nav_btn_pressed(section: String) -> void:
 	_view_model.request_coming_soon(section)
 
 
+# Temporário: faz logout para permitir login com outra conta.
+func _on_menu_btn_pressed() -> void:
+	_view_model.logout_and_go_to_main()
+
+
 func _on_loading_changed(is_loading: bool) -> void:
 	if is_instance_valid(play_btn):
 		play_btn.disabled = is_loading
@@ -283,6 +288,8 @@ func _on_loading_changed(is_loading: bool) -> void:
 		mode_inline_rank_btn.disabled = is_loading
 	if is_instance_valid(info_btn):
 		info_btn.disabled = is_loading
+	if is_instance_valid(menu_btn):
+		menu_btn.disabled = is_loading
 
 
 func _on_error_changed(message: String) -> void:

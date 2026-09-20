@@ -5,11 +5,16 @@ signal rooms_changed
 signal rooms_busy_changed(is_busy: bool)
 signal action_changed(action_id: String)
 signal notice_changed(message: String)
+signal room_created(room: Room)
+signal create_failed(message: String)
 
 const MODE_BROWSE := "browse"
 const MODE_SEARCH := "search"
+const ACTION_CREATE := "create"
 
 var _usecase: RoomsUseCase
+var _navigation: NavigationService
+var _pending_navigation_payload: PendingNavigationPayload
 
 var _mode: String = MODE_BROWSE
 var _browse_rooms: Array = []
@@ -25,12 +30,21 @@ var _search_failed: bool = false
 var _rooms_gen: int = 0
 
 var _rooms_busy: bool = false
+var _create_busy: bool = false
 var _action_id: String = ""
 var _page_size: int = 6
 
 
-func _init(usecase: RoomsUseCase) -> void:
+func _init(
+	usecase: RoomsUseCase,
+	navigation: NavigationService = null,
+	pending_navigation_payload: PendingNavigationPayload = null
+) -> void:
 	_usecase = usecase
+	_navigation = navigation
+	_pending_navigation_payload = pending_navigation_payload
+	_usecase.room_created.connect(_on_room_created)
+	_usecase.create_failed.connect(_on_create_failed)
 
 
 func setup_page_size(size: int) -> void:
@@ -98,6 +112,10 @@ func rooms_failed() -> bool:
 
 func is_rooms_busy() -> bool:
 	return _rooms_busy
+
+
+func is_creating() -> bool:
+	return _create_busy
 
 
 func action_id() -> String:
@@ -253,3 +271,39 @@ func _friendly_error(result: Dictionary) -> String:
 	if raw.is_empty():
 		return "Falha de conexão. Tente novamente."
 	return raw
+
+
+func create_room(room_name: String, allow_spectators: bool, private_game: bool) -> Dictionary:
+	if _create_busy or not _action_id.is_empty():
+		return {"error": ""}
+	_set_create_busy(true)
+	_clear_error()
+	var result: Dictionary = _usecase.create_room(room_name, allow_spectators, private_game)
+	if result.has("error"):
+		_set_create_busy(false)
+		return result
+	return {"ok": true}
+
+
+func _on_room_created(room: Room) -> void:
+	_set_create_busy(false)
+	room_created.emit(room)
+	if _pending_navigation_payload != null:
+		_pending_navigation_payload.set_payload(RoomCreatedEvent.new(room.game_id, room.display_name()))
+	if _navigation != null:
+		_navigation.go_to(AppRoutes.ROOM)
+
+
+func _on_create_failed(message: String) -> void:
+	_set_create_busy(false)
+	var text := message.strip_edges()
+	if text.is_empty():
+		text = "Falha de conexão. Tente novamente."
+	create_failed.emit(text)
+
+
+func _set_create_busy(value: bool) -> void:
+	if _create_busy == value:
+		return
+	_create_busy = value
+	_set_action(ACTION_CREATE if value else "")

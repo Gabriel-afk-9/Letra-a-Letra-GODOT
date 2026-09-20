@@ -59,3 +59,33 @@ func test_rooms_clearing_search_returns_to_browse() -> void:
 	_page._search_input.text = ""
 	_page._on_search_text_changed("")
 	assert_eq(_page._view_model.mode(), RoomsViewModel.MODE_BROWSE, "limpar a busca deve voltar à listagem")
+
+
+func test_rooms_create_popup_has_name_and_options() -> void:
+	_page._on_create_pressed()
+
+	assert_not_null(_page.get_node("CreatePopup/Center/Card/Margin/Form/NameInput"), "campo de nome deve existir")
+	assert_eq((_page.get_node("CreatePopup/Center/Card/Margin/Form/NameInput") as LineEdit).placeholder_text, "Nome da sala", "placeholder deve indicar o nome")
+	assert_true((_page.get_node("CreatePopup/Center/Card/Margin/Form/SpectatorsCheck") as CheckBox).button_pressed, "espectadores devem iniciar habilitados")
+	assert_false((_page.get_node("CreatePopup/Center/Card/Margin/Form/PrivateCheck") as CheckBox).button_pressed, "sala deve iniciar pública")
+	assert_not_null(_page.get_node("CreatePopup/Center/Card/Margin/Form/ButtonRow/CancelBtn"), "botão cancelar deve existir")
+	assert_not_null(_page.get_node("CreatePopup/Center/Card/Margin/Form/ButtonRow/ConfirmBtn"), "botão criar deve existir")
+
+
+func test_rooms_create_empty_name_shows_error() -> void:
+	_page._on_create_pressed()
+	(_page.get_node("CreatePopup/Center/Card/Margin/Form/NameInput") as LineEdit).text = "   "
+	_page._on_create_confirm_pressed()
+
+	assert_eq((_page.get_node("CreatePopup/Center/Card/Margin/Form/ErrorLabel") as Label).text, "Digite o nome da sala.", "nome vazio deve validar")
+	assert_false(_page._view_model.is_creating(), "não deve enviar com nome inválido")
+	assert_true(_page.get_node("CreatePopup").visible, "popup deve permanecer aberto")
+
+
+func test_rooms_create_failure_restores_popup() -> void:
+	_page._on_create_pressed()
+	(_page.get_node("CreatePopup/Center/Card/Margin/Form/NameInput") as LineEdit).text = "Minha Sala"
+	_page._view_model._on_create_failed("the room name is invalid")
+
+	assert_eq((_page.get_node("CreatePopup/Center/Card/Margin/Form/ErrorLabel") as Label).text, "the room name is invalid", "erro deve aparecer no popup")
+	assert_false((_page.get_node("CreatePopup/Center/Card/Margin/Form/ButtonRow/ConfirmBtn") as Button).disabled, "botão deve liberar nova tentativa")

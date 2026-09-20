@@ -2,6 +2,10 @@ extends RefCounted
 class_name RoomRepository
 
 
+signal room_created(room: Room)
+signal create_failed(message: String)
+
+
 func fetch_public_rooms(
 	page: int,
 	size: int
@@ -30,3 +34,12 @@ func find_game_by_code(
 	assert(false, "Must be implemented.")
 
 	return {}
+
+
+func create_room(
+	room_name: String,
+	allow_spectators: bool,
+	private_game: bool
+) -> void:
+
+	assert(false, "Must be implemented.")

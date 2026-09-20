@@ -142,3 +142,70 @@ func test_find_by_code_error_returns_friendly_message() -> void:
 
 	assert_eq(result["error"], "Sala não encontrada. Verifique e tente de novo.")
 	assert_eq(_vm.action_id(), "")
+
+
+func test_create_validates_empty_name() -> void:
+	var result: Dictionary = _vm.create_room("   ", true, false)
+
+	assert_eq(result["error"], "Digite o nome da sala.")
+	assert_false(_vm.is_creating())
+	assert_eq(_repo.last_create_name, "")
+
+
+func test_create_validates_name_length() -> void:
+	var long_name := "Sala com um nome muito longo além do limite"
+
+	var result: Dictionary = _vm.create_room(long_name, true, false)
+
+	assert_eq(result["error"], "O nome da sala deve ter no máximo 32 caracteres.")
+	assert_false(_vm.is_creating())
+	assert_eq(_repo.last_create_name, "")
+
+
+func test_create_sends_booleans_and_locks() -> void:
+	_repo.create_result = {"ok": true}
+
+	var result: Dictionary = _vm.create_room("Minha Sala", true, false)
+
+	assert_eq(result, {"ok": true})
+	assert_eq(_repo.last_create_name, "Minha Sala")
+	assert_true(_repo.last_create_allow)
+	assert_false(_repo.last_create_private)
+	assert_true(_vm.is_creating())
+	assert_eq(_vm.action_id(), "create")
+
+
+func test_create_duplicate_is_ignored() -> void:
+	_repo.create_result = {"ok": true}
+	_vm.create_room("Minha Sala", true, false)
+	_repo.last_create_name = ""
+
+	var result: Dictionary = _vm.create_room("Outra Sala", false, true)
+
+	assert_eq(result, {"error": ""})
+	assert_eq(_repo.last_create_name, "")
+
+
+func test_create_success_emits_and_unlocks() -> void:
+	var room := Room.new("g-1", "Minha Sala", "CUSTOM", "WAITING", [], {}, [])
+	_repo.create_result = {"room": room}
+	var created: Array = []
+	_vm.room_created.connect(func(r: Room) -> void: created.append(r))
+
+	_vm.create_room("Minha Sala", false, true)
+
+	assert_eq(created, [room])
+	assert_false(_vm.is_creating())
+	assert_eq(_vm.action_id(), "")
+
+
+func test_create_failure_emits_message_and_unlocks() -> void:
+	_repo.create_result = {"error": "the room name is invalid"}
+	var failures: Array = []
+	_vm.create_failed.connect(func(message: String) -> void: failures.append(message))
+
+	_vm.create_room("Minha Sala", true, false)
+
+	assert_eq(failures, ["the room name is invalid"])
+	assert_false(_vm.is_creating())
+	assert_eq(_vm.action_id(), "")
