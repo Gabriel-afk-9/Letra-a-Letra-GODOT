@@ -9,7 +9,8 @@ static func create() -> LoginViewModel:
 	var usecase := LoginUseCase.new(
 		login_repository,
 		services.user_repository(),
-		SessionStore
+		SessionStore,
+		services.session_persistence()
 	)
 
 	return LoginViewModel.new(usecase, services.navigation_service())

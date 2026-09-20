@@ -1,5 +1,5 @@
 extends RefCounted
-class_name LoginUseCase
+class_name RefreshSessionUseCase
 
 var _login_repository: LoginRepository
 var _user_repository: UserRepository
@@ -17,11 +17,23 @@ func _init(
 	_session_store = session_store
 	_persistence = persistence
 
-func execute(email: String, password: String) -> LoginResult:
-	var request := LoginRequest.new(email, password)
-	var result: LoginResult = await _login_repository.login(request)
+
+func execute(refresh_token: String = "") -> LoginResult:
+	var stored_refresh := refresh_token
+	if stored_refresh.is_empty() and _session_store.has_method("get_refresh_token"):
+		stored_refresh = str(_session_store.get_refresh_token())
+	if stored_refresh.is_empty():
+		_session_store.end_session()
+		if _persistence != null:
+			_persistence.clear()
+		return LoginResult.new(false, null, "", "Sessão expirada. Entre novamente.")
+
+	var result: LoginResult = await _login_repository.refresh(stored_refresh)
 
 	if not result.success:
+		_session_store.end_session()
+		if _persistence != null:
+			_persistence.clear()
 		return result
 
 	var user := await _user_repository.fetch_current_user(result.access_token)

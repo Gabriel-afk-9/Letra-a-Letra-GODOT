@@ -22,6 +22,7 @@ func _ready() -> void:
 	_connect_popups()
 	_start_logo_animation()
 	_start_top_animation()
+	_view_model.try_auto_login()
 
 
 func _notification(what: int) -> void:

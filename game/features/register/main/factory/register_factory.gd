@@ -10,7 +10,8 @@ static func create() -> RegisterViewModel:
 	var login_usecase := LoginUseCase.new(
 		login_repository,
 		services.user_repository(),
-		SessionStore
+		SessionStore,
+		services.session_persistence()
 	)
 
 	var register_usecase := RegisterUseCase.new(

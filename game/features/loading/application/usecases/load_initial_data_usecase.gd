@@ -19,6 +19,8 @@ var _inventory_repository: InventoryRepository
 var _friend_repository: FriendRepository
 var _session_store
 var _data_store: InitialDataStore
+var _login_repository: LoginRepository = null
+var _persistence: SessionPersistence = null
 
 
 func _init(
@@ -27,7 +29,9 @@ func _init(
 	inventory_repository: InventoryRepository,
 	friend_repository: FriendRepository,
 	session_store,
-	data_store: InitialDataStore
+	data_store: InitialDataStore,
+	login_repository: LoginRepository = null,
+	persistence: SessionPersistence = null
 ) -> void:
 	_user_repository = user_repository
 	_shop_repository = shop_repository
@@ -35,6 +39,8 @@ func _init(
 	_friend_repository = friend_repository
 	_session_store = session_store
 	_data_store = data_store
+	_login_repository = login_repository
+	_persistence = persistence
 
 
 func execute(on_step: Callable = Callable()) -> LoadingResult:
@@ -100,10 +106,39 @@ func _load_profile() -> Dictionary:
 	var result: Dictionary = await _user_repository.fetch_current_user_result(token)
 	var user: User = result.get("user") as User
 	if user == null:
-		return _group_error(GROUP_PROFILE, "Não foi possível carregar o perfil.", result)
+		if int(result.get("status_code", 0)) == 401:
+			var renewed_token := await _try_silent_refresh()
+			if not renewed_token.is_empty():
+				result = await _user_repository.fetch_current_user_result(renewed_token)
+				user = result.get("user") as User
+				token = renewed_token
+		if user == null:
+			return _group_error(GROUP_PROFILE, "Não foi possível carregar o perfil.", result)
 	_session_store.start_session(user, token)
+	if _persistence != null:
+		_persistence.save(_session_store)
 	_data_store.set_user(user)
 	return {"ok": true}
+
+
+func _try_silent_refresh() -> String:
+	if _login_repository == null:
+		return ""
+	if not _session_store.has_method("get_refresh_token"):
+		return ""
+	var stored_refresh := str(_session_store.get_refresh_token())
+	if stored_refresh.is_empty():
+		return ""
+	var refresh_result: LoginResult = await _login_repository.refresh(stored_refresh)
+	if not refresh_result.success or refresh_result.access_token.is_empty():
+		return ""
+	if _session_store.has_method("set_tokens"):
+		_session_store.set_tokens(refresh_result.access_token, refresh_result.refresh_token)
+	elif _session_store.has_method("get_user"):
+		_session_store.start_session(_session_store.get_user(), refresh_result.access_token)
+	if _persistence != null:
+		_persistence.save(_session_store)
+	return refresh_result.access_token
 
 
 func _load_shop() -> Dictionary:

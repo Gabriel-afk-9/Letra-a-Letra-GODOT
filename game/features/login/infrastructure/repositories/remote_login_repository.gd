@@ -14,3 +14,21 @@ func login(request: LoginRequest) -> LoginResult:
 	if not response.success:
 		return LoginResult.new(false, null, "", response.error_message)
 	return LoginMapper.from_response_body(response.body)
+
+
+func refresh(refresh_token: String) -> LoginResult:
+	var response: HttpResponse = await _http_client.http_post(
+		"/user/auth/refresh",
+		{"refreshToken": refresh_token}
+	)
+	if not response.success:
+		return LoginResult.new(false, null, "", response.error_message)
+	return LoginMapper.from_response_body(response.body)
+
+
+func logout() -> bool:
+	var response: HttpResponse = await _http_client.http_post(
+		"/user/auth/logout",
+		{}
+	)
+	return response.success

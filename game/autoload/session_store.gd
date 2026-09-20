@@ -6,14 +6,24 @@ signal session_changed
 
 var _current_user: User = null
 var _access_token: String = ""
+var _refresh_token: String = ""
 var _current_game_id: String = ""
 
 
-func start_session(user: User, access_token: String) -> void:
+func start_session(user: User, access_token: String, refresh_token: String = "") -> void:
 	_current_user = user
 	_access_token = access_token
+	if not refresh_token.is_empty():
+		_refresh_token = refresh_token
 
 	session_started.emit(user)
+	session_changed.emit()
+
+
+func set_tokens(access_token: String, refresh_token: String = "") -> void:
+	_access_token = access_token
+	if not refresh_token.is_empty():
+		_refresh_token = refresh_token
 	session_changed.emit()
 
 
@@ -44,6 +54,14 @@ func get_token() -> String:
 	return _access_token
 
 
+func get_refresh_token() -> String:
+	return _refresh_token
+
+
+func has_refresh_token() -> bool:
+	return not _refresh_token.is_empty()
+
+
 func set_current_game_id(game_id: String) -> void:
 	_current_game_id = game_id
 	session_changed.emit()
@@ -58,6 +76,7 @@ func clear_current_game_id() -> void:
 func _clear_session() -> void:
 	_current_user = null
 	_access_token = ""
+	_refresh_token = ""
 	_current_game_id = ""
 
 func has_session() -> bool:

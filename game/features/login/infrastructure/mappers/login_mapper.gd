@@ -6,8 +6,6 @@ class_name LoginMapper
 static func from_response_body(
 	body: Dictionary
 ) -> LoginResult:
-	print(body)
-
 	var success: bool = body.get("success", false) as bool
 
 	if not success:
@@ -29,12 +27,15 @@ static func from_response_body(
 		{}
 	) as Dictionary
 
-	var user: User = User.from_dictionary(data)
+	var user: User = null
+	if data.has("email") or data.has("nickname") or data.has("user"):
+		var user_variant = data.get("user", data)
+		if user_variant is Dictionary and not (user_variant as Dictionary).is_empty():
+			user = User.from_dictionary(user_variant)
 
-	var token: String = data.get(
-		"token",
-		""
-	) as String
+	var token: String = str(data.get("token", ""))
+
+	var refresh_token: String = str(data.get("refreshToken", data.get("refresh_token", "")))
 
 	var success_message: String = body.get(
 		"message",
@@ -45,5 +46,6 @@ static func from_response_body(
 		true,
 		user,
 		token,
-		success_message
+		success_message,
+		refresh_token
 	)

@@ -9,6 +9,7 @@ var _usecase: LoadInitialDataUseCase
 var _navigation: NavigationService
 var _session_store
 var _data_store: InitialDataStore
+var _persistence: SessionPersistence = null
 var _progress: float = 0.0
 
 
@@ -16,12 +17,14 @@ func _init(
 	usecase: LoadInitialDataUseCase,
 	navigation: NavigationService,
 	session_store,
-	data_store: InitialDataStore
+	data_store: InitialDataStore,
+	persistence: SessionPersistence = null
 ) -> void:
 	_usecase = usecase
 	_navigation = navigation
 	_session_store = session_store
 	_data_store = data_store
+	_persistence = persistence
 
 
 func progress() -> float:
@@ -47,8 +50,7 @@ func start() -> void:
 		return
 
 	if result.unauthorized:
-		_session_store.end_session()
-		_data_store.clear()
+		_end_session()
 		_navigation.go_to(AppRoutes.LOGIN)
 		return
 
@@ -60,9 +62,15 @@ func retry() -> void:
 
 
 func go_to_login() -> void:
+	_end_session()
+	_navigation.go_to(AppRoutes.LOGIN)
+
+
+func _end_session() -> void:
 	_session_store.end_session()
 	_data_store.clear()
-	_navigation.go_to(AppRoutes.LOGIN)
+	if _persistence != null:
+		_persistence.clear()
 
 
 func _on_step(completed: int, total: int, group_name: String) -> void:

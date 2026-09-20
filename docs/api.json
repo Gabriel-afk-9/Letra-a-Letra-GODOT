@@ -546,12 +546,62 @@
         }
       }
     },
-    "/user/auth/google": {
+    "/user/auth/refresh": {
       "post": {
         "tags": [
           "User"
         ],
         "operationId": "handle_14",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshSessionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseAuthUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/auth/logout": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_15",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/auth/google": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "handle_16",
         "requestBody": {
           "content": {
             "application/json": {
@@ -581,7 +631,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_15",
+        "operationId": "handle_17",
         "requestBody": {
           "content": {
             "application/json": {
@@ -611,7 +661,7 @@
         "tags": [
           "Ticket"
         ],
-        "operationId": "handle_16",
+        "operationId": "handle_18",
         "requestBody": {
           "content": {
             "application/json": {
@@ -641,7 +691,7 @@
         "tags": [
           "Shop"
         ],
-        "operationId": "handle_17",
+        "operationId": "handle_19",
         "parameters": [
           {
             "name": "offerId",
@@ -672,7 +722,7 @@
         "tags": [
           "Offer"
         ],
-        "operationId": "handle_18",
+        "operationId": "handle_20",
         "parameters": [
           {
             "name": "pageable",
@@ -730,7 +780,7 @@
         "tags": [
           "Level"
         ],
-        "operationId": "handle_19",
+        "operationId": "handle_21",
         "parameters": [
           {
             "name": "pageable",
@@ -758,7 +808,7 @@
         "tags": [
           "Level"
         ],
-        "operationId": "handle_20",
+        "operationId": "handle_22",
         "requestBody": {
           "content": {
             "application/json": {
@@ -788,7 +838,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_21",
+        "operationId": "handle_23",
         "requestBody": {
           "content": {
             "application/json": {
@@ -818,7 +868,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_22",
+        "operationId": "handle_24",
         "parameters": [
           {
             "name": "pageable",
@@ -846,7 +896,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_23",
+        "operationId": "handle_25",
         "requestBody": {
           "content": {
             "application/json": {
@@ -876,7 +926,7 @@
         "tags": [
           "Items"
         ],
-        "operationId": "handle_24",
+        "operationId": "handle_26",
         "parameters": [
           {
             "name": "kind",
@@ -928,7 +978,7 @@
         "tags": [
           "Items"
         ],
-        "operationId": "handle_25",
+        "operationId": "handle_27",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -957,7 +1007,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_26",
+        "operationId": "handle_28",
         "requestBody": {
           "content": {
             "application/json": {
@@ -987,7 +1037,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_27",
+        "operationId": "handle_29",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1017,7 +1067,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_28",
+        "operationId": "handle_30",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1047,7 +1097,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_29",
+        "operationId": "handle_31",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1077,7 +1127,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_30",
+        "operationId": "handle_32",
         "parameters": [
           {
             "name": "userId",
@@ -1118,7 +1168,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_31",
+        "operationId": "handle_33",
         "parameters": [
           {
             "name": "userId",
@@ -1149,7 +1199,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_32",
+        "operationId": "handle_34",
         "parameters": [
           {
             "name": "userId",
@@ -1190,7 +1240,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_33",
+        "operationId": "handle_35",
         "parameters": [
           {
             "name": "userId",
@@ -1231,7 +1281,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_34",
+        "operationId": "handle_36",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1261,7 +1311,7 @@
         "tags": [
           "Offer"
         ],
-        "operationId": "handle_35",
+        "operationId": "handle_37",
         "parameters": [
           {
             "name": "offerId",
@@ -1323,7 +1373,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_36",
+        "operationId": "handle_38",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1353,7 +1403,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_37",
+        "operationId": "handle_39",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1383,7 +1433,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_38",
+        "operationId": "handle_40",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1413,7 +1463,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_39",
+        "operationId": "handle_41",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1443,7 +1493,7 @@
         "tags": [
           "Ticket Admin"
         ],
-        "operationId": "handle_40",
+        "operationId": "handle_42",
         "parameters": [
           {
             "name": "ticketId",
@@ -1483,7 +1533,7 @@
         "tags": [
           "Items"
         ],
-        "operationId": "handle_41",
+        "operationId": "handle_43",
         "parameters": [
           {
             "name": "itemId",
@@ -1514,7 +1564,7 @@
         "tags": [
           "Items"
         ],
-        "operationId": "handle_42",
+        "operationId": "handle_44",
         "parameters": [
           {
             "name": "itemId",
@@ -1545,7 +1595,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_43",
+        "operationId": "handle_45",
         "parameters": [
           {
             "name": "token",
@@ -1585,7 +1635,7 @@
         "tags": [
           "Inventory"
         ],
-        "operationId": "handle_44",
+        "operationId": "handle_46",
         "parameters": [
           {
             "name": "userId",
@@ -1648,7 +1698,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_45",
+        "operationId": "handle_47",
         "parameters": [
           {
             "name": "username",
@@ -1687,7 +1737,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_46",
+        "operationId": "handle_48",
         "parameters": [
           {
             "name": "pageable",
@@ -1717,7 +1767,7 @@
         "tags": [
           "User"
         ],
-        "operationId": "handle_47",
+        "operationId": "handle_49",
         "responses": {
           "200": {
             "description": "OK",
@@ -1737,7 +1787,7 @@
         "tags": [
           "Inventory"
         ],
-        "operationId": "handle_48",
+        "operationId": "handle_50",
         "parameters": [
           {
             "name": "kind",
@@ -1791,7 +1841,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_49",
+        "operationId": "handle_51",
         "parameters": [
           {
             "name": "pageable",
@@ -1821,7 +1871,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_50",
+        "operationId": "handle_52",
         "parameters": [
           {
             "name": "transactionId",
@@ -1852,7 +1902,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_51",
+        "operationId": "handle_53",
         "parameters": [
           {
             "name": "userId",
@@ -1891,7 +1941,7 @@
         "tags": [
           "Transaction"
         ],
-        "operationId": "handle_52",
+        "operationId": "handle_54",
         "parameters": [
           {
             "name": "username",
@@ -1929,7 +1979,7 @@
         "tags": [
           "Ticket"
         ],
-        "operationId": "handle_53",
+        "operationId": "handle_55",
         "parameters": [
           {
             "name": "ticketId",
@@ -1960,7 +2010,7 @@
         "tags": [
           "Ticket"
         ],
-        "operationId": "handle_54",
+        "operationId": "handle_56",
         "parameters": [
           {
             "name": "pageable",
@@ -1990,7 +2040,7 @@
         "tags": [
           "Shop"
         ],
-        "operationId": "handle_55",
+        "operationId": "handle_57",
         "responses": {
           "200": {
             "description": "OK",
@@ -2010,7 +2060,7 @@
         "tags": [
           "Offer"
         ],
-        "operationId": "handle_56",
+        "operationId": "handle_58",
         "parameters": [
           {
             "name": "offerId",
@@ -2039,7 +2089,7 @@
         "tags": [
           "Offer"
         ],
-        "operationId": "handle_57",
+        "operationId": "handle_59",
         "parameters": [
           {
             "name": "offerId",
@@ -2070,7 +2120,7 @@
         "tags": [
           "Level"
         ],
-        "operationId": "handle_58",
+        "operationId": "handle_60",
         "parameters": [
           {
             "name": "value",
@@ -2101,7 +2151,7 @@
         "tags": [
           "Game"
         ],
-        "operationId": "handle_59",
+        "operationId": "handle_61",
         "parameters": [
           {
             "name": "pageable",
@@ -2192,7 +2242,7 @@
         "tags": [
           "Game"
         ],
-        "operationId": "handle_60",
+        "operationId": "handle_62",
         "parameters": [
           {
             "name": "pageable",
@@ -2222,7 +2272,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_61",
+        "operationId": "handle_63",
         "parameters": [
           {
             "name": "pageable",
@@ -2252,7 +2302,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_62",
+        "operationId": "handle_64",
         "responses": {
           "200": {
             "description": "OK",
@@ -2272,7 +2322,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_63",
+        "operationId": "handle_65",
         "responses": {
           "200": {
             "description": "OK",
@@ -2292,7 +2342,7 @@
         "tags": [
           "Ticket Admin"
         ],
-        "operationId": "handle_64",
+        "operationId": "handle_66",
         "parameters": [
           {
             "name": "status",
@@ -2357,7 +2407,7 @@
         "tags": [
           "Ticket Admin"
         ],
-        "operationId": "handle_65",
+        "operationId": "handle_67",
         "parameters": [
           {
             "name": "username",
@@ -2395,7 +2445,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_66",
+        "operationId": "handle_68",
         "responses": {
           "200": {
             "description": "OK",
@@ -2675,7 +2725,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_67",
+        "operationId": "handle_69",
         "parameters": [
           {
             "name": "email",
@@ -2706,7 +2756,7 @@
         "tags": [
           "Audit"
         ],
-        "operationId": "handle_68",
+        "operationId": "handle_70",
         "parameters": [
           {
             "name": "targetUserId",
@@ -2913,7 +2963,7 @@
         "tags": [
           "Audit"
         ],
-        "operationId": "handle_69",
+        "operationId": "handle_71",
         "parameters": [
           {
             "name": "userId",
@@ -3029,7 +3079,7 @@
         "tags": [
           "Audit"
         ],
-        "operationId": "handle_70",
+        "operationId": "handle_72",
         "parameters": [
           {
             "name": "type",
@@ -3114,7 +3164,7 @@
         "tags": [
           "Inventory"
         ],
-        "operationId": "handle_71",
+        "operationId": "handle_73",
         "parameters": [
           {
             "name": "itemId",
@@ -3735,6 +3785,9 @@
           },
           "token": {
             "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
           }
         }
       },
@@ -3802,6 +3855,18 @@
           "code",
           "email",
           "newPassword"
+        ]
+      },
+      "RefreshSessionRequest": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "refreshToken"
         ]
       },
       "GoogleAuthRequest": {
