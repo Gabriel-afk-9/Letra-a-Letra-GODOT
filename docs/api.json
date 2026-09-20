@@ -2267,12 +2267,51 @@
         }
       }
     },
+    "/game/active/room-name/{roomName}": {
+      "get": {
+        "tags": [
+          "Game"
+        ],
+        "operationId": "handle_63",
+        "parameters": [
+          {
+            "name": "roomName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponsePageResponseGameResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/friend": {
       "get": {
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_63",
+        "operationId": "handle_64",
         "parameters": [
           {
             "name": "pageable",
@@ -2302,7 +2341,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_64",
+        "operationId": "handle_65",
         "responses": {
           "200": {
             "description": "OK",
@@ -2322,7 +2361,7 @@
         "tags": [
           "Friend"
         ],
-        "operationId": "handle_65",
+        "operationId": "handle_66",
         "responses": {
           "200": {
             "description": "OK",
@@ -2342,7 +2381,7 @@
         "tags": [
           "Ticket Admin"
         ],
-        "operationId": "handle_66",
+        "operationId": "handle_67",
         "parameters": [
           {
             "name": "status",
@@ -2407,7 +2446,7 @@
         "tags": [
           "Ticket Admin"
         ],
-        "operationId": "handle_67",
+        "operationId": "handle_68",
         "parameters": [
           {
             "name": "username",
@@ -2445,7 +2484,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_68",
+        "operationId": "handle_69",
         "responses": {
           "200": {
             "description": "OK",
@@ -2725,7 +2764,7 @@
         "tags": [
           "Admin"
         ],
-        "operationId": "handle_69",
+        "operationId": "handle_70",
         "parameters": [
           {
             "name": "email",
@@ -2756,7 +2795,7 @@
         "tags": [
           "Audit"
         ],
-        "operationId": "handle_70",
+        "operationId": "handle_71",
         "parameters": [
           {
             "name": "targetUserId",
@@ -2963,7 +3002,7 @@
         "tags": [
           "Audit"
         ],
-        "operationId": "handle_71",
+        "operationId": "handle_72",
         "parameters": [
           {
             "name": "userId",
@@ -3079,7 +3118,7 @@
         "tags": [
           "Audit"
         ],
-        "operationId": "handle_72",
+        "operationId": "handle_73",
         "parameters": [
           {
             "name": "type",
@@ -3164,7 +3203,7 @@
         "tags": [
           "Inventory"
         ],
-        "operationId": "handle_73",
+        "operationId": "handle_74",
         "parameters": [
           {
             "name": "itemId",
