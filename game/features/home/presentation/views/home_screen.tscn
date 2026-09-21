@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://b1gbmuj31b2um"]
 
 [ext_resource type="Script" uid="uid://cdaar7k8dj5rc" path="res://features/home/presentation/views/home_screen.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://ddw4mt7rfhvhp" path="res://assets/cosmetics/avatar/logo.png" id="3_cosmetic_avatar_default"]
 [ext_resource type="Script" uid="uid://btut18wfrac78" path="res://shared/animation/animated_btn.gd" id="7"]
 [ext_resource type="StyleBox" uid="uid://bovag1plxp43w" path="res://assets/styles/buttons/white_button_menu.tres" id="7_aky6k"]
 [ext_resource type="Script" uid="uid://c6p8kkcyxj35k" path="res://shared/animation/animated_error_label.gd" id="8"]
@@ -16,6 +15,7 @@
 [ext_resource type="StyleBox" uid="uid://b01gylab453s3" path="res://assets/styles/buttons/home/home_casual.tres" id="22_casual"]
 [ext_resource type="StyleBox" uid="uid://r2ors7bdhlmn" path="res://assets/styles/buttons/home/home_bot.tres" id="23_bot"]
 [ext_resource type="StyleBox" uid="uid://6ei5y4f77pii" path="res://assets/styles/buttons/home/home_rank.tres" id="24_rank"]
+[ext_resource type="PackedScene" uid="uid://bntemtnyff4y2" path="res://assets/components/new/PlayerCard.tscn" id="30_card"]
 [ext_resource type="Texture2D" uid="uid://boi28pqwrgtwg" path="res://assets/images/icons/info.png" id="info_icon"]
 
 [sub_resource type="StyleBoxFlat" id="LevelBadge"]
@@ -83,43 +83,6 @@ corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
-
-[sub_resource type="StyleBoxFlat" id="BannerStyle"]
-bg_color = Color(0.105882354, 0.6156863, 0.87058824, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-
-[sub_resource type="StyleBoxFlat" id="AvatarFrameStyle"]
-bg_color = Color(1, 1, 1, 1)
-draw_center = false
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StatsPillStyle"]
-bg_color = Color(1, 1, 1, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="QuickOrange"]
 bg_color = Color(1, 1, 1, 1)
@@ -375,149 +338,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="ProfileCard" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow" unique_id=52369079]
+[node name="HomePlayerCard" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow" unique_id=52369079 instance=ExtResource("30_card")]
+custom_minimum_size = Vector2(200, 80)
+custom_maximum_size = Vector2(300, -1)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.5
-theme_override_styles/panel = SubResource("BannerStyle")
-
-[node name="BannerTexture" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard" unique_id=52369080]
-visible = false
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 6
-
-[node name="ProfileMargin" type="MarginContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard" unique_id=880711546]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="ProfileHBox" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin" unique_id=1178891237]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="AvatarFrame" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox" unique_id=790813429]
-custom_minimum_size = Vector2(75, 75)
-clip_contents = true
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("AvatarFrameStyle")
-
-[node name="AvatarTexture" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/AvatarFrame" unique_id=109038505]
-layout_mode = 2
-texture = ExtResource("3_cosmetic_avatar_default")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="AvatarFrameTexture" type="TextureRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/AvatarFrame" unique_id=790813430]
-layout_mode = 2
-expand_mode = 1
-stretch_mode = 6
-
-[node name="ProfileInfo" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox" unique_id=599158578]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 6
-
-[node name="NicknameLabel" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo" unique_id=960189649]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 18
-text_overrun_behavior = 3
-
-[node name="StatsPill" type="PanelContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo" unique_id=55535428]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StatsPillStyle")
-
-[node name="StatsMargin" type="MarginContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill" unique_id=660541266]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 5
-
-[node name="StatsRow" type="HBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin" unique_id=866101055]
-layout_mode = 2
-theme_override_constants/separation = 10
-alignment = 1
-
-[node name="WinsBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1303023206]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="WinsValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=174400951]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
-theme_override_font_sizes/font_size = 17
-text = "0"
-horizontal_alignment = 1
-
-[node name="WinsCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=1194139755]
-layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 0.9490196)
-theme_override_font_sizes/font_size = 11
-text = "VITÓRIAS"
-horizontal_alignment = 1
-
-[node name="StatsDivA" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=480767760]
-custom_minimum_size = Vector2(1, 0)
-layout_mode = 2
-size_flags_vertical = 3
-color = Color(0.12, 0.16, 0.27, 0.5)
-
-[node name="StreakBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1851865190]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="StreakValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=1406867347]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
-theme_override_font_sizes/font_size = 17
-text = "0"
-horizontal_alignment = 1
-
-[node name="StreakCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=1659997936]
-layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 0.9490196)
-theme_override_font_sizes/font_size = 11
-text = "STREAK"
-horizontal_alignment = 1
-
-[node name="StatsDivB" type="ColorRect" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1130093653]
-custom_minimum_size = Vector2(1, 0)
-layout_mode = 2
-size_flags_vertical = 3
-color = Color(0.12, 0.16, 0.27, 0.5)
-
-[node name="MatchesBox" type="VBoxContainer" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow" unique_id=1360930194]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="MatchesValue" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=914725355]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
-theme_override_font_sizes/font_size = 17
-text = "0"
-horizontal_alignment = 1
-
-[node name="MatchesCaption" type="Label" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=887015844]
-layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 0.9490196)
-theme_override_font_sizes/font_size = 11
-text = "PARTIDAS"
-horizontal_alignment = 1
 
 [node name="CardSpacer" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow" unique_id=869313747]
 layout_mode = 2
@@ -632,11 +458,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="PlayTopSpacer" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea" unique_id=1105322069]
-custom_minimum_size = Vector2(0, 25)
-layout_mode = 2
-size_flags_vertical = 3
-
 [node name="PlayModesWrapper" type="Control" parent="SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea" unique_id=923606786]
 custom_minimum_size = Vector2(356, 130)
 layout_mode = 2
@@ -690,9 +511,9 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.014
-offset_left = -12.0
+offset_left = -11.0
 offset_top = -13.0
-offset_right = 15.015991
+offset_right = 16.015991
 offset_bottom = 19.0
 grow_horizontal = 0
 size_flags_horizontal = 0

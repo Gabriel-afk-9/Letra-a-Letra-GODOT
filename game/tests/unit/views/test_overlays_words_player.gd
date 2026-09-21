@@ -76,17 +76,30 @@ func test_words_container_update_and_signature() -> void:
 
 func test_player_info_bar_turn_and_cards() -> void:
 	var tscn = FileAccess.get_file_as_string("res://assets/components/game/player/player_info_bar.tscn")
-	assert_true(tscn.contains("MyCardWrapper") and tscn.contains("Vector2(220, 70)"), "MyCard 220x70")
-	assert_true(tscn.contains("OpponentCardWrapper") and tscn.contains("Vector2(220, 70)"), "OpponentCard 220x70")
+	assert_true(tscn.contains("MyCardWrapper") and tscn.contains("Vector2(140, 94)"), "MyCard 140x94 responsivo")
+	assert_true(tscn.contains("OpponentCardWrapper") and tscn.contains("Vector2(140, 94)"), "OpponentCard 140x94 responsivo")
+	assert_true(tscn.contains("size_flags_horizontal = 3"), "wrappers devem ser EXPAND responsivo")
+	assert_true(tscn.contains("TimerLabel") and tscn.contains("TimerCircle"), "Timer 30 no meio deve existir")
 	_player.setup_players("Eu", "Adv")
 	await get_tree().process_frame
 	_player.set_turn(true)
 	await get_tree().process_frame
 	_player.set_turn_seconds(30.0)
 	await get_tree().process_frame
-	var turn_label: Label = _player.get_node_or_null("TurnLabel") as Label
-	if turn_label != null:
-		assert_true(turn_label.text.length() > 0, "TurnLabel deve mostrar texto")
-	assert_not_null(_player.get_node_or_null("CardsCenter/MyCardWrapper"), "MyCardWrapper deve existir")
-	assert_not_null(_player.get_node_or_null("CardsCenter/OpponentCardWrapper"), "OpponentCardWrapper deve existir")
+	var timer_label: Label = _player.get_node_or_null("%TimerLabel") as Label
+	if timer_label == null:
+		timer_label = _player.get_node_or_null("CardsRow/TimerCenter/TimerCircle/TimerLabel") as Label
+	if timer_label != null:
+		assert_eq(timer_label.text, "30", "Timer deve mostrar 30")
+	assert_not_null(_player.get_node_or_null("CardsRow/MyCardWrapper"), "MyCardWrapper deve existir")
+	assert_not_null(_player.get_node_or_null("CardsRow/OpponentCardWrapper"), "OpponentCardWrapper deve existir")
+	var inner_tscn = FileAccess.get_file_as_string("res://assets/components/new/PlayerCard.tscn")
+	assert_true(inner_tscn.contains("PowerDotsRow") and inner_tscn.contains("StatsPill"), "PlayerCard deve ter STATS e POWERS")
+	assert_true(inner_tscn.contains("RightVBox") and inner_tscn.contains("NameBackground") and inner_tscn.contains("StatsPill") and inner_tscn.contains("PowerDotsRow"), "RightVBox deve conter NameBackground + StatsPill + PowerDotsRow sob nickname")
+	assert_true(inner_tscn.contains("[node name=\"StatsPill\" type=\"PanelContainer\" parent=\"MarginContainer/CardVBox/TopRow/RightVBox\""), "StatsPill deve estar sob nickname em RightVBox")
+	assert_true(inner_tscn.contains("[node name=\"PowerDotsRow\" type=\"HBoxContainer\" parent=\"MarginContainer/CardVBox/TopRow/RightVBox\""), "PowerDotsRow deve estar sob nickname mesmo slot")
+	assert_true(inner_tscn.contains("size_flags_horizontal = 3") and inner_tscn.contains("[node name=\"NameBackground\" type=\"PanelContainer\" parent=\"MarginContainer/CardVBox/TopRow/RightVBox\""), "NameBackground deve ser EXPAND preenchendo direita")
+	assert_true(inner_tscn.contains('path="res://assets/cosmetics/avatar/logo.png"'), "avatar padrão deve ser logo.png da Home")
+	assert_true(inner_tscn.contains("Vector2(160, 90)") and inner_tscn.contains("Vector2(320"), "PlayerCard deve ser responsivo 160-320")
+	assert_false(tscn.contains("MyPowerDots") or tscn.contains("OpponentPowerDots"), "PlayerInfoBar não deve ter dots externos duplicados")
 

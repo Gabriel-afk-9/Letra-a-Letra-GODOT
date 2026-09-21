@@ -4,12 +4,12 @@
 [ext_resource type="Texture2D" uid="uid://hb4b5dimdw5i" path="res://assets/images/backgrounds/vertical_clean.jpg" id="2_fiugi"]
 [ext_resource type="StyleBox" uid="uid://b6nvfx34smt17" path="res://assets/styles/buttons/red_button_default.tres" id="4_fiugi"]
 [ext_resource type="PackedScene" uid="uid://3137f64a7ed1" path="res://assets/components/game/overlays/effect_overlay.tscn" id="5_overlay"]
-[ext_resource type="PackedScene" uid="uid://392bfbe95390" path="res://assets/components/game/overlays/blind_vignette.tscn" id="6_overlay"]
-[ext_resource type="PackedScene" uid="uid://2903eab57f86" path="res://assets/components/game/overlays/game_over_overlay.tscn" id="7_overlay"]
-[ext_resource type="PackedScene" uid="uid://5c931b964c808" path="res://assets/components/game/words/words_container_view.tscn" id="8_words"]
-[ext_resource type="PackedScene" uid="uid://5e6c14f5791a7" path="res://assets/components/game/board/board_view.tscn" id="9_board"]
-[ext_resource type="PackedScene" uid="uid://c4e8a1b2d6f94573e8a1" path="res://assets/components/game/inventory/inventory_panel.tscn" id="10_inv"]
-[ext_resource type="PackedScene" uid="uid://b8c7d6e5f4a3b2c1d0e9f8a7" path="res://assets/components/game/player/player_info_bar.tscn" id="11_player"]
+[ext_resource type="PackedScene" uid="uid://4a2bfbfa54a0" path="res://assets/components/game/overlays/blind_vignette.tscn" id="6_overlay"]
+[ext_resource type="PackedScene" uid="uid://3a03eab57f86" path="res://assets/components/game/overlays/game_over_overlay.tscn" id="7_overlay"]
+[ext_resource type="PackedScene" uid="uid://dbf0vwuf5w4pv" path="res://assets/components/game/words/words_container_view.tscn" id="8_words"]
+[ext_resource type="PackedScene" uid="uid://ddb8wp0fauvyu" path="res://assets/components/game/board/board_view.tscn" id="9_board"]
+[ext_resource type="PackedScene" uid="uid://dta42alvsxkio" path="res://assets/components/game/inventory/inventory_panel.tscn" id="10_inv"]
+[ext_resource type="PackedScene" uid="uid://vslro5xl6klg" path="res://assets/components/game/player/player_info_bar.tscn" id="11_player"]
 
 [node name="GameScreen" type="Control" unique_id=1142999134]
 layout_mode = 3
@@ -48,27 +48,47 @@ layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="PlayerInfoBar" parent="MarginContainer/MainLayout" instance=ExtResource("11_player") unique_id=2024784364]
+[node name="PlayerInfoBar" parent="MarginContainer/MainLayout" unique_id=2024784364 instance=ExtResource("11_player")]
+layout_mode = 2
 
-[node name="WordsContainerView" parent="MarginContainer/MainLayout" instance=ExtResource("8_words") unique_id=9100010]
+[node name="WordsContainerView" parent="MarginContainer/MainLayout" unique_id=9100010 instance=ExtResource("8_words")]
+layout_mode = 2
 
-[node name="BoardView" parent="MarginContainer/MainLayout" instance=ExtResource("9_board") unique_id=9200010]
+[node name="BoardView" parent="MarginContainer/MainLayout" unique_id=9200010 instance=ExtResource("9_board")]
+layout_mode = 2
 
-[node name="BoardInventorySpacer" type="Control" parent="MarginContainer/MainLayout" unique_id=3421098765]
+[node name="BoardInventorySpacer" type="Control" parent="MarginContainer/MainLayout" unique_id=-873868531]
 custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="InventoryPanel" parent="MarginContainer/MainLayout" instance=ExtResource("10_inv") unique_id=1784113057]
+[node name="InventoryPanel" parent="MarginContainer/MainLayout" unique_id=1784113057 instance=ExtResource("10_inv")]
+layout_mode = 2
 
 [node name="BottomBar" type="HBoxContainer" parent="MarginContainer/MainLayout" unique_id=1690820103]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="EffectOverlay" parent="." instance=ExtResource("5_overlay") unique_id=9000010]
-[node name="BlindVignette" parent="." instance=ExtResource("6_overlay") unique_id=9000011]
-[node name="GameOverOverlay" parent="." instance=ExtResource("7_overlay") unique_id=9000020]
+[node name="EffectOverlay" parent="." unique_id=9000010 instance=ExtResource("5_overlay")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="BlindVignette" parent="." unique_id=9000011 instance=ExtResource("6_overlay")]
+anchors_preset = 0
+
+[node name="GameOverOverlay" parent="." unique_id=9000020 instance=ExtResource("7_overlay")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
 
 [node name="TopBarLeaveButton" type="Button" parent="." unique_id=633011318]
 custom_minimum_size = Vector2(20, 16)

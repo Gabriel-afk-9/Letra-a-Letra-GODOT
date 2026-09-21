@@ -11,11 +11,18 @@ func test_words_wrapper_is_72_fixed_and_shrink_center() -> void:
 func test_card_220_and_dots_inside() -> void:
 	var tscn := FileAccess.get_file_as_string("res://features/game/presentation/views/game_screen.tscn")
 	var bar := FileAccess.get_file_as_string("res://assets/components/game/player/player_info_bar.tscn")
+	var card := FileAccess.get_file_as_string("res://assets/components/new/PlayerCard.tscn")
 	var combined := tscn + bar
-	assert_true(combined.contains("MyCardWrapper") and combined.contains("custom_minimum_size = Vector2(220, 70)"))
-	assert_true(combined.contains("OpponentCardWrapper") and combined.contains("Vector2(220, 70)"))
-	assert_true(combined.contains("MyPowerDots") and combined.contains("offset_right = 210.0"))
-	assert_true(combined.contains("offset_top = 50.0") and combined.contains("offset_bottom = 66.0"))
+	assert_true(combined.contains("MyCardWrapper") and combined.contains("Vector2(140, 94)"), "wrapper responsivo 140x94")
+	assert_true(combined.contains("OpponentCardWrapper") and combined.contains("Vector2(140, 94)"))
+	assert_true(combined.contains("TimerLabel") and combined.contains("TimerCircle"), "PlayerInfoBar deve ter timer no meio")
+	assert_true(bar.contains("CardsRow") and bar.contains("HBoxContainer"), "Game deve usar 2 cards lado a lado com timer")
+	assert_true(bar.contains("size_flags_horizontal = 3"), "wrappers devem ser EXPAND responsivo")
+	assert_true(card.contains("[node name=\"StatsPill\" type=\"PanelContainer\" parent=\"MarginContainer/CardVBox/TopRow/RightVBox\""), "StatsPill sob nickname")
+	assert_true(card.contains("[node name=\"PowerDotsRow\" type=\"HBoxContainer\" parent=\"MarginContainer/CardVBox/TopRow/RightVBox\""), "PowerDotsRow sob nickname mesmo slot Game")
+	assert_true(card.contains("[node name=\"NameBackground\" type=\"PanelContainer\" parent=\"MarginContainer/CardVBox/TopRow/RightVBox\"") and card.contains("size_flags_horizontal = 3"), "NameBackground EXPAND preenchendo direita")
+	assert_true(card.contains('logo.png'), "avatar padrão logo.png")
+	assert_false(bar.contains("MyPowerDots") or bar.contains("OpponentPowerDots"), "Game não deve duplicar dots externos")
 
 func test_inventory_transparent_when_has_power() -> void:
 	var gd := FileAccess.get_file_as_string("res://features/game/presentation/views/game_screen.gd")

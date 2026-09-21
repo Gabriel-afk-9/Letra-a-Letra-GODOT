@@ -20,8 +20,12 @@ enum BottomMode { NONE, STATS, POWERS }
 @onready var avatar: TextureRect = %AvatarTexture
 @onready var spinner: Spinner = %Spinner
 @onready var nickname: Label = %NicknameLabel
+@onready var name_background: PanelContainer = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox/NameBackground") as PanelContainer
+@onready var frame_texture: TextureRect = get_node_or_null("MarginContainer/CardVBox/TopRow/AvatarFrame/FrameTexture") as TextureRect
+@onready var banner_texture: TextureRect = get_node_or_null("BannerTexture") as TextureRect
 
 var _current_state: CardState = CardState.CLEAR
+var _compact: bool = false
 
 const INVENTORY_SIZE := 5
 
@@ -51,10 +55,14 @@ var _has_stats_meta: bool = false
 func _ready() -> void:
 	_collect_power_dots()
 	_apply_bottom_mode()
+	if _compact:
+		_apply_compact()
 
 
 func _collect_power_dots() -> void:
-	var row: HBoxContainer = get_node_or_null("MarginContainer/CardVBox/PowerDotsRow") as HBoxContainer
+	var row: HBoxContainer = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow") as HBoxContainer
+	if row == null:
+		row = get_node_or_null("MarginContainer/CardVBox/PowerDotsRow") as HBoxContainer
 	if row == null:
 		return
 	_power_dots = row.get_children()
@@ -89,12 +97,20 @@ func set_bottom_mode(mode: BottomMode) -> void:
 
 func set_stats_raw(wins: int, streak: int, matches: int, has_stats: bool = true) -> void:
 	_has_stats_meta = has_stats
-	var stats_pill: Control = get_node_or_null("MarginContainer/CardVBox/StatsPill") as Control
+	var stats_pill: Control = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox/StatsPill") as Control
+	if stats_pill == null:
+		stats_pill = get_node_or_null("MarginContainer/CardVBox/StatsPill") as Control
 	if stats_pill == null:
 		return
-	var wins_label: Label = get_node_or_null("MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/WinsBox/WinsValue") as Label
-	var streak_label: Label = get_node_or_null("MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/StreakBox/StreakValue") as Label
-	var matches_label: Label = get_node_or_null("MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/MatchesBox/MatchesValue") as Label
+	var wins_label: Label = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow/WinsBox/WinsValue") as Label
+	if wins_label == null:
+		wins_label = get_node_or_null("MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/WinsBox/WinsValue") as Label
+	var streak_label: Label = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow/StreakBox/StreakValue") as Label
+	if streak_label == null:
+		streak_label = get_node_or_null("MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/StreakBox/StreakValue") as Label
+	var matches_label: Label = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow/MatchesBox/MatchesValue") as Label
+	if matches_label == null:
+		matches_label = get_node_or_null("MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/MatchesBox/MatchesValue") as Label
 	if has_stats:
 		if wins_label:
 			wins_label.text = str(wins)
@@ -172,8 +188,12 @@ func _set_state(new_state: CardState) -> void:
 
 
 func _apply_bottom_mode() -> void:
-	var stats_pill: Control = get_node_or_null("MarginContainer/CardVBox/StatsPill") as Control
-	var dots_row: Control = get_node_or_null("MarginContainer/CardVBox/PowerDotsRow") as Control
+	var stats_pill: Control = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox/StatsPill") as Control
+	if stats_pill == null:
+		stats_pill = get_node_or_null("MarginContainer/CardVBox/StatsPill") as Control
+	var dots_row: Control = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow") as Control
+	if dots_row == null:
+		dots_row = get_node_or_null("MarginContainer/CardVBox/PowerDotsRow") as Control
 	if stats_pill == null and dots_row == null:
 		return
 	var effective := bottom_mode
@@ -191,9 +211,115 @@ func _apply_style(
 ) -> void:
 	if card_style:
 		add_theme_stylebox_override("panel", card_style)
-
-	if avatar_style:
+	if avatar_style and is_instance_valid(avatar_frame):
 		avatar_frame.add_theme_stylebox_override("panel", avatar_style)
+	_update_name_pill_style()
+
+
+func _update_name_pill_style() -> void:
+	if not is_instance_valid(name_background):
+		return
+	var pill := name_background.get_theme_stylebox("panel") as StyleBoxFlat
+	if pill == null:
+		return
+	var style := pill.duplicate() as StyleBoxFlat
+	if style == null:
+		return
+	match _current_state:
+		CardState.LOCAL:
+			if local_avatar_style:
+				style.bg_color = local_avatar_style.bg_color
+		CardState.OPPONENT:
+			if opponent_avatar_style:
+				style.bg_color = opponent_avatar_style.bg_color
+		CardState.SEARCHING:
+			if searching_avatar_style:
+				style.bg_color = searching_avatar_style.bg_color
+		_:
+			if local_avatar_style:
+				style.bg_color = local_avatar_style.bg_color
+	name_background.add_theme_stylebox_override("panel", style)
+
+
+func set_compact(enabled: bool) -> void:
+	_compact = enabled
+	if not is_node_ready():
+		return
+	if enabled:
+		_apply_compact()
+	else:
+		_clear_compact()
+
+
+func _apply_compact() -> void:
+	custom_minimum_size = Vector2(160, 94)
+	var av: TextureRect = get_node_or_null("%AvatarTexture") as TextureRect
+	if av:
+		av.custom_minimum_size = Vector2(60, 60)
+	var sp = get_node_or_null("%Spinner")
+	if sp is Control:
+		(sp as Control).custom_minimum_size = Vector2(60, 60)
+	var mc := get_node_or_null("MarginContainer") as MarginContainer
+	if mc:
+		mc.add_theme_constant_override("margin_left", 4)
+		mc.add_theme_constant_override("margin_top", 4)
+		mc.add_theme_constant_override("margin_right", 4)
+		mc.add_theme_constant_override("margin_bottom", 4)
+	var nl: Label = get_node_or_null("%NicknameLabel") as Label
+	if nl:
+		nl.add_theme_font_size_override("font_size", 14)
+		nl.add_theme_constant_override("outline_size", 3)
+
+
+func _clear_compact() -> void:
+	custom_minimum_size = Vector2(160, 90)
+	var av2: TextureRect = get_node_or_null("%AvatarTexture") as TextureRect
+	if av2:
+		av2.custom_minimum_size = Vector2(70, 70)
+	var sp2 = get_node_or_null("%Spinner")
+	if sp2 is Control:
+		(sp2 as Control).custom_minimum_size = Vector2(70, 70)
+	var mc2 := get_node_or_null("MarginContainer") as MarginContainer
+	if mc2:
+		mc2.add_theme_constant_override("margin_left", 5)
+		mc2.add_theme_constant_override("margin_top", 5)
+		mc2.add_theme_constant_override("margin_right", 5)
+		mc2.add_theme_constant_override("margin_bottom", 5)
+	var nl2: Label = get_node_or_null("%NicknameLabel") as Label
+	if nl2:
+		nl2.add_theme_font_size_override("font_size", 15)
+		nl2.add_theme_constant_override("outline_size", 3)
+
+
+func set_avatar_texture(tex: Texture2D) -> void:
+	if tex and is_instance_valid(avatar):
+		avatar.texture = tex
+
+
+func set_frame_texture(tex: Texture2D) -> void:
+	if not is_instance_valid(frame_texture):
+		return
+	if tex:
+		frame_texture.texture = tex
+		frame_texture.visible = true
+	else:
+		frame_texture.visible = false
+
+
+func set_banner_texture(tex: Texture2D) -> void:
+	if tex:
+		add_theme_stylebox_override("panel", null)
+	else:
+		match _current_state:
+			CardState.OPPONENT:
+				if opponent_style:
+					add_theme_stylebox_override("panel", opponent_style)
+			CardState.SEARCHING:
+				if searching_style:
+					add_theme_stylebox_override("panel", searching_style)
+			_:
+				if local_style:
+					add_theme_stylebox_override("panel", local_style)
 
 
 

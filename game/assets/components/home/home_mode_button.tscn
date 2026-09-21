@@ -13,7 +13,9 @@ corner_radius_bottom_left = 15
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
 
 [node name="HomeModeButton" type="Button" unique_id=26825845 groups=["home_mode_button"]]
-custom_minimum_size = Vector2(110, 85)
+custom_minimum_size = Vector2(110, 75)
+offset_right = 110.0
+offset_bottom = 75.0
 mouse_default_cursor_shape = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_base")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_base")
@@ -63,7 +65,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9647059)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "CASUAL"
 horizontal_alignment = 1
 vertical_alignment = 1

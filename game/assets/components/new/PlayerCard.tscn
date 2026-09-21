@@ -2,13 +2,30 @@
 
 [ext_resource type="Script" uid="uid://moavy8u3crh7" path="res://assets/scripts/player_card.gd" id="1_ddx8p"]
 [ext_resource type="StyleBox" uid="uid://c16yoywnoyft6" path="res://assets/styles/player_color/azul.tres" id="1_ea4aa"]
+[ext_resource type="Texture2D" uid="uid://ddw4mt7rfhvhp" path="res://assets/cosmetics/avatar/logo.png" id="3_logo"]
 [ext_resource type="StyleBox" uid="uid://dxdcv60l8cgah" path="res://assets/styles/player_color/orange.tres" id="3_o6gkt"]
-[ext_resource type="Texture2D" uid="uid://jhxx3mqt6bxj" path="res://assets/images/icons/godot-game-engine-icon.png" id="3_wqngk"]
 [ext_resource type="StyleBox" uid="uid://xspcjx3u8mci" path="res://assets/styles/player_color/cinza.tres" id="4_bblc8"]
 [ext_resource type="Script" uid="uid://b75b230h4n1cl" path="res://addons/tattomoosa.spinner/spinner.gd" id="4_lnqh2"]
 [ext_resource type="StyleBox" uid="uid://dqp8f1s6vvxog" path="res://assets/styles/player_color/azul_escuro.tres" id="5_8g5d0"]
 [ext_resource type="StyleBox" uid="uid://d2q5gc5yk57jc" path="res://assets/styles/player_color/orange_escuro.tres" id="6_ihay5"]
 [ext_resource type="StyleBox" uid="uid://cw1g2glb7cbfb" path="res://assets/styles/player_color/cinza_escuro.tres" id="7_eirgi"]
+[ext_resource type="Shader" uid="uid://iuymfc1pybd7" path="res://assets/styles/rounded_image_mask.gdshader" id="8_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_avatar"]
+shader = ExtResource("8_shader")
+shader_parameter/radius = 0.1290000061275
+
+[sub_resource type="StyleBoxFlat" id="NamePillStyle"]
+bg_color = Color(0.09803922, 0.28627452, 0.41960785, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StatsPillStyle"]
 bg_color = Color(1, 1, 1, 1)
@@ -35,7 +52,7 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [node name="PlayerCard" type="PanelContainer" unique_id=1864201814]
-custom_minimum_size = Vector2(250, 80)
+custom_minimum_size = Vector2(160, 90)
 custom_maximum_size = Vector2(320, -1)
 offset_right = 242.0
 offset_bottom = 88.0
@@ -65,15 +82,24 @@ theme_override_constants/separation = 15
 
 [node name="AvatarFrame" type="PanelContainer" parent="MarginContainer/CardVBox/TopRow" unique_id=213700357]
 unique_name_in_owner = true
+clip_contents = true
 layout_mode = 2
+theme_override_styles/panel = ExtResource("5_8g5d0")
 
 [node name="AvatarTexture" type="TextureRect" parent="MarginContainer/CardVBox/TopRow/AvatarFrame" unique_id=1771369700]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_avatar")
 custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
-texture = ExtResource("3_wqngk")
+texture = ExtResource("3_logo")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="FrameTexture" type="TextureRect" parent="MarginContainer/CardVBox/TopRow/AvatarFrame" unique_id=790813431]
+visible = false
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 6
 
 [node name="Spinner" type="Range" parent="MarginContainer/CardVBox/TopRow/AvatarFrame" unique_id=849937534]
 unique_name_in_owner = true
@@ -84,7 +110,7 @@ process_thread_group = 0
 physics_interpolation_mode = 2
 auto_translate_mode = 0
 editor_description = ""
-visible = true
+visible = false
 modulate = Color(1, 1, 1, 1)
 self_modulate = Color(1, 1, 1, 1)
 show_behind_parent = false
@@ -155,17 +181,22 @@ spin_fill_percent = 0.387
 spin_revolution_per_second = 0.602
 metadata/_custom_type_script = "uid://b75b230h4n1cl"
 
-[node name="NameBackground" type="PanelContainer" parent="MarginContainer/CardVBox/TopRow" unique_id=384194472]
-custom_minimum_size = Vector2(0, 10)
-custom_maximum_size = Vector2(140, 30)
+[node name="RightVBox" type="VBoxContainer" parent="MarginContainer/CardVBox/TopRow" unique_id=9000100]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 4
+alignment = 1
 
-[node name="NicknameLabel" type="Label" parent="MarginContainer/CardVBox/TopRow/NameBackground" unique_id=1086036629]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(90, 0)
+[node name="NameBackground" type="PanelContainer" parent="MarginContainer/CardVBox/TopRow/RightVBox" unique_id=384194472]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("NamePillStyle")
+
+[node name="NicknameLabel" type="Label" parent="MarginContainer/CardVBox/TopRow/RightVBox/NameBackground" unique_id=1086036629]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 15
@@ -173,127 +204,131 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text_overrun_behavior = 1
 
-[node name="StatsPill" type="PanelContainer" parent="MarginContainer/CardVBox" unique_id=9000002]
+[node name="StatsPill" type="PanelContainer" parent="MarginContainer/CardVBox/TopRow/RightVBox" unique_id=9000002]
 visible = false
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StatsPillStyle")
 
-[node name="StatsMargin" type="MarginContainer" parent="MarginContainer/CardVBox/StatsPill" unique_id=9000003]
+[node name="StatsMargin" type="MarginContainer" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill" unique_id=9000003]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 4
 
-[node name="StatsRow" type="HBoxContainer" parent="MarginContainer/CardVBox/StatsPill/StatsMargin" unique_id=9000004]
+[node name="StatsRow" type="HBoxContainer" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin" unique_id=9000004]
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="WinsBox" type="VBoxContainer" parent="MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow" unique_id=9000005]
+[node name="WinsBox" type="VBoxContainer" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow" unique_id=9000005]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="WinsValue" type="Label" parent="MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=9000006]
+[node name="WinsValue" type="Label" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=9000006]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
 theme_override_font_sizes/font_size = 14
 text = "-"
 horizontal_alignment = 1
 
-[node name="WinsCaption" type="Label" parent="MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=9000007]
+[node name="WinsCaption" type="Label" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow/WinsBox" unique_id=9000007]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 0.95)
 theme_override_font_sizes/font_size = 9
 text = "VITÓRIAS"
 horizontal_alignment = 1
 
-[node name="StatsDivA" type="ColorRect" parent="MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow" unique_id=9000008]
+[node name="StatsDivA" type="ColorRect" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow" unique_id=9000008]
 custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 color = Color(0.12, 0.16, 0.27, 0.5)
 
-[node name="StreakBox" type="VBoxContainer" parent="MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow" unique_id=9000009]
+[node name="StreakBox" type="VBoxContainer" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow" unique_id=9000009]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="StreakValue" type="Label" parent="MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=9000010]
+[node name="StreakValue" type="Label" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=9000010]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
 theme_override_font_sizes/font_size = 14
 text = "-"
 horizontal_alignment = 1
 
-[node name="StreakCaption" type="Label" parent="MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=9000011]
+[node name="StreakCaption" type="Label" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow/StreakBox" unique_id=9000011]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 0.95)
 theme_override_font_sizes/font_size = 9
 text = "STREAK"
 horizontal_alignment = 1
 
-[node name="StatsDivB" type="ColorRect" parent="MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow" unique_id=9000012]
+[node name="StatsDivB" type="ColorRect" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow" unique_id=9000012]
 custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 color = Color(0.12, 0.16, 0.27, 0.5)
 
-[node name="MatchesBox" type="VBoxContainer" parent="MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow" unique_id=9000013]
+[node name="MatchesBox" type="VBoxContainer" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow" unique_id=9000013]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="MatchesValue" type="Label" parent="MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=9000014]
+[node name="MatchesValue" type="Label" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=9000014]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.08, 0.1, 0.18, 1)
 theme_override_font_sizes/font_size = 14
 text = "-"
 horizontal_alignment = 1
 
-[node name="MatchesCaption" type="Label" parent="MarginContainer/CardVBox/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=9000015]
+[node name="MatchesCaption" type="Label" parent="MarginContainer/CardVBox/TopRow/RightVBox/StatsPill/StatsMargin/StatsRow/MatchesBox" unique_id=9000015]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 0.95)
 theme_override_font_sizes/font_size = 9
 text = "PARTIDAS"
 horizontal_alignment = 1
 
-[node name="PowerDotsRow" type="HBoxContainer" parent="MarginContainer/CardVBox" unique_id=9000016]
-visible = false
+[node name="Space" type="Control" parent="MarginContainer/CardVBox/TopRow/RightVBox" unique_id=788401486]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="PowerDotsRow" type="HBoxContainer" parent="MarginContainer/CardVBox/TopRow/RightVBox" unique_id=9000016]
 layout_mode = 2
 theme_override_constants/separation = 6
 alignment = 1
 
-[node name="Dot1" type="Panel" parent="MarginContainer/CardVBox/PowerDotsRow" unique_id=9000017]
-custom_minimum_size = Vector2(16, 16)
+[node name="Dot1" type="Panel" parent="MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow" unique_id=9000017]
+custom_minimum_size = Vector2(15, 15)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("DotStyle")
 
-[node name="Dot2" type="Panel" parent="MarginContainer/CardVBox/PowerDotsRow" unique_id=9000018]
-custom_minimum_size = Vector2(16, 16)
+[node name="Dot2" type="Panel" parent="MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow" unique_id=9000018]
+custom_minimum_size = Vector2(15, 15)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("DotStyle")
 
-[node name="Dot3" type="Panel" parent="MarginContainer/CardVBox/PowerDotsRow" unique_id=9000019]
-custom_minimum_size = Vector2(16, 16)
+[node name="Dot3" type="Panel" parent="MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow" unique_id=9000019]
+custom_minimum_size = Vector2(15, 15)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("DotStyle")
 
-[node name="Dot4" type="Panel" parent="MarginContainer/CardVBox/PowerDotsRow" unique_id=9000020]
-custom_minimum_size = Vector2(16, 16)
+[node name="Dot4" type="Panel" parent="MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow" unique_id=9000020]
+custom_minimum_size = Vector2(15, 15)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("DotStyle")
 
-[node name="Dot5" type="Panel" parent="MarginContainer/CardVBox/PowerDotsRow" unique_id=9000021]
-custom_minimum_size = Vector2(16, 16)
+[node name="Dot5" type="Panel" parent="MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow" unique_id=9000021]
+custom_minimum_size = Vector2(15, 15)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("DotStyle")

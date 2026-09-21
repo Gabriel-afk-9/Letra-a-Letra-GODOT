@@ -1,12 +1,9 @@
 extends HubPage
 class_name HomeScreen
 
-# Fundo do card sem banner: mesmo azul do blue_button_default.tres.
 const CARD_NO_BANNER_BG := Color(0.105882354, 0.6156863, 0.87058824)
-# Fundo com banner equipado: verde anterior do BannerStyle.
 const CARD_BANNER_BG := Color(0.23, 0.62, 0.32)
 
-# Mapeamento de nomes de cosméticos para recursos
 const AVATAR_COSMETICS := {
 	"logo": preload("res://assets/cosmetics/avatar/logo.png"),
 	"stupid": preload("res://assets/cosmetics/avatar/stupid.png"),
@@ -15,15 +12,12 @@ const AVATAR_COSMETICS := {
 	"arvenis": preload("res://assets/cosmetics/avatar/arvenis.png"),
 }
 
-# Mesma máscara de cantos arredondados dos cards do inventário.
 const AVATAR_MASK_SHADER := preload("res://assets/styles/rounded_image_mask.gdshader")
 
 const FRAME_COSMETICS := {
-	# Frames serão adicionados quando houver assets
 }
 
 const BANNER_COSMETICS := {
-	# Banners serão adicionados quando houver assets
 }
 
 @onready var level_number: Label = $SafeMargin/RootVBox/ResourceBar/LevelGroup/LevelBadge/LevelNumber
@@ -33,14 +27,7 @@ const BANNER_COSMETICS := {
 @onready var gems_label: Label = $SafeMargin/RootVBox/ResourceBar/GemsPill/GemsMargin/GemsHBox/GemsLabel
 @onready var gems_plus_btn: Button = $SafeMargin/RootVBox/ResourceBar/GemsPill/GemsMargin/GemsHBox/GemsPlusBtn
 
-@onready var nickname_label: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/NicknameLabel
-@onready var profile_card: PanelContainer = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard
-@onready var banner_texture: TextureRect = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/BannerTexture
-@onready var avatar_texture: TextureRect = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/AvatarFrame/AvatarTexture
-@onready var avatar_frame_texture: TextureRect = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/AvatarFrame/AvatarFrameTexture
-@onready var wins_value: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/WinsBox/WinsValue
-@onready var streak_value: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/StreakBox/StreakValue
-@onready var matches_value: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/ProfileCard/ProfileMargin/ProfileHBox/ProfileInfo/StatsPill/StatsMargin/StatsRow/MatchesBox/MatchesValue
+@onready var home_player_card: PlayerCard = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/HomePlayerCard
 @onready var settings_btn: Button = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/SettingsBtn
 @onready var menu_btn: Button = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/ProfileRow/QuickBtns/MenuBtn
 
@@ -96,9 +83,7 @@ func enter(_params: Dictionary) -> void:
 
 
 func _setup_avatar_shader() -> void:
-	var mat := ShaderMaterial.new()
-	mat.shader = AVATAR_MASK_SHADER
-	avatar_texture.material = mat
+	pass
 
 
 func _connect_view_model() -> void:
@@ -133,56 +118,62 @@ func _connect_buttons() -> void:
 
 
 func _on_user_loaded(user: User) -> void:
-	nickname_label.text = user.nickname
+	if is_instance_valid(home_player_card):
+		home_player_card.show_local(user.nickname)
 
 
 func _on_profile_changed(profile: HomePlayerProfile) -> void:
-	nickname_label.text = profile.nickname
 	level_number.text = str(profile.level)
 	xp_label.text = profile.xp_compact()
 	coins_label.text = _format_thousands(profile.coins)
 	gems_label.text = _format_thousands(profile.gems)
-	wins_value.text = str(profile.wins)
-	streak_value.text = str(profile.streak)
-	matches_value.text = str(profile.matches)
-	_apply_card_background(profile.has_banner)
-	_apply_cosmetics(profile)
+	if is_instance_valid(home_player_card):
+		var tex := _resolve_avatar_texture(profile)
+		home_player_card.show_local(profile.nickname, tex)
+		home_player_card.set_stats_from_profile(profile)
+		_apply_cosmetics(profile)
 
 
 func _apply_card_background(has_banner: bool) -> void:
-	var sb := profile_card.get_theme_stylebox("panel") as StyleBoxFlat
+	if not is_instance_valid(home_player_card):
+		return
+	var base := home_player_card.get_theme_stylebox("panel") as StyleBoxFlat
+	if base == null:
+		return
+	var sb := base.duplicate() as StyleBoxFlat
 	if sb == null:
 		return
 	sb.bg_color = CARD_BANNER_BG if has_banner else CARD_NO_BANNER_BG
+	home_player_card.add_theme_stylebox_override("panel", sb)
 
 
 func _apply_cosmetics(profile: HomePlayerProfile) -> void:
-	var equipped_item := _view_model.equipped_avatar_item()
+	if not is_instance_valid(home_player_card):
+		return
+	var tex := _resolve_avatar_texture(profile)
+	if tex != null:
+		home_player_card.set_avatar_texture(tex)
+	var frame_name := profile.equipped_frame.to_lower()
+	if FRAME_COSMETICS.has(frame_name):
+		home_player_card.set_frame_texture(FRAME_COSMETICS[frame_name])
+	else:
+		home_player_card.set_frame_texture(null)
+	var banner_name := profile.equipped_banner.to_lower()
+	if BANNER_COSMETICS.has(banner_name):
+		home_player_card.set_banner_texture(BANNER_COSMETICS[banner_name])
+	else:
+		home_player_card.set_banner_texture(null)
+		_apply_card_background(profile.has_banner)
+
+
+func _resolve_avatar_texture(profile: HomePlayerProfile) -> Texture2D:
+	var equipped_item = _view_model.equipped_avatar_item() if _view_model != null else null
 	var real_texture: Texture2D = null
 	if equipped_item != null:
 		real_texture = EquippableAssetPaths.load_local_texture(equipped_item.asset_path)
 	if real_texture != null:
-		avatar_texture.texture = real_texture
-	else:
-		avatar_texture.texture = _mock_avatar_texture(profile.equipped_avatar)
-	
-	var frame_name := profile.equipped_frame.to_lower()
-	if FRAME_COSMETICS.has(frame_name):
-		avatar_frame_texture.texture = FRAME_COSMETICS[frame_name]
-		avatar_frame_texture.visible = true
-	else:
-		avatar_frame_texture.visible = false
-	
-	var banner_name := profile.equipped_banner.to_lower()
-	if BANNER_COSMETICS.has(banner_name):
-		banner_texture.texture = BANNER_COSMETICS[banner_name]
-		banner_texture.visible = true
-		var sb := profile_card.get_theme_stylebox("panel") as StyleBoxFlat
-		if sb:
-			sb.bg_color = Color(0, 0, 0, 0)
-	else:
-		banner_texture.visible = false
-		_apply_card_background(profile.has_banner)
+		return real_texture
+	return _mock_avatar_texture(profile.equipped_avatar)
 
 
 func _mock_avatar_texture(avatar_name: String) -> Texture2D:
@@ -217,7 +208,6 @@ func _on_mode_bar_gui_input(event: InputEvent) -> void:
 
 
 func _on_mode_option_pressed(_mode: int) -> void:
-	# Desativado: Opt* do ModePopup são apenas informativos, não fecham o popup.
 	return
 
 
@@ -272,7 +262,6 @@ func _on_nav_btn_pressed(section: String) -> void:
 	_view_model.request_coming_soon(section)
 
 
-# Temporário: faz logout para permitir login com outra conta.
 func _on_menu_btn_pressed() -> void:
 	_view_model.logout_and_go_to_main()
 
