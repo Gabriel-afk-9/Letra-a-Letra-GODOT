@@ -16,7 +16,8 @@ const UNFREEZE_HOT_HOLD := 2.0
 @onready var board_view: BoardView = $MarginContainer/MainLayout/BoardView
 @onready var _main_layout: VBoxContainer = $MarginContainer/MainLayout
 @onready var _inventory_panel: InventoryPanel = $MarginContainer/MainLayout/InventoryPanel
-@onready var leave_button: Button = $TopBarLeaveButton
+@onready var _footer_config_button: Button = $FooterConfigButton/CenterWrap/HalfMoon/Margin/ConfigButton
+@onready var _pause_popup: PausePopup = $PausePopup
 
 var _view_model: GameViewModel
 var _cell_buttons: Dictionary = {}
@@ -43,7 +44,13 @@ var _cached_opponent_inventory: Array = []
 var _navigation_started: bool = false
 
 func _ready() -> void:
-	leave_button.pressed.connect(_on_leave_button_pressed)
+	if is_instance_valid(_footer_config_button) and not _footer_config_button.pressed.is_connected(_on_config_pressed):
+		_footer_config_button.pressed.connect(_on_config_pressed)
+	if is_instance_valid(_pause_popup):
+		if not _pause_popup.leave_confirmed.is_connected(_on_pause_leave_confirmed):
+			_pause_popup.leave_confirmed.connect(_on_pause_leave_confirmed)
+		if not _pause_popup.closed.is_connected(_on_pause_closed):
+			_pause_popup.closed.connect(_on_pause_closed)
 	if is_instance_valid(_inventory_panel):
 		if not _inventory_panel.slot_pressed.is_connected(_on_inventory_slot_pressed):
 			_inventory_panel.slot_pressed.connect(_on_inventory_slot_pressed)
@@ -458,13 +465,26 @@ func _exit_tree() -> void:
 	if is_instance_valid(_view_model) and not _navigation_started:
 		_view_model.leave_game()
 
-func _on_leave_button_pressed() -> void:
-	leave_button.disabled = true
+func _on_config_pressed() -> void:
+	if is_instance_valid(_pause_popup):
+		_pause_popup.open()
+
+func _on_pause_leave_confirmed() -> void:
+	if is_instance_valid(_pause_popup):
+		_pause_popup.visible = false
+	if is_instance_valid(_footer_config_button):
+		_footer_config_button.disabled = true
 	_view_model.leave_game()
 	_navigate_home()
 
+func _on_pause_closed() -> void:
+	pass
+
 func _on_game_ended(_is_winner: bool, _title: String, _subtitle: String) -> void:
-	leave_button.disabled = true
+	if is_instance_valid(_footer_config_button):
+		_footer_config_button.disabled = true
+	if is_instance_valid(_pause_popup):
+		_pause_popup.close()
 	_game_over_overlay.show_result(_is_winner, _title, _subtitle)
 
 func _navigate_home() -> void:

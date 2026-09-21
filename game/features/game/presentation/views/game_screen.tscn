@@ -10,6 +10,23 @@
 [ext_resource type="PackedScene" uid="uid://ddb8wp0fauvyu" path="res://assets/components/game/board/board_view.tscn" id="9_board"]
 [ext_resource type="PackedScene" uid="uid://dta42alvsxkio" path="res://assets/components/game/inventory/inventory_panel.tscn" id="10_inv"]
 [ext_resource type="PackedScene" uid="uid://vslro5xl6klg" path="res://assets/components/game/player/player_info_bar.tscn" id="11_player"]
+[ext_resource type="Texture2D" path="res://assets/images/icons/config-icon.png" id="12_config"]
+[ext_resource type="PackedScene" path="res://assets/components/game/pause/pause_popup.tscn" id="13_pause"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_halfmoon"]
+bg_color = Color(0.078431375, 0.078431375, 0.078431375, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 0
+border_color = Color(0.14509805, 0.3882353, 0.92156863, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 0
+corner_radius_bottom_left = 0
+shadow_color = Color(0, 0, 0, 0.25)
+shadow_size = 4
+shadow_offset = Vector2(0, -2)
 
 [node name="GameScreen" type="Control" unique_id=1142999134]
 layout_mode = 3
@@ -130,27 +147,57 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TopBarLeaveButton" type="Button" parent="." unique_id=633011318]
-custom_minimum_size = Vector2(20, 16)
-custom_maximum_size = Vector2(50, -1)
+[node name="FooterConfigButton" type="Control" parent="." unique_id=9000030]
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
+anchors_preset = 12
+anchor_left = 0.0
 anchor_right = 1.0
-offset_left = -92.0
-offset_top = 44.0
-offset_right = -4.0
-offset_bottom = 84.0
-grow_horizontal = 0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 1
-theme_override_font_sizes/font_size = 8
-theme_override_styles/normal = ExtResource("4_fiugi")
-theme_override_styles/pressed = ExtResource("4_fiugi")
-theme_override_styles/hover = ExtResource("4_fiugi")
-theme_override_styles/disabled = ExtResource("4_fiugi")
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -36.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+z_index = 60
+
+[node name="CenterWrap" type="CenterContainer" parent="FooterConfigButton" unique_id=9000031]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HalfMoon" type="PanelContainer" parent="FooterConfigButton/CenterWrap" unique_id=9000032]
+custom_minimum_size = Vector2(80, 36)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_halfmoon")
+
+[node name="Margin" type="MarginContainer" parent="FooterConfigButton/CenterWrap/HalfMoon" unique_id=9000033]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 2
+
+[node name="ConfigButton" type="Button" parent="FooterConfigButton/CenterWrap/HalfMoon/Margin" unique_id=9000034]
+layout_mode = 2
+icon = ExtResource("12_config")
+expand_icon = true
+icon_alignment = 1
+flat = true
+focus_mode = 0
+mouse_filter = 0
+
+[node name="PausePopup" parent="." unique_id=9000040 instance=ExtResource("13_pause")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+z_index = 90
 
 [editable path="MarginContainer/MainLayout/PlayerInfoBar"]
 [editable path="MarginContainer/MainLayout/PlayerInfoBar/CardsRow/MyCardWrapper/MyPlayerCard"]

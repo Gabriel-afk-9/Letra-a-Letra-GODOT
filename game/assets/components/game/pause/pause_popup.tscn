@@ -1,0 +1,221 @@
+[gd_scene format=3 uid="uid://pause_popup_001"]
+
+[ext_resource type="Script" path="res://assets/components/game/pause/pause_popup.gd" id="1_pause"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/red_button_default.tres" id="2_red"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/white_button_default.tres" id="3_white"]
+[ext_resource type="StyleBox" path="res://assets/styles/buttons/disabled_button.tres" id="4_disabled"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(1, 0.972549, 0.90588236, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.14509805, 0.3882353, 0.92156863, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 6
+shadow_offset = Vector2(0, 6)
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.14509805, 0.3882353, 0.92156863, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_close"]
+bg_color = Color(0.9372549, 0.26666668, 0.26666668, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="PausePopup" type="Control" groups=["pause_popup"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pause")
+visible = false
+
+[node name="DimBackground" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+mouse_filter = 0
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Card" type="PanelContainer" parent="Center" unique_id=1446789548]
+custom_minimum_size = Vector2(320, 200)
+clip_contents = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="Margin" type="MarginContainer" parent="Center/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="RootVBox" type="VBoxContainer" parent="Center/Card/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TitlePillWrap" type="Control" parent="Center/Card/Margin/RootVBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TitlePill" type="PanelContainer" parent="Center/Card/Margin/RootVBox/TitlePillWrap"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -62.0
+offset_top = -34.0
+offset_right = 62.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
+
+[node name="Label" type="Label" parent="Center/Card/Margin/RootVBox/TitlePillWrap/TitlePill"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.11764706, 0.22745098, 0.5411765, 1)
+theme_override_font_sizes/font_size = 16
+text = "PAUSE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="Center/Card/Margin/RootVBox/TitlePillWrap"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 1
+anchors_preset = 9
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = -38.0
+offset_top = -28.0
+offset_right = -6.0
+offset_bottom = 4.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_close")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_close")
+theme_override_styles/hover = SubResource("StyleBoxFlat_close")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_close")
+text = "×"
+
+[node name="Content" type="VBoxContainer" parent="Center/Card/Margin/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="DefaultActions" type="VBoxContainer" parent="Center/Card/Margin/RootVBox/Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="LeaveButton" type="Button" parent="Center/Card/Margin/RootVBox/Content/DefaultActions"]
+custom_minimum_size = Vector2(200, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = ExtResource("2_red")
+theme_override_styles/pressed = ExtResource("2_red")
+theme_override_styles/hover = ExtResource("2_red")
+theme_override_styles/disabled = ExtResource("4_disabled")
+text = "SAIR"
+
+[node name="ConfirmActions" type="VBoxContainer" parent="Center/Card/Margin/RootVBox/Content"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="ConfirmLabel" type="Label" parent="Center/Card/Margin/RootVBox/Content/ConfirmActions"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.078431375, 0.078431375, 0.078431375, 1)
+theme_override_font_sizes/font_size = 14
+text = "Tem certeza que deseja sair?"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Row" type="HBoxContainer" parent="Center/Card/Margin/RootVBox/Content/ConfirmActions"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="CancelButton" type="Button" parent="Center/Card/Margin/RootVBox/Content/ConfirmActions/Row"]
+custom_minimum_size = Vector2(130, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.14509805, 0.3882353, 0.92156863, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = ExtResource("3_white")
+theme_override_styles/pressed = ExtResource("3_white")
+theme_override_styles/hover = ExtResource("3_white")
+theme_override_styles/disabled = ExtResource("4_disabled")
+text = "CANCELAR"
+
+[node name="ConfirmLeaveButton" type="Button" parent="Center/Card/Margin/RootVBox/Content/ConfirmActions/Row"]
+custom_minimum_size = Vector2(130, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = ExtResource("2_red")
+theme_override_styles/pressed = ExtResource("2_red")
+theme_override_styles/hover = ExtResource("2_red")
+theme_override_styles/disabled = ExtResource("4_disabled")
+text = "SIM, SAIR"
+
+[connection signal="gui_input" from="DimBackground" to="." method="_on_dim_background_gui_input"]
+[connection signal="pressed" from="Center/Card/Margin/RootVBox/TitlePillWrap/CloseButton" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="Center/Card/Margin/RootVBox/Content/DefaultActions/LeaveButton" to="." method="_on_leave_pressed"]
+[connection signal="pressed" from="Center/Card/Margin/RootVBox/Content/ConfirmActions/Row/CancelButton" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Center/Card/Margin/RootVBox/Content/ConfirmActions/Row/ConfirmLeaveButton" to="." method="_on_confirm_leave_pressed"]
