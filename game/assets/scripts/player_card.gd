@@ -50,6 +50,9 @@ var _inventory_row: HBoxContainer = null
 var _icon_cache: Dictionary = {}
 var _power_dots: Array = []
 var _has_stats_meta: bool = false
+var _is_active: bool = false
+var _active_tween: Tween = null
+var _base_panel_style: StyleBoxFlat = null
 
 
 func _ready() -> void:
@@ -210,10 +213,13 @@ func _apply_style(
 	avatar_style: StyleBoxFlat
 ) -> void:
 	if card_style:
+		_base_panel_style = card_style
 		add_theme_stylebox_override("panel", card_style)
 	if avatar_style and is_instance_valid(avatar_frame):
 		avatar_frame.add_theme_stylebox_override("panel", avatar_style)
 	_update_name_pill_style()
+	if _is_active:
+		_start_active_pulse()
 
 
 func _update_name_pill_style() -> void:
@@ -241,6 +247,55 @@ func _update_name_pill_style() -> void:
 	name_background.add_theme_stylebox_override("panel", style)
 
 
+func set_active(is_active: bool) -> void:
+	if _is_active == is_active and is_active == false:
+		return
+	_is_active = is_active
+	if is_active:
+		_start_active_pulse()
+	else:
+		_stop_active_pulse()
+
+
+func _start_active_pulse() -> void:
+	_stop_active_pulse()
+	if not is_inside_tree():
+		return
+	if _base_panel_style == null:
+		var cur := get_theme_stylebox("panel") as StyleBoxFlat
+		if cur != null:
+			_base_panel_style = cur
+	if _base_panel_style == null:
+		return
+	var pulse_style := _base_panel_style.duplicate() as StyleBoxFlat
+	if pulse_style == null:
+		return
+	pulse_style.shadow_color = Color(1, 1, 0.5, 0.45)
+	pulse_style.shadow_size = 8
+	add_theme_stylebox_override("panel", pulse_style)
+	set_meta("_active_pulse_style", pulse_style)
+	_active_tween = create_tween()
+	_active_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_active_tween.set_loops()
+	_active_tween.tween_property(pulse_style, "border_color", Color(1, 0.95, 0.45, 1), 0.6)
+	_active_tween.tween_property(pulse_style, "border_color", Color(0, 0, 0, 1), 0.6)
+	_active_tween.parallel().tween_property(pulse_style, "shadow_color", Color(1, 1, 0.5, 0.0), 0.6)
+	_active_tween.parallel().tween_property(pulse_style, "shadow_color", Color(1, 1, 0.5, 0.45), 0.6)
+	_active_tween.parallel().tween_property(self, "modulate", Color(1, 1, 0.92, 1), 0.6)
+	_active_tween.parallel().tween_property(self, "modulate", Color.WHITE, 0.6)
+
+
+func _stop_active_pulse() -> void:
+	if is_instance_valid(_active_tween) and _active_tween.is_valid():
+		_active_tween.kill()
+	_active_tween = null
+	if has_meta("_active_pulse_style"):
+		remove_meta("_active_pulse_style")
+	modulate = Color.WHITE
+	if _base_panel_style != null:
+		add_theme_stylebox_override("panel", _base_panel_style)
+
+
 func set_compact(enabled: bool) -> void:
 	_compact = enabled
 	if not is_node_ready():
@@ -253,6 +308,7 @@ func set_compact(enabled: bool) -> void:
 
 func _apply_compact() -> void:
 	custom_minimum_size = Vector2(160, 94)
+	clip_contents = false
 	var av: TextureRect = get_node_or_null("%AvatarTexture") as TextureRect
 	if av:
 		av.custom_minimum_size = Vector2(60, 60)
@@ -265,6 +321,15 @@ func _apply_compact() -> void:
 		mc.add_theme_constant_override("margin_top", 4)
 		mc.add_theme_constant_override("margin_right", 4)
 		mc.add_theme_constant_override("margin_bottom", 4)
+	var tr: HBoxContainer = get_node_or_null("MarginContainer/CardVBox/TopRow") as HBoxContainer
+	if tr:
+		tr.add_theme_constant_override("separation", 10)
+	var rv: VBoxContainer = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox") as VBoxContainer
+	if rv:
+		rv.add_theme_constant_override("separation", 8)
+	var pr: HBoxContainer = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow") as HBoxContainer
+	if pr:
+		pr.add_theme_constant_override("separation", 10)
 	var nl: Label = get_node_or_null("%NicknameLabel") as Label
 	if nl:
 		nl.add_theme_font_size_override("font_size", 14)
@@ -273,6 +338,7 @@ func _apply_compact() -> void:
 
 func _clear_compact() -> void:
 	custom_minimum_size = Vector2(160, 90)
+	clip_contents = true
 	var av2: TextureRect = get_node_or_null("%AvatarTexture") as TextureRect
 	if av2:
 		av2.custom_minimum_size = Vector2(70, 70)
@@ -285,6 +351,15 @@ func _clear_compact() -> void:
 		mc2.add_theme_constant_override("margin_top", 5)
 		mc2.add_theme_constant_override("margin_right", 5)
 		mc2.add_theme_constant_override("margin_bottom", 5)
+	var tr2: HBoxContainer = get_node_or_null("MarginContainer/CardVBox/TopRow") as HBoxContainer
+	if tr2:
+		tr2.add_theme_constant_override("separation", 15)
+	var rv2: VBoxContainer = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox") as VBoxContainer
+	if rv2:
+		rv2.add_theme_constant_override("separation", 4)
+	var pr2: HBoxContainer = get_node_or_null("MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow") as HBoxContainer
+	if pr2:
+		pr2.add_theme_constant_override("separation", 6)
 	var nl2: Label = get_node_or_null("%NicknameLabel") as Label
 	if nl2:
 		nl2.add_theme_font_size_override("font_size", 15)

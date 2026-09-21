@@ -13,7 +13,7 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_avatar"]
 shader = ExtResource("8_shader")
-shader_parameter/radius = 0.1290000061275
+shader_parameter/radius = 0.1600000076
 
 [sub_resource type="StyleBoxFlat" id="NamePillStyle"]
 bg_color = Color(0.09803922, 0.28627452, 0.41960785, 1)
@@ -184,7 +184,7 @@ metadata/_custom_type_script = "uid://b75b230h4n1cl"
 [node name="RightVBox" type="VBoxContainer" parent="MarginContainer/CardVBox/TopRow" unique_id=9000100]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 alignment = 1
 
 [node name="NameBackground" type="PanelContainer" parent="MarginContainer/CardVBox/TopRow/RightVBox" unique_id=384194472]
@@ -294,41 +294,38 @@ theme_override_font_sizes/font_size = 9
 text = "PARTIDAS"
 horizontal_alignment = 1
 
-[node name="Space" type="Control" parent="MarginContainer/CardVBox/TopRow/RightVBox" unique_id=788401486]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-
 [node name="PowerDotsRow" type="HBoxContainer" parent="MarginContainer/CardVBox/TopRow/RightVBox" unique_id=9000016]
+visible = false
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 10
 alignment = 1
 
 [node name="Dot1" type="Panel" parent="MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow" unique_id=9000017]
-custom_minimum_size = Vector2(15, 15)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("DotStyle")
 
 [node name="Dot2" type="Panel" parent="MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow" unique_id=9000018]
-custom_minimum_size = Vector2(15, 15)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("DotStyle")
 
 [node name="Dot3" type="Panel" parent="MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow" unique_id=9000019]
-custom_minimum_size = Vector2(15, 15)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("DotStyle")
 
 [node name="Dot4" type="Panel" parent="MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow" unique_id=9000020]
-custom_minimum_size = Vector2(15, 15)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("DotStyle")
 
 [node name="Dot5" type="Panel" parent="MarginContainer/CardVBox/TopRow/RightVBox/PowerDotsRow" unique_id=9000021]
-custom_minimum_size = Vector2(15, 15)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("DotStyle")

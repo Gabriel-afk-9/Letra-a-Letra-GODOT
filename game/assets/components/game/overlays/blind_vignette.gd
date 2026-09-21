@@ -1,8 +1,8 @@
 extends Control
 class_name BlindVignette
 
-
-const EFFECT_OVERLAY_FADE := 0.3
+# Reusa fade do EffectOverlay para manter timing consistente — defina só em EffectOverlay.
+const EFFECT_OVERLAY_FADE := EffectOverlay.EFFECT_OVERLAY_FADE
 
 var _blind_tween: Tween
 

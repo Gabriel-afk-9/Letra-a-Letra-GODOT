@@ -51,6 +51,41 @@ alignment = 1
 [node name="PlayerInfoBar" parent="MarginContainer/MainLayout" unique_id=2024784364 instance=ExtResource("11_player")]
 layout_mode = 2
 
+[node name="MyArrow" parent="MarginContainer/MainLayout/PlayerInfoBar/ArrowsRow/MyArrowSlot" parent_id_path=PackedInt32Array(2024784364, 9000201) index="0" unique_id=9000202]
+position = Vector2(88, 2)
+
+[node name="MyArrowBorder" parent="MarginContainer/MainLayout/PlayerInfoBar/ArrowsRow/MyArrowSlot" parent_id_path=PackedInt32Array(2024784364, 9000201) index="1" unique_id=9000203]
+position = Vector2(87, 2)
+
+[node name="OpponentArrow" parent="MarginContainer/MainLayout/PlayerInfoBar/ArrowsRow/OpponentArrowSlot" parent_id_path=PackedInt32Array(2024784364, 9000205) index="0" unique_id=9000206]
+position = Vector2(98, 2)
+
+[node name="OpponentArrowBorder" parent="MarginContainer/MainLayout/PlayerInfoBar/ArrowsRow/OpponentArrowSlot" parent_id_path=PackedInt32Array(2024784364, 9000205) index="1" unique_id=9000207]
+modulate = Color(0.9867516, 0.9867516, 0.9867516, 1)
+position = Vector2(98, 2)
+
+[node name="MyPlayerCard" parent="MarginContainer/MainLayout/PlayerInfoBar/CardsRow/MyCardWrapper" parent_id_path=PackedInt32Array(2024784364, 2088274691) index="0" unique_id=1864201814]
+custom_minimum_size = Vector2(160, 10)
+custom_maximum_size = Vector2(320, 84)
+offset_left = -5.5
+offset_top = 5.0
+offset_right = 5.5
+offset_bottom = -5.0
+
+[node name="PowerDotsRow" parent="MarginContainer/MainLayout/PlayerInfoBar/CardsRow/MyCardWrapper/MyPlayerCard/MarginContainer/CardVBox/TopRow/RightVBox" parent_id_path=PackedInt32Array(2024784364, 1864201814, 9000100) index="2" unique_id=9000016]
+visible = true
+theme_override_constants/separation = 5
+
+[node name="OpponentPlayerCard" parent="MarginContainer/MainLayout/PlayerInfoBar/CardsRow/OpponentCardWrapper" parent_id_path=PackedInt32Array(2024784364, -795085055) index="0" unique_id=585961095]
+custom_minimum_size = Vector2(160, 10)
+custom_maximum_size = Vector2(320, 84)
+offset_left = -5.5
+offset_right = 5.5
+
+[node name="PowerDotsRow" parent="MarginContainer/MainLayout/PlayerInfoBar/CardsRow/OpponentCardWrapper/OpponentPlayerCard/MarginContainer/CardVBox/TopRow/RightVBox" parent_id_path=PackedInt32Array(2024784364, 585961095, 9000100) index="2" unique_id=9000016]
+visible = true
+theme_override_constants/separation = 5
+
 [node name="WordsContainerView" parent="MarginContainer/MainLayout" unique_id=9100010 instance=ExtResource("8_words")]
 layout_mode = 2
 
@@ -110,3 +145,8 @@ theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = ExtResource("4_fiugi")
 theme_override_styles/pressed = ExtResource("4_fiugi")
 theme_override_styles/hover = ExtResource("4_fiugi")
+theme_override_styles/disabled = ExtResource("4_fiugi")
+
+[editable path="MarginContainer/MainLayout/PlayerInfoBar"]
+[editable path="MarginContainer/MainLayout/PlayerInfoBar/CardsRow/MyCardWrapper/MyPlayerCard"]
+[editable path="MarginContainer/MainLayout/PlayerInfoBar/CardsRow/OpponentCardWrapper/OpponentPlayerCard"]

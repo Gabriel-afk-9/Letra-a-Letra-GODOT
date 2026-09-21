@@ -50,5 +50,5 @@ func flash(color: Color, hold_seconds: float) -> void:
 	_flash_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_flash_tween.tween_property(self, "modulate:a", 1.0, 0.2)
 	_flash_tween.tween_interval(hold_seconds)
-	_flash_tween.tween_property(self, "modulate:a", 0.0, 0.5)
+	_flash_tween.tween_property(self, "modulate:a", 0.0, EFFECT_OVERLAY_FADE)
 	_flash_tween.tween_callback(hide)

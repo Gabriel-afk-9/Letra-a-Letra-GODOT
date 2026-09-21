@@ -8,8 +8,10 @@ class_name PlayerInfoBar
 @onready var timer_label: Label = %TimerLabel
 @onready var timer_circle: PanelContainer = $CardsRow/TimerCenter/TimerCircle
 @onready var turn_label: Label = $TurnLabel
-
-const HIGHLIGHT_DURATION := 0.15
+@onready var my_arrow: Polygon2D = $ArrowsRow/MyArrowSlot/MyArrow
+@onready var my_arrow_border: Polygon2D = $ArrowsRow/MyArrowSlot/MyArrowBorder
+@onready var opponent_arrow: Polygon2D = $ArrowsRow/OpponentArrowSlot/OpponentArrow
+@onready var opponent_arrow_border: Polygon2D = $ArrowsRow/OpponentArrowSlot/OpponentArrowBorder
 
 var _my_nickname: String = ""
 var _opponent_nickname: String = ""
@@ -23,6 +25,7 @@ var _opponent_inventory: Array = []
 
 func _ready() -> void:
 	_shrink_game_cards()
+	_apply_turn_highlight(false)
 
 
 func _shrink_game_cards() -> void:
@@ -87,18 +90,21 @@ func _update_player_cards() -> void:
 		opponent_player_card.set_power_dots(_opponent_inventory)
 
 
-func _apply_turn_highlight(animated: bool) -> void:
-	var tween := create_tween() if animated else null
-	if tween:
-		tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	for wrapper in [my_card_wrapper, opponent_card_wrapper]:
-		if not is_instance_valid(wrapper):
-			continue
-		var is_active: bool = (wrapper == my_card_wrapper and _is_my_turn) or (wrapper == opponent_card_wrapper and not _is_my_turn)
-		wrapper.modulate = Color.WHITE if is_active else Color(1, 1, 1, 0.92)
-		if tween:
-			wrapper.scale = Vector2.ONE
-			tween.parallel().tween_property(wrapper, "scale", Vector2(1.02, 1.02) if is_active else Vector2.ONE, HIGHLIGHT_DURATION)
+func _apply_turn_highlight(_animated: bool) -> void:
+	var my_active := _is_my_turn
+	var opp_active := not _is_my_turn
+	if is_instance_valid(my_player_card) and my_player_card.has_method("set_active"):
+		my_player_card.set_active(my_active)
+	if is_instance_valid(opponent_player_card) and opponent_player_card.has_method("set_active"):
+		opponent_player_card.set_active(opp_active)
+	if is_instance_valid(my_arrow):
+		my_arrow.visible = my_active
+	if is_instance_valid(my_arrow_border):
+		my_arrow_border.visible = my_active
+	if is_instance_valid(opponent_arrow):
+		opponent_arrow.visible = opp_active
+	if is_instance_valid(opponent_arrow_border):
+		opponent_arrow_border.visible = opp_active
 
 
 func _pulse_timer() -> void:

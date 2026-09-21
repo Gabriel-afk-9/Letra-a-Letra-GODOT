@@ -10,21 +10,73 @@ border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
 
 [node name="PlayerInfoBar" type="VBoxContainer" unique_id=2024784364]
+clip_contents = false
 script = ExtResource("1_bar")
+
+[node name="ArrowsRow" type="HBoxContainer" parent="." unique_id=9000200]
+clip_contents = false
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="MyArrowSlot" type="Control" parent="ArrowsRow" unique_id=9000201]
+custom_minimum_size = Vector2(130, 14)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+size_flags_stretch_ratio = 1.0
+
+[node name="MyArrow" type="Polygon2D" parent="ArrowsRow/MyArrowSlot" unique_id=9000202]
+visible = false
+position = Vector2(65, 2)
+polygon = PackedVector2Array(0, 0, 12, 0, 6, 8)
+color = Color(1, 1, 1, 1)
+
+[node name="MyArrowBorder" type="Polygon2D" parent="ArrowsRow/MyArrowSlot" unique_id=9000203]
+visible = false
+z_index = -1
+position = Vector2(65, 2)
+polygon = PackedVector2Array(-1, -1, 13, -1, 6, 9.5)
+color = Color(0, 0, 0, 1)
+
+[node name="TimerArrowSpacer" type="Control" parent="ArrowsRow" unique_id=9000204]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+
+[node name="OpponentArrowSlot" type="Control" parent="ArrowsRow" unique_id=9000205]
+custom_minimum_size = Vector2(130, 14)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+size_flags_stretch_ratio = 1.0
+
+[node name="OpponentArrow" type="Polygon2D" parent="ArrowsRow/OpponentArrowSlot" unique_id=9000206]
+visible = false
+position = Vector2(65, 2)
+polygon = PackedVector2Array(0, 0, 12, 0, 6, 8)
+color = Color(1, 1, 1, 1)
+
+[node name="OpponentArrowBorder" type="Polygon2D" parent="ArrowsRow/OpponentArrowSlot" unique_id=9000207]
+visible = false
+z_index = -1
+position = Vector2(65, 2)
+polygon = PackedVector2Array(-1, -1, 13, -1, 6, 9.5)
+color = Color(0, 0, 0, 1)
 
 [node name="CardsRow" type="HBoxContainer" parent="." unique_id=1702989824]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 alignment = 1
 
 [node name="MyCardWrapper" type="Control" parent="CardsRow" unique_id=2088274691]
-custom_minimum_size = Vector2(140, 94)
+custom_minimum_size = Vector2(130, 94)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -41,22 +93,22 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="TimerCenter" type="Control" parent="CardsRow" unique_id=1199000010]
-custom_minimum_size = Vector2(56, 56)
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 size_flags_vertical = 4
 
 [node name="TimerCircle" type="PanelContainer" parent="CardsRow/TimerCenter" unique_id=1199000011]
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(44, 44)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -25.0
-offset_right = 25.0
-offset_bottom = 25.0
+offset_left = -22.0
+offset_top = -22.0
+offset_right = 22.0
+offset_bottom = 22.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_circle")
@@ -65,13 +117,13 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_circle")
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 18
 text = "30"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="OpponentCardWrapper" type="Control" parent="CardsRow" unique_id=-795085055]
-custom_minimum_size = Vector2(140, 94)
+custom_minimum_size = Vector2(130, 94)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4

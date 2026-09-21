@@ -9,6 +9,9 @@ const EFFECT_FREEZE_COLOR := Color(0.2, 0.5, 1.0, 0.25)
 const EFFECT_IMMUNITY_COLOR := Color(1.0, 0.55, 0.1, 0.35)
 const EFFECT_LANTERN_FLASH := Color(1, 1, 1, 0.6)
 const EFFECT_UNFREEZE_HOT := Color(1.0, 0.45, 0.15, 0.4)
+const EFFECT_SPY_WASH := Color(0.15, 0.6, 1.0, 0.18)
+const EFFECT_DETECT_WASH := Color(1.0, 0.85, 0.2, 0.15)
+const EFFECT_IMMUNITY_END_FLASH := Color(1, 1, 1, 0.45)
 const UNFREEZE_HOT_HOLD := 2.0
 @onready var player_info_bar: PlayerInfoBar = $MarginContainer/MainLayout/PlayerInfoBar
 @onready var words_container_view: WordsContainerView = $MarginContainer/MainLayout/WordsContainerView
@@ -25,6 +28,9 @@ var _last_cell_state: Dictionary = {}
 @onready var _game_over_overlay: GameOverOverlay = $GameOverOverlay
 var _was_blinded: bool = false
 var _was_frozen: bool = false
+var _was_immune: bool = false
+var _was_spied: bool = false
+var _was_detecting: bool = false
 
 var _global_power_armed: bool = false
 var _action_locked: bool = false
@@ -311,26 +317,47 @@ func _on_effect_state_changed() -> void:
 	var blinded_now := _view_model.is_blinded()
 	var frozen_now := _view_model.is_frozen()
 	var immune_now := _view_model.is_immune()
+	var spied_now := _view_model.is_spied() if _view_model.has_method("is_spied") else false
+	var detecting_now := _view_model.is_detecting_traps() if _view_model.has_method("is_detecting_traps") else false
 
+	var has_wash := false
 	if frozen_now:
-		_blind_vignette.hide_vignette()
 		_effect_overlay.show_with_color(EFFECT_FREEZE_COLOR)
+		has_wash = true
 	elif immune_now:
-		_blind_vignette.hide_vignette()
 		_effect_overlay.show_with_color(EFFECT_IMMUNITY_COLOR)
-	elif blinded_now:
-		_effect_overlay.hide_overlay()
+		has_wash = true
+	elif detecting_now and not blinded_now:
+		_effect_overlay.show_with_color(EFFECT_DETECT_WASH)
+		has_wash = true
+	elif spied_now and not blinded_now:
+		_effect_overlay.show_with_color(EFFECT_SPY_WASH)
+		has_wash = true
+
+	if blinded_now:
 		_blind_vignette.show_vignette()
+		if has_wash and is_instance_valid(_blind_vignette):
+			_blind_vignette.modulate.a = 0.7
 	else:
-		_effect_overlay.hide_overlay()
 		_blind_vignette.hide_vignette()
-		if _was_blinded:
+
+	if not has_wash and not blinded_now:
+		if _was_blinded or _was_frozen or _was_immune or _was_spied or _was_detecting:
+			_effect_overlay.hide_overlay()
+		else:
+			_effect_overlay.hide_overlay()
+		if _was_blinded and not blinded_now:
 			_effect_overlay.flash(EFFECT_LANTERN_FLASH, 0.5)
-		elif _was_frozen:
+		elif _was_frozen and not frozen_now:
 			_effect_overlay.flash(EFFECT_UNFREEZE_HOT, UNFREEZE_HOT_HOLD)
+		elif _was_immune and not immune_now:
+			_effect_overlay.flash(EFFECT_IMMUNITY_END_FLASH, 0.5)
 
 	_was_blinded = blinded_now
 	_was_frozen = frozen_now
+	_was_immune = immune_now
+	_was_spied = spied_now
+	_was_detecting = detecting_now
 
 func _refresh_all_cell_styles() -> void:
 	if _view_model == null or _cell_buttons.is_empty():

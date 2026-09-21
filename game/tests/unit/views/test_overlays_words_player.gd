@@ -76,10 +76,12 @@ func test_words_container_update_and_signature() -> void:
 
 func test_player_info_bar_turn_and_cards() -> void:
 	var tscn = FileAccess.get_file_as_string("res://assets/components/game/player/player_info_bar.tscn")
-	assert_true(tscn.contains("MyCardWrapper") and tscn.contains("Vector2(140, 94)"), "MyCard 140x94 responsivo")
-	assert_true(tscn.contains("OpponentCardWrapper") and tscn.contains("Vector2(140, 94)"), "OpponentCard 140x94 responsivo")
+	assert_true(tscn.contains("MyCardWrapper") and tscn.contains("Vector2(130, 94)"), "MyCard 130x94 responsivo")
+	assert_true(tscn.contains("OpponentCardWrapper") and tscn.contains("Vector2(130, 94)"), "OpponentCard 130x94 responsivo")
 	assert_true(tscn.contains("size_flags_horizontal = 3"), "wrappers devem ser EXPAND responsivo")
 	assert_true(tscn.contains("TimerLabel") and tscn.contains("TimerCircle"), "Timer 30 no meio deve existir")
+	assert_true(tscn.contains("ArrowsRow") and tscn.contains("MyArrow") and tscn.contains("OpponentArrow"), "Seta branca com borda deve existir")
+	assert_true(tscn.contains("custom_minimum_size = Vector2(44, 44)"), "TimerCircle 44 responsivo")
 	_player.setup_players("Eu", "Adv")
 	await get_tree().process_frame
 	_player.set_turn(true)
