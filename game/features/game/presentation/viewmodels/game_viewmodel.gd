@@ -696,7 +696,7 @@ func _on_my_effect_event(event_name: String) -> void:
 		"PLAYER_UNFREEZE":
 			_is_frozen = false
 			_freeze_turns_left = 0
-		"PLAYER_USE_IMMUNITY", "IMMUNITY_APPLIED":
+		"PLAYER_USE_IMMUNITY", "IMMUNITY_APPLIED", "PLAYER_ARE_IMMUNE":
 			_is_frozen = false
 			_freeze_turns_left = 0
 			_is_blinded = false
@@ -783,7 +783,7 @@ func _on_turn_passed() -> void:
 	_apply_turn_effect_decrement()
 
 
-func _on_my_effects_snapshot(is_frozen: bool, is_blinded: bool, is_immune: bool, freeze_duration: int, blind_duration: int, immune_duration: int) -> void:
+func _on_my_effects_snapshot(is_frozen: bool, is_blinded: bool, is_immune: bool, freeze_duration: int, blind_duration: int, immune_duration: int, is_spied: bool = false, is_detecting: bool = false) -> void:
 	var changed := false
 	if is_frozen != _is_frozen:
 		_is_frozen = is_frozen
@@ -824,8 +824,14 @@ func _on_my_effects_snapshot(is_frozen: bool, is_blinded: bool, is_immune: bool,
 	elif is_immune and immune_duration != -1 and immune_duration != _immunity_turns_left:
 		_immunity_turns_left = immune_duration
 		changed = true
+	if is_spied != _is_spied:
+		_is_spied = is_spied
+		changed = true
+	if is_detecting != _is_detecting_traps:
+		_is_detecting_traps = is_detecting
+		changed = true
 	if changed:
-		AppLogger.debug("GameViewModel: snapshot sync frozen=%s blind=%s immune=%s freeze_left=%d" % [str(_is_frozen), str(_is_blinded), str(_is_immune), _freeze_turns_left])
+		AppLogger.debug("GameViewModel: snapshot sync frozen=%s blind=%s immune=%s spied=%s detecting=%s freeze_left=%d" % [str(_is_frozen), str(_is_blinded), str(_is_immune), str(_is_spied), str(_is_detecting_traps), _freeze_turns_left])
 		effect_state_changed.emit()
 		_refresh_defense_pulse()
 

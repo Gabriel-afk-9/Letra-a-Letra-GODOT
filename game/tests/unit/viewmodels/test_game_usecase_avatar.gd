@@ -22,10 +22,11 @@ func test_avatar_emitted_once_per_path_change() -> void:
 	_usecase._on_players_updated([_state("me", "AVATAR/ceo.webp"), _state("opp", "AVATAR/evil.png")])
 	assert_signal_emitted_with_parameters(_usecase, "my_avatar_updated", ["AVATAR/ceo.webp"])
 	assert_signal_emitted_with_parameters(_usecase, "opponent_avatar_updated", ["AVATAR/evil.png"])
-	watch_signals(_usecase)
+	var before_my: int = get_signal_emit_count(_usecase, "my_avatar_updated")
+	var before_opp: int = get_signal_emit_count(_usecase, "opponent_avatar_updated")
 	_usecase._on_players_updated([_state("me", "AVATAR/ceo.webp"), _state("opp", "AVATAR/evil.png")])
-	assert_signal_not_emitted(_usecase, "my_avatar_updated")
-	assert_signal_not_emitted(_usecase, "opponent_avatar_updated")
+	assert_eq(get_signal_emit_count(_usecase, "my_avatar_updated"), before_my, "my_avatar não deve reemitir path igual")
+	assert_eq(get_signal_emit_count(_usecase, "opponent_avatar_updated"), before_opp, "opponent_avatar não deve reemitir path igual")
 
 
 func test_avatar_associated_by_id_not_position() -> void:

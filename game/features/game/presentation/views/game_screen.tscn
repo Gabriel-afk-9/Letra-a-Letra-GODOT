@@ -107,23 +107,28 @@ layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="EffectOverlay" parent="." unique_id=9000010 instance=ExtResource("5_overlay")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="BlindVignette" parent="." unique_id=9000011 instance=ExtResource("6_overlay")]
-anchors_preset = 0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="GameOverOverlay" parent="." unique_id=9000020 instance=ExtResource("7_overlay")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="TopBarLeaveButton" type="Button" parent="." unique_id=633011318]
 custom_minimum_size = Vector2(20, 16)

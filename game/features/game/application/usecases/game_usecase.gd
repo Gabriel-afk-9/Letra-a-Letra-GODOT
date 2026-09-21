@@ -15,7 +15,7 @@ signal my_cell_revealed
 signal word_found(cells: Array, found_by_player_id: String, is_me: bool)
 signal trap_event(event_name: String, x: int, y: int)
 signal my_effect_event(event_name: String)
-signal my_effects_snapshot(is_frozen: bool, is_blinded: bool, is_immune: bool, freeze_duration: int, blind_duration: int, immune_duration: int)
+signal my_effects_snapshot(is_frozen: bool, is_blinded: bool, is_immune: bool, freeze_duration: int, blind_duration: int, immune_duration: int, is_spied: bool, is_detecting: bool)
 signal spy_position_changed(pos: Vector2i, active: bool)
 signal game_over(is_winner: bool, reason: String)
 signal connection_lost(message: String)
@@ -37,6 +37,8 @@ var _my_snapshot_synced: bool = false
 var _my_last_snapshot_frozen: bool = false
 var _my_last_snapshot_blinded: bool = false
 var _my_last_snapshot_immune: bool = false
+var _my_last_snapshot_spied: bool = false
+var _my_last_snapshot_detecting: bool = false
 
 
 func _init(repository: GameRepository, current_user_provider: CurrentUserProvider) -> void:
@@ -188,24 +190,32 @@ func _sync_my_effects(effects: Array) -> void:
 			has_spy = true
 			break
 
-	var has_freeze_snapshot: bool = _has_effect_keyword(effects, "FROZ")
+	var has_freeze_snapshot: bool = _has_effect_keyword(effects, "FREEZE") or _has_effect_keyword(effects, "FROZ")
 	var has_blind_snapshot: bool = _has_effect_keyword(effects, "BLIND")
 	var has_immune_snapshot: bool = _has_effect_keyword(effects, "IMMUN")
-	var freeze_dur: int = _find_duration_for_keyword(effects, "FROZ")
+	var has_spy_snapshot: bool = _has_effect_keyword(effects, "SPY")
+	var has_detect_snapshot: bool = _has_effect_keyword(effects, "DETECT") or _has_effect_keyword(effects, "TRAPS_DETECTED")
+	var freeze_dur: int = _find_duration_for_keyword(effects, "FREEZE")
+	if freeze_dur == -1:
+		freeze_dur = _find_duration_for_keyword(effects, "FROZ")
 	var blind_dur: int = _find_duration_for_keyword(effects, "BLIND")
 	var immune_dur: int = _find_duration_for_keyword(effects, "IMMUN")
 	if not _my_snapshot_synced:
 		_my_last_snapshot_frozen = has_freeze_snapshot
 		_my_last_snapshot_blinded = has_blind_snapshot
 		_my_last_snapshot_immune = has_immune_snapshot
+		_my_last_snapshot_spied = has_spy_snapshot
+		_my_last_snapshot_detecting = has_detect_snapshot
 		_my_snapshot_synced = true
-		my_effects_snapshot.emit(has_freeze_snapshot, has_blind_snapshot, has_immune_snapshot, freeze_dur, blind_dur, immune_dur)
+		my_effects_snapshot.emit(has_freeze_snapshot, has_blind_snapshot, has_immune_snapshot, freeze_dur, blind_dur, immune_dur, has_spy_snapshot, has_detect_snapshot)
 	else:
-		if has_freeze_snapshot != _my_last_snapshot_frozen or has_blind_snapshot != _my_last_snapshot_blinded or has_immune_snapshot != _my_last_snapshot_immune or freeze_dur != -1 or blind_dur != -1 or immune_dur != -1:
+		if has_freeze_snapshot != _my_last_snapshot_frozen or has_blind_snapshot != _my_last_snapshot_blinded or has_immune_snapshot != _my_last_snapshot_immune or has_spy_snapshot != _my_last_snapshot_spied or has_detect_snapshot != _my_last_snapshot_detecting or freeze_dur != -1 or blind_dur != -1 or immune_dur != -1:
 			_my_last_snapshot_frozen = has_freeze_snapshot
 			_my_last_snapshot_blinded = has_blind_snapshot
 			_my_last_snapshot_immune = has_immune_snapshot
-			my_effects_snapshot.emit(has_freeze_snapshot, has_blind_snapshot, has_immune_snapshot, freeze_dur, blind_dur, immune_dur)
+			_my_last_snapshot_spied = has_spy_snapshot
+			_my_last_snapshot_detecting = has_detect_snapshot
+			my_effects_snapshot.emit(has_freeze_snapshot, has_blind_snapshot, has_immune_snapshot, freeze_dur, blind_dur, immune_dur, has_spy_snapshot, has_detect_snapshot)
 		elif has_effects:
 			pass
 
@@ -278,7 +288,7 @@ func _on_internal_event_received(event: GameInternalEvent) -> void:
 			_handle_cell_revealed(event)
 		"TURN_PASSED":
 			turn_passed.emit()
-		"PLAYER_BLINDED", "PLAYER_USE_LANTERN", "PLAYER_FROZEN", "PLAYER_UNFREEZE", "PLAYER_USE_IMMUNITY", "IMMUNITY_APPLIED", "IMMUNITY_REMOVED", "TRAPS_DETECTED", "DETECT_TRAPS_REMOVED", "SPY_APPLIED", "SPY_REMOVED", "PLAYER_SPIED":
+		"PLAYER_BLINDED", "PLAYER_USE_LANTERN", "PLAYER_FROZEN", "PLAYER_UNFREEZE", "PLAYER_USE_IMMUNITY", "IMMUNITY_APPLIED", "IMMUNITY_REMOVED", "PLAYER_ARE_IMMUNE", "TRAPS_DETECTED", "DETECT_TRAPS_REMOVED", "SPY_APPLIED", "SPY_REMOVED", "PLAYER_SPIED":
 			_handle_effect_event(event)
 		_:
 			AppLogger.debug("GameUseCase: unhandled internal event: %s" % event.event_name)

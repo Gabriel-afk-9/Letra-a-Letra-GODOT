@@ -30,7 +30,9 @@ func _stage_asset() -> void:
 	DirAccess.make_dir_recursive_absolute(EquippableAssetPaths.user_dir(STAGED_ASSET))
 	var image := Image.create_empty(4, 4, false, Image.FORMAT_RGBA8)
 	image.fill(Color.BLUE)
-	image.save_png_to_file(user_p)
+	var err := image.save_png(user_p)
+	assert_eq(err, OK, "save_png deve ter sucesso")
+	assert_true(FileAccess.file_exists(user_p), "arquivo deve existir após save_png")
 	_staged.append(user_p)
 
 
@@ -49,18 +51,27 @@ func _avatar_dict(item_id: String, equipped: bool) -> Dictionary:
 	}
 
 
+func _card_avatar() -> TextureRect:
+	var card: PlayerCard = _page.home_player_card as PlayerCard
+	if card == null:
+		return null
+	return card.avatar as TextureRect
+
 func test_home_shows_equipped_avatar_instead_of_mock() -> void:
 	_stage_asset()
+	await get_tree().process_frame  # Ensure file system visibility
 	var store := ServiceRegistry.initial_data_store()
 	store.set_inventory([InventoryItem.from_dictionary(_avatar_dict("av-1", true))])
 	_page.enter({})
 	await get_tree().process_frame
 
-	var texture := _page.avatar_texture.texture
+	var tex_rect: TextureRect = _card_avatar()
+	assert_not_null(tex_rect, "PlayerCard avatar existe")
+	var texture: Texture2D = tex_rect.texture as Texture2D
 	assert_not_null(texture, "avatar exibido")
 	assert_ne(texture, HomeScreen.AVATAR_COSMETICS["logo"], "usa o asset real, não o mock")
 	assert_eq(texture.get_size(), Vector2(4, 4), "dimensões do asset local")
-	assert_true(_page.avatar_texture.material is ShaderMaterial, "máscara de cantos aplicada")
+	assert_true(tex_rect.material is ShaderMaterial, "máscara de cantos aplicada")
 
 
 func test_home_without_equipped_shows_mock() -> void:
@@ -69,8 +80,12 @@ func test_home_without_equipped_shows_mock() -> void:
 	_page.enter({})
 	await get_tree().process_frame
 
-	assert_eq(_page.avatar_texture.texture, HomeScreen.AVATAR_COSMETICS["logo"], "sem equipado exibe o mock")
+	var tex_rect: TextureRect = _card_avatar()
+	assert_not_null(tex_rect, "avatar rect deve existir")
+	assert_eq(tex_rect.texture, HomeScreen.AVATAR_COSMETICS["logo"], "sem equipado exibe o mock")
 
 
 func test_home_avatar_texture_fills_frame() -> void:
-	assert_eq(_page.avatar_texture.stretch_mode, TextureRect.STRETCH_KEEP_ASPECT_COVERED, "avatar preenche o quadrado sem deformar")
+	var tex_rect: TextureRect = _card_avatar()
+	assert_not_null(tex_rect, "avatar rect deve existir")
+	assert_eq(tex_rect.stretch_mode, TextureRect.STRETCH_KEEP_ASPECT_COVERED, "avatar preenche o quadrado sem deformar")

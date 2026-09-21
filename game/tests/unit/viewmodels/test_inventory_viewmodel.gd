@@ -7,7 +7,13 @@ var _vm: InventoryViewModel
 func before_each() -> void:
 	_repo = FakeInventoryRepository.new()
 	var usecase := InventoryUseCase.new(_repo)
-	_vm = InventoryViewModel.new(usecase, EquippableAssetService.new(), null)
+	var assets := EquippableAssetService.new()
+	add_child(assets)
+	_vm = InventoryViewModel.new(usecase, assets, null)
+
+func after_each() -> void:
+	if is_instance_valid(_vm.asset_service()):
+		_vm.asset_service().queue_free()
 
 
 func _item(data: Dictionary) -> InventoryItem:
@@ -46,13 +52,13 @@ func _consumable(item_id: String) -> InventoryItem:
 
 func test_refresh_loads_items_and_notifies() -> void:
 	_repo.inventory_result = {"items": [_avatar("a-1", true)], "status_code": 200}
-	var changed := 0
-	_vm.inventory_changed.connect(func() -> void: changed += 1)
+	var emitted: Array = []
+	_vm.inventory_changed.connect(func() -> void: emitted.append(1))
 
 	await _vm.refresh()
 
 	assert_eq(_vm.items().size(), 1, "um item carregado")
-	assert_eq(changed, 1, "inventory_changed emitido")
+	assert_eq(emitted.size(), 1, "inventory_changed emitido")
 	assert_false(_vm.is_loading(), "loading finalizado")
 	assert_false(_vm.has_error(), "sem erro")
 
@@ -73,7 +79,9 @@ func test_load_initial_seeds_from_store_then_refreshes() -> void:
 	store.set_inventory([_avatar("seed-1")])
 	_repo.inventory_result = {"items": [_avatar("fresh-1"), _consumable("c-1")], "status_code": 200}
 	var usecase := InventoryUseCase.new(_repo)
-	var seeded_vm := InventoryViewModel.new(usecase, EquippableAssetService.new(), store)
+	var seeded_assets := EquippableAssetService.new()
+	add_child(seeded_assets)
+	var seeded_vm := InventoryViewModel.new(usecase, seeded_assets, store)
 	var seen: Array = []
 	seeded_vm.inventory_changed.connect(func() -> void: seen.append(seeded_vm.items().size()))
 
@@ -82,6 +90,7 @@ func test_load_initial_seeds_from_store_then_refreshes() -> void:
 	assert_eq(seen, [1, 2], "semeia do store e depois atualiza pela API")
 	assert_eq(seeded_vm.items().size(), 2, "itens finais vêm da API")
 	assert_eq(store.get_inventory().size(), 2, "store atualizado para as próximas telas")
+	seeded_assets.queue_free()
 
 
 func test_sections_and_cosmetic_categories_always_visible() -> void:

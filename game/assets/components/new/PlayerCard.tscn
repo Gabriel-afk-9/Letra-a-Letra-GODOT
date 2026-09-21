@@ -93,7 +93,7 @@ custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 texture = ExtResource("3_logo")
 expand_mode = 1
-stretch_mode = 5
+stretch_mode = 6
 
 [node name="FrameTexture" type="TextureRect" parent="MarginContainer/CardVBox/TopRow/AvatarFrame" unique_id=790813431]
 visible = false

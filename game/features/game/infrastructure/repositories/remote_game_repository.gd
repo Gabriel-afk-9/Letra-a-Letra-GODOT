@@ -30,6 +30,7 @@ var _pending_words: Array = []
 var _pending_players: Array = []
 var _pending_turn_player_id: String = ""
 var _pending_turn_ends_at: String = ""
+var _pending_internal_events: Array = []
 
 
 func _init(websocket_client: WebSocketClient, current_user_provider: CurrentUserProvider) -> void:
@@ -114,11 +115,16 @@ func _flush_pending_state() -> void:
 	if not _pending_turn_player_id.is_empty() or not _pending_turn_ends_at.is_empty():
 		turn_updated.emit(_pending_turn_player_id, _pending_turn_ends_at)
 
+	for raw_event in _pending_internal_events:
+		if raw_event is Dictionary:
+			internal_event_received.emit(GameInternalEventMapper.to_domain(raw_event as Dictionary))
+
 	_pending_board = null
 	_pending_words = []
 	_pending_players = []
 	_pending_turn_player_id = ""
 	_pending_turn_ends_at = ""
+	_pending_internal_events = []
 
 
 func reveal_cell(x: int, y: int) -> void:
@@ -274,6 +280,7 @@ func _clear_game_state() -> void:
 	_pending_players = []
 	_pending_turn_player_id = ""
 	_pending_turn_ends_at = ""
+	_pending_internal_events = []
 	_game_id = ""
 	SessionStore.clear_current_game_id()
 	_clear_persisted_game_id()
@@ -393,6 +400,9 @@ func _handle_internal_events(message: WebSocketMessage) -> void:
 			continue
 
 		var event_dict: Dictionary = raw_event
+		if _game_id.is_empty():
+			_pending_internal_events.append(event_dict)
+			continue
 
 		internal_event_received.emit(
 			GameInternalEventMapper.to_domain(event_dict)

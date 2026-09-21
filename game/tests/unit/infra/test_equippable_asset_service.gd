@@ -55,7 +55,8 @@ func _stage_user_asset(asset_path: String) -> void:
 	DirAccess.make_dir_recursive_absolute(EquippableAssetPaths.user_dir(asset_path))
 	var image := Image.create_empty(4, 4, false, Image.FORMAT_RGBA8)
 	image.fill(Color.RED)
-	image.save_png_to_file(user_p)
+	var err := image.save_png(user_p)
+	assert_eq(err, OK, "save_png deve ter sucesso")
 	_staged_user_files.append(user_p)
 
 
