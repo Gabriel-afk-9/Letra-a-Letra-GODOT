@@ -194,3 +194,42 @@ func test_join_success_clears_selection() -> void:
 	_page._on_room_joined(Room.new("g-1", "Sala Um", "CUSTOM", "WAITING", [], {}, []))
 
 	assert_true(_join_buttons().is_empty(), "após sucesso não há mais seleção")
+
+
+func test_select_room_reuses_cards_without_rebuilding_list() -> void:
+	_inject_rooms()
+	var before := _cards()
+	_page._select_room("g-2")
+
+	assert_eq(_cards().size(), before.size(), "a lista não deve crescer")
+	assert_eq(_cards()[1], before[1], "selecionar não deve reconstruir os cards")
+	assert_eq(_join_buttons().size(), 1, "o card selecionado ganha o botão de entrar")
+
+
+func test_rooms_escape_closes_open_popup() -> void:
+	_page._on_create_pressed()
+	await get_tree().process_frame
+	assert_true(_page.get_node("CreatePopup").visible, "popup de criar deve abrir")
+
+	var event := InputEventAction.new()
+	event.action = "ui_cancel"
+	event.pressed = true
+	_page._input(event)
+
+	assert_false(_page.get_node("CreatePopup").visible, "ESC deve fechar o popup")
+
+
+func test_rooms_focus_starts_on_create_button() -> void:
+	_page.enter({})
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	assert_eq(get_viewport().gui_get_focus_owner(), _page.get_node("Center/VBox/ActionsRow/CreateBtn"), "a página deve começar focada")
+
+
+func test_rooms_empty_state_shows_message_inside_list() -> void:
+	_page._refresh_rooms()
+	var rows := _page.get_node("Center/VBox/ContentPanel/ContentMargin/RoomsSection/RoomsScroll/RoomsRows")
+	assert_eq(rows.get_child_count(), 1, "lista vazia mostra apenas o estado vazio")
+	var message := _page.get_node("Center/VBox/ContentPanel/ContentMargin/RoomsSection/RoomsStatusLabel") as Label
+	assert_eq(message.text, "Nenhuma sala pública no momento.", "a mensagem continua disponível no rótulo")
