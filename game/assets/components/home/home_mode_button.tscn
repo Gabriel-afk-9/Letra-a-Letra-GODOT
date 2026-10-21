@@ -4,24 +4,45 @@
 [ext_resource type="Texture2D" uid="uid://e753xeshtu33" path="res://assets/images/icons/Play.png" id="3_play"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_base"]
+content_margin_left = 12.0
+content_margin_top = 10.0
+content_margin_right = 12.0
+content_margin_bottom = 10.0
 bg_color = Color(0.243, 0.573, 0.839, 1)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 6
+shadow_offset = Vector2(0, 3)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 21
+corner_radius_top_right = 21
+corner_radius_bottom_right = 21
+corner_radius_bottom_left = 21
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
 
 [node name="HomeModeButton" type="Button" unique_id=26825845 groups=["home_mode_button"]]
-custom_minimum_size = Vector2(110, 75)
-offset_right = 110.0
-offset_bottom = 75.0
+custom_minimum_size = Vector2(112, 118)
+offset_right = 112.0
+offset_bottom = 118.0
 mouse_default_cursor_shape = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_base")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_base")
 theme_override_styles/hover = SubResource("StyleBoxFlat_base")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_base")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/focus = SubResource("StyleBoxFlat_focus")
 script = ExtResource("2_btn")
 
 [node name="CenterBox" type="VBoxContainer" parent="." unique_id=1000000001]
@@ -32,7 +53,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 5
 alignment = 1
 
 [node name="IconWrap" type="CenterContainer" parent="CenterBox" unique_id=1000000002]
@@ -69,3 +90,14 @@ theme_override_font_sizes/font_size = 16
 text = "CASUAL"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="DescLabel" type="Label" parent="CenterBox" unique_id=1000000007]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.85)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 11
+text = "Partida rápida"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

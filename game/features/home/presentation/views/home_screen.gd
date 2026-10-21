@@ -40,15 +40,21 @@ const BANNER_COSMETICS := {
 @onready var opt_casual_btn: Button = $ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptCasualBtn
 @onready var opt_bot_btn: Button = $ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptBotBtn
 @onready var opt_rank_btn: Button = $ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/OptRankBtn
-@onready var close_btn: Button = $ModePopup/Center/CardWrapper/CloseBtn as Button
+@onready var close_btn: Button = $ModePopup/Center/CardWrapper/ModeCard/ModeCardMargin/ModeCardVBox/ModeHeaderRow/CloseBtn as Button
 @onready var mode_inline_bot_btn: HomeModeButton = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayModesWrapper/PlayModesRow/ModeInlineBotBtn as HomeModeButton
 @onready var mode_inline_casual_btn: HomeModeButton = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayModesWrapper/PlayModesRow/ModeInlineCasualBtn as HomeModeButton
 @onready var mode_inline_rank_btn: HomeModeButton = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayModesWrapper/PlayModesRow/ModeInlineRankBtn as HomeModeButton
 @onready var info_btn: Button = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/PlayModesWrapper/InfoBtn as Button
 @onready var mode_prompt_label: Label = $SafeMargin/RootVBox/HomeScroll/ScrollVBox/PlayArea/ModePromptLabel as Label
+@onready var safe_margin: MarginContainer = $SafeMargin
 
 var _view_model: HomeViewModel
 var _prompt_tween: Tween = null
+
+const BASE_MARGIN_LEFT := 16
+const BASE_MARGIN_TOP := 12
+const BASE_MARGIN_RIGHT := 16
+const BASE_MARGIN_BOTTOM := 12
 
 
 func _ready() -> void:
@@ -60,15 +66,56 @@ func _ready() -> void:
 		_view_model.load_initial()
 	_setup_avatar_shader()
 	_start_prompt_pulse()
+	_setup_focus_chain()
+	_apply_safe_area()
+	get_viewport().size_changed.connect(_apply_safe_area)
 
 
 func _setup_inline_buttons() -> void:
 	if is_instance_valid(mode_inline_bot_btn):
-		mode_inline_bot_btn.setup(HomeGameMode.Mode.BOT, preload("res://assets/images/icons/bot-icon.png") as Texture2D, "BOT", "Treine suas estratégias contra o robô.", false)
+		mode_inline_bot_btn.setup(HomeGameMode.Mode.BOT, preload("res://assets/images/icons/bot-icon.png") as Texture2D, "BOT", "Treine contra o robô", false)
 	if is_instance_valid(mode_inline_casual_btn):
-		mode_inline_casual_btn.setup(HomeGameMode.Mode.NORMAL, preload("res://assets/images/icons/Play.png") as Texture2D, "CASUAL", "Partida rápida contra outro jogador.", false)
+		mode_inline_casual_btn.setup(HomeGameMode.Mode.NORMAL, preload("res://assets/images/icons/Play.png") as Texture2D, "CASUAL", "Partida rápida 1x1", false)
 	if is_instance_valid(mode_inline_rank_btn):
-		mode_inline_rank_btn.setup(HomeGameMode.Mode.RANKED, null, "RANK", "Vença outros jogadores e suba no ranking.", true)
+		mode_inline_rank_btn.setup(HomeGameMode.Mode.RANKED, null, "RANK", "Disputa o ranking", true)
+
+
+func _setup_focus_chain() -> void:
+	coins_plus_btn.focus_neighbor_right = coins_plus_btn.get_path_to(gems_plus_btn)
+	gems_plus_btn.focus_neighbor_left = gems_plus_btn.get_path_to(coins_plus_btn)
+	gems_plus_btn.focus_neighbor_bottom = gems_plus_btn.get_path_to(mode_inline_casual_btn)
+	menu_btn.focus_neighbor_bottom = menu_btn.get_path_to(mode_inline_casual_btn)
+	mode_inline_bot_btn.focus_neighbor_right = mode_inline_bot_btn.get_path_to(mode_inline_casual_btn)
+	mode_inline_bot_btn.focus_neighbor_bottom = mode_inline_bot_btn.get_path_to(info_btn)
+	mode_inline_casual_btn.focus_neighbor_left = mode_inline_casual_btn.get_path_to(mode_inline_bot_btn)
+	mode_inline_casual_btn.focus_neighbor_right = mode_inline_casual_btn.get_path_to(mode_inline_rank_btn)
+	mode_inline_casual_btn.focus_neighbor_top = mode_inline_casual_btn.get_path_to(coins_plus_btn)
+	mode_inline_rank_btn.focus_neighbor_left = mode_inline_rank_btn.get_path_to(mode_inline_casual_btn)
+	mode_inline_rank_btn.focus_neighbor_bottom = mode_inline_rank_btn.get_path_to(info_btn)
+	info_btn.focus_neighbor_top = info_btn.get_path_to(mode_inline_casual_btn)
+
+
+func _apply_safe_area() -> void:
+	var window_size := DisplayServer.window_get_size()
+	var viewport_size := get_viewport_rect().size
+	if window_size.x <= 0 or window_size.y <= 0:
+		return
+	if viewport_size.x <= 0 or viewport_size.y <= 0:
+		return
+	var window_rect := Rect2i(Vector2i.ZERO, window_size)
+	var safe := DisplayServer.get_display_safe_area().intersection(window_rect)
+	if safe.size.x <= 0 or safe.size.y <= 0:
+		return
+	var scale_x := viewport_size.x / float(window_size.x)
+	var scale_y := viewport_size.y / float(window_size.y)
+	var inset_left := int(round(safe.position.x * scale_x))
+	var inset_top := int(round(safe.position.y * scale_y))
+	var inset_right := int(round((window_size.x - safe.end.x) * scale_x))
+	var inset_bottom := int(round((window_size.y - safe.end.y) * scale_y))
+	safe_margin.add_theme_constant_override("margin_left", BASE_MARGIN_LEFT + inset_left)
+	safe_margin.add_theme_constant_override("margin_top", BASE_MARGIN_TOP + inset_top)
+	safe_margin.add_theme_constant_override("margin_right", BASE_MARGIN_RIGHT + inset_right)
+	safe_margin.add_theme_constant_override("margin_bottom", BASE_MARGIN_BOTTOM + inset_bottom)
 
 
 func page_id() -> StringName:
@@ -80,6 +127,25 @@ func enter(_params: Dictionary) -> void:
 	if not is_node_ready() or _view_model == null:
 		return
 	_view_model.load_initial()
+	_focus_default_control()
+
+
+func _focus_default_control() -> void:
+	await get_tree().process_frame
+	if not is_visible_in_tree():
+		return
+	if mode_popup.visible:
+		return
+	if is_instance_valid(mode_inline_casual_btn):
+		mode_inline_casual_btn.grab_focus()
+
+
+func _input(event: InputEvent) -> void:
+	if not event.is_action_pressed("ui_cancel"):
+		return
+	if mode_popup.visible:
+		_close_mode_popup()
+		get_viewport().set_input_as_handled()
 
 
 func _setup_avatar_shader() -> void:
@@ -204,7 +270,21 @@ func _on_mode_bar_gui_input(event: InputEvent) -> void:
 		if click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
 			if _view_model != null and _view_model.is_loading():
 				return
-			mode_popup.show()
+			_open_mode_popup()
+
+
+func _open_mode_popup() -> void:
+	mode_popup.show()
+	await get_tree().process_frame
+	if is_instance_valid(close_btn):
+		close_btn.grab_focus()
+
+
+func _close_mode_popup() -> void:
+	mode_popup.hide()
+	get_viewport().gui_release_focus()
+	if is_visible_in_tree() and is_instance_valid(info_btn):
+		info_btn.grab_focus()
 
 
 func _on_mode_option_pressed(_mode: int) -> void:
@@ -221,18 +301,18 @@ func _on_inline_mode_pressed(mode: int) -> void:
 func _on_info_btn_pressed() -> void:
 	if _view_model != null and _view_model.is_loading():
 		return
-	mode_popup.show()
+	_open_mode_popup()
 
 
 func _on_close_btn_pressed() -> void:
-	mode_popup.hide()
+	_close_mode_popup()
 
 
 func _on_dim_background_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var click := event as InputEventMouseButton
 		if click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
-			mode_popup.hide()
+			_close_mode_popup()
 
 
 func exit() -> void:

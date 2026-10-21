@@ -11,6 +11,7 @@ var _desc_text: String = ""
 
 @onready var _icon: TextureRect = get_node_or_null("CenterBox/IconWrap/Icon") as TextureRect
 @onready var _label: Label = get_node_or_null("CenterBox/Label") as Label
+@onready var _desc_label: Label = get_node_or_null("CenterBox/DescLabel") as Label
 @onready var _crown_wrap: Control = get_node_or_null("CenterBox/IconWrap/CrownWrap") as Control
 
 var _select_tween: Tween = null
@@ -41,6 +42,10 @@ func setup(mode: int, icon_texture: Texture2D, text: String, desc: String, use_c
 	if is_instance_valid(label_node):
 		label_node.text = text
 		_label = label_node
+	var desc_node: Label = _desc_label if is_instance_valid(_desc_label) else get_node_or_null("CenterBox/DescLabel") as Label
+	if is_instance_valid(desc_node):
+		desc_node.text = desc
+		_desc_label = desc_node
 	var icon_node: TextureRect = _icon if is_instance_valid(_icon) else get_node_or_null("CenterBox/IconWrap/Icon") as TextureRect
 	var crown_node: Control = _crown_wrap if is_instance_valid(_crown_wrap) else get_node_or_null("CenterBox/IconWrap/CrownWrap") as Control
 	if use_crown:
