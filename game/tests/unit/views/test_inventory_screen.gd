@@ -336,3 +336,42 @@ func test_inventory_script_has_no_hash_comments() -> void:
 	var text := FileAccess.get_file_as_string("res://features/inventory/presentation/views/inventory_screen.gd")
 	for line in text.split("\n"):
 		assert_false((line as String).strip_edges().begins_with("#"), "script não deve conter comentários #")
+
+
+func test_inventory_header_shows_title_and_item_count() -> void:
+	var title := _page.get_node("Content/MainVBox/Header/HeaderRow/HeaderLeft/Title") as Label
+	assert_eq(title.text, "Inventário", "cabeçalho deve identificar a tela")
+	var count := _page.get_node("Content/MainVBox/Header/HeaderRow/CountPill/CountLabel") as Label
+	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
+	assert_eq(count.text, "1 ITEM", "contador deve refletir o filtro atual")
+
+
+func test_inventory_selection_updates_cards_without_rebuilding_grid() -> void:
+	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
+	var card := _grid().get_child(0) as Button
+
+	_page._on_item_pressed("av-1")
+	await get_tree().process_frame
+
+	assert_eq(_grid().get_child(0), card, "selecionar não deve reconstruir a grade")
+	assert_not_null(_equip_button(card), "toque revela o botão equipar")
+
+
+func test_inventory_category_chips_are_readable_and_fit_the_row() -> void:
+	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
+	var chip := _sub_tabs_row().get_node("BOARDTab") as Button
+	assert_true(chip.size.x >= 60.0, "chip precisa de largura para o texto")
+	var total := 0.0
+	for child in _sub_tabs_row().get_children():
+		total += (child as Control).size.x
+	assert_true(total <= _sub_tabs_row().size.x + 1.0, "as categorias devem caber na linha")
+
+
+func test_inventory_focus_starts_on_first_item() -> void:
+	await _bind_items([_item(_avatar_dict("av-1", "AVATAR/ceo.webp"))])
+	_page.enter({})
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	assert_eq(get_viewport().gui_get_focus_owner(), _grid().get_child(0), "a página deve começar focada no primeiro item")
+

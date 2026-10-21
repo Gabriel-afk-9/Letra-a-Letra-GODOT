@@ -17,43 +17,151 @@ shadow_color = Color(0, 0, 0, 0.35)
 shadow_size = 8
 shadow_offset = Vector2(0, 4)
 
+[sub_resource type="StyleBoxEmpty" id="NavEmpty"]
+
 [sub_resource type="StyleBoxFlat" id="ArrowOrange"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
 bg_color = Color(0.96, 0.51, 0.12, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.118, 0.165, 0.267, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_color = Color(0, 0, 0, 0.28)
+shadow_size = 4
+shadow_offset = Vector2(0, 3)
 
-[sub_resource type="StyleBoxEmpty" id="NavEmpty"]
-
-[sub_resource type="StyleBoxFlat" id="PagerPill"]
-bg_color = Color(0.878, 0.914, 0.945, 1)
+[sub_resource type="StyleBoxFlat" id="ArrowOrangeHover"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 0.573, 0.196, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.118, 0.165, 0.267, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_color = Color(0, 0, 0, 0.28)
+shadow_size = 4
+shadow_offset = Vector2(0, 3)
 
 [sub_resource type="StyleBoxFlat" id="ArrowBlue"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
 bg_color = Color(0.16, 0.6, 0.85, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_color = Color(0, 0, 0, 0.28)
+shadow_size = 4
+shadow_offset = Vector2(0, 3)
+
+[sub_resource type="StyleBoxFlat" id="ArrowBlueHover"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0.239, 0.678, 0.925, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_color = Color(0, 0, 0, 0.28)
+shadow_size = 4
+shadow_offset = Vector2(0, 3)
+
+[sub_resource type="StyleBoxFlat" id="MutedButton"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0.702, 0.729, 0.769, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.478, 0.502, 0.541, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="FocusRingOrange"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.96, 0.51, 0.12, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="PagerPill"]
+content_margin_left = 16.0
+content_margin_top = 6.0
+content_margin_right = 16.0
+content_margin_bottom = 6.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.118, 0.165, 0.267, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxLine" id="FooterLine"]
+color = Color(0.118, 0.165, 0.267, 0.16)
+thickness = 2
+
+[sub_resource type="StyleBoxFlat" id="CountPill"]
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(0.16, 0.6, 0.85, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.118, 0.165, 0.267, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
 
 [node name="InventoryScreen" type="Control" unique_id=1475450406]
 layout_mode = 3
@@ -71,14 +179,60 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 24
+theme_override_constants/margin_left = 14
 theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 24
+theme_override_constants/margin_right = 14
 theme_override_constants/margin_bottom = 8
 
 [node name="MainVBox" type="VBoxContainer" parent="Content" unique_id=2126607316]
+custom_minimum_size = Vector2(440, 0)
 layout_mode = 2
-theme_override_constants/separation = 0
+size_flags_horizontal = 4
+theme_override_constants/separation = 8
+
+[node name="Header" type="MarginContainer" parent="Content/MainVBox"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 8
+
+[node name="HeaderRow" type="HBoxContainer" parent="Content/MainVBox/Header"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderLeft" type="VBoxContainer" parent="Content/MainVBox/Header/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 2
+
+[node name="Title" type="Label" parent="Content/MainVBox/Header/HeaderRow/HeaderLeft"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 26
+text = "Inventário"
+
+[node name="Subtitle" type="Label" parent="Content/MainVBox/Header/HeaderRow/HeaderLeft"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.82)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 13
+text = "Personalize avatar, molduras e tabuleiro"
+autowrap_mode = 2
+
+[node name="CountPill" type="PanelContainer" parent="Content/MainVBox/Header/HeaderRow"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("CountPill")
+
+[node name="CountLabel" type="Label" parent="Content/MainVBox/Header/HeaderRow/CountPill"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "0 ITENS"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TabScroll" type="ScrollContainer" parent="Content/MainVBox" unique_id=1198767989]
 layout_mode = 2
@@ -87,7 +241,7 @@ vertical_scroll_mode = 0
 [node name="TabsRow" type="HBoxContainer" parent="Content/MainVBox/TabScroll" unique_id=1534116884]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 alignment = 1
 
 [node name="Panel" type="PanelContainer" parent="Content/MainVBox" unique_id=1109142151]
@@ -108,13 +262,13 @@ theme_override_constants/separation = 8
 
 [node name="SubTabsRow" type="HBoxContainer" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox" unique_id=603590406]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 5
 alignment = 1
 
 [node name="StatusLabel" type="Label" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox" unique_id=139369806]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.118, 0.165, 0.267, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 15
 text = "Carregando inventário..."
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -125,6 +279,11 @@ size_flags_vertical = 3
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
 columns = 3
+
+[node name="PagerSeparator" type="HSeparator" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+theme_override_styles/separator = SubResource("FooterLine")
 
 [node name="PagerRow" type="HBoxContainer" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox" unique_id=120538703]
 layout_mode = 2
@@ -137,12 +296,12 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("ArrowOrange")
 theme_override_styles/pressed = SubResource("ArrowOrange")
-theme_override_styles/hover = SubResource("ArrowOrange")
-theme_override_styles/disabled = SubResource("ArrowOrange")
-theme_override_styles/focus = SubResource("NavEmpty")
+theme_override_styles/hover = SubResource("ArrowOrangeHover")
+theme_override_styles/disabled = SubResource("MutedButton")
+theme_override_styles/focus = SubResource("FocusRingOrange")
 text = "<"
 
 [node name="PagePill" type="PanelContainer" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow" unique_id=611045811]
@@ -152,15 +311,15 @@ theme_override_styles/panel = SubResource("PagerPill")
 
 [node name="PageMargin" type="MarginContainer" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow/PagePill" unique_id=25609502]
 layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 4
 
 [node name="PageLabel" type="Label" parent="Content/MainVBox/Panel/PanelMargin/PanelVBox/PagerRow/PagePill/PageMargin" unique_id=742932968]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.118, 0.165, 0.267, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "Pág 1"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -171,10 +330,10 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("ArrowBlue")
 theme_override_styles/pressed = SubResource("ArrowBlue")
-theme_override_styles/hover = SubResource("ArrowBlue")
-theme_override_styles/disabled = SubResource("ArrowBlue")
-theme_override_styles/focus = SubResource("NavEmpty")
+theme_override_styles/hover = SubResource("ArrowBlueHover")
+theme_override_styles/disabled = SubResource("MutedButton")
+theme_override_styles/focus = SubResource("FocusRingOrange")
 text = ">"
